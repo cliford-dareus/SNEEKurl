@@ -3,7 +3,7 @@ import CustomError from './CustomError';
 
 class BadRequest extends CustomError {
     statusCode : unknown
-    constructor(message){
+    constructor(message:string){
         super(message);
         this.statusCode = StatusCodes.BAD_REQUEST;
     }

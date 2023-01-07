@@ -6,6 +6,8 @@ import helmet from 'helmet';
 import connectDB from './db/connect';
 dotenv.config();
 
+import authRouter from './routes/auth';
+
 import notfoundMiddleware from './middlewares/NotFound';
 
 const app = express();
@@ -13,6 +15,8 @@ const app = express();
 app.use(morgan('combined'));
 app.use(cors());
 app.use(helmet());
+
+app.use('/api/v1/auth', authRouter);
 
 //custom middleware
 app.use(notfoundMiddleware);
