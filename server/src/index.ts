@@ -5,11 +5,17 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 dotenv.config();
 
+import notfoundMiddleware from './middlewares/NotFound';
+
 const app = express();
 
 app.use(morgan('combined'));
 app.use(cors());
 app.use(helmet());
+
+//custom middleware
+app.use(notfoundMiddleware);
+
 
 const PORT = process.env.PORT || 4000;
 
