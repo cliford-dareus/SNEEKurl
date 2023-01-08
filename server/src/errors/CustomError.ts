@@ -1,6 +1,7 @@
 
+
 class CustomError extends Error {
-    BadRequest: any
+    public BadRequest: unknown
     constructor(message: string){
         super(message);
     };

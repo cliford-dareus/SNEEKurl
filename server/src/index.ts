@@ -9,18 +9,21 @@ dotenv.config();
 import authRouter from './routes/auth';
 
 import notfoundMiddleware from './middlewares/NotFound';
+import errorHandlerMiddleware from './middlewares/errorHandler';
 
 const app = express();
 
 app.use(morgan('combined'));
 app.use(cors());
 app.use(helmet());
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json());
 
 app.use('/api/v1/auth', authRouter);
 
 //custom middleware
 app.use(notfoundMiddleware);
-
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 4000;
 

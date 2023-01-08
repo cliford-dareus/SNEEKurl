@@ -1,14 +1,15 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Unauthenticated, BadRequest, NotFound } from "../errors";
+import jwt from 'jsonwebtoken';
 import User from "../models/user";
 
 const registerUser = async ( req:Request, res: Response ) => {
     const { name, email, password } = req.body;
 
-    const isAlreadyExist = await User.findOne({ email });
+    const isAlreadyExist = await User.find({ email });
 
-    if(!isAlreadyExist){
+    if(isAlreadyExist.length > 0){
         throw new BadRequest('Email already exists');
     };
 
@@ -17,8 +18,8 @@ const registerUser = async ( req:Request, res: Response ) => {
         email,
         password
     });
-
-    res.status(StatusCodes.CREATED).json({ user });
+    
+    res.status(StatusCodes.CREATED).json(user);
 };
 
 const loginUser = async ( req:Request, res: Response ) => {
@@ -35,6 +36,13 @@ const loginUser = async ( req:Request, res: Response ) => {
     };
 
     const isPasswordCorrect = await user.comparePassword(password);
+
+    if(!isPasswordCorrect){
+        throw new BadRequest('Credentials Invalid');
+    };
+
+    const accessToken = jwt.sign({ userId: user._id, name: user.name }, process.env.JWT_SECRET!);
+    console.log(accessToken);
 };
 
 export {
