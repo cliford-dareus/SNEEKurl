@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
 import helmet from 'helmet';
-import bodyparser from 'body-parser';
 import cookieParser from 'cookie-parser'
 import connectDB from './db/connect';
 dotenv.config();
@@ -12,7 +11,7 @@ import authRouter from './routes/auth';
 
 import notfoundMiddleware from './middlewares/NotFound';
 import errorHandlerMiddleware from './middlewares/errorHandler';
-import authorize from './middlewares/authorization';
+
 
 const app = express();
 

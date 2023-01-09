@@ -1,6 +1,9 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useLoginUserMutation } from '../features/api';
 import InputForm from '../components/InputForm';
+import { useAppDispatch, useAppSelector } from '../app/hook';
+import { setUser } from '../features/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 interface UserInterface {
     name: string;
@@ -8,34 +11,42 @@ interface UserInterface {
 };
 
 const Login = () => {
-    const [ loginUser, { data }] = useLoginUserMutation();
+    const [ loginUser, { data: data }] = useLoginUserMutation();
     const [ userInfo, setUserInfo ] = useState<UserInterface>({ name: '', password: '' });
+    const user = useAppSelector((state) => state.user);
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setUserInfo({...userInfo, [event.target.name] : event.target.value })
     };
 
-    const onSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const { name, password } = userInfo;
 
         if(!name || !password){
             console.log('Please provide an email and password')
-            return (<h1 className='text-white bg-white w-full absolute h-11'>Please provide an email and password</h1>)
+            return (<div className='text-white bg-white w-10 absolute h-11'>Please provide an email and password</div>)
         };
         
         const body = { name, password };
 
         try {
-            loginUser(body);
+            await loginUser(body);
             setUserInfo({ name: '', password: '' });
+            navigate('/');
         } catch (error) {
             console.log(error);
         }
     };
 
+    useEffect(() => {
+        dispatch(setUser({...data}));
+    }, [data]);
+    
   return (
-    <div className='w-4/12 flex flex-col items-center'>
+    <div className='w-11/12 flex flex-col items-center sm:w-6/12'>
         <h2 className='text-2xl text-white'>Login</h2>
         <form 
             action=""
