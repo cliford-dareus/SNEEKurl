@@ -19,8 +19,15 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body
             })
+        }),
+        addUrl: build.mutation({
+            query: (body) => ({
+                url:'/api/v1/short/add',
+                method: 'POST',
+                body
+            })
         })
     })
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation } = apiSlice;
+export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation } = apiSlice;
