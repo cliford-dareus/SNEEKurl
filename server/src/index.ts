@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -12,6 +12,7 @@ import authRouter from './routes/auth';
 
 import notfoundMiddleware from './middlewares/NotFound';
 import errorHandlerMiddleware from './middlewares/errorHandler';
+import authorize from './middlewares/authorization';
 
 const app = express();
 
