@@ -41,8 +41,17 @@ const loginUser = async ( req:Request, res: Response ) => {
         throw new BadRequest('Credentials Invalid');
     };
 
-    const accessToken = jwt.sign({ userId: user._id, name: user.name }, process.env.JWT_SECRET!);
-    console.log(accessToken);
+    const accessTokenJWT = jwt.sign({ userId: user._id, name: user.name }, process.env.JWT_SECRET!);
+    const oneDay = 1000 * 60 * 60 * 24;
+
+    res.cookie('accessToken', accessTokenJWT, {
+        httpOnly: true,
+        secure: false,
+        signed: true,
+        expires: new Date(Date.now() + oneDay),
+      });
+
+    res.status(StatusCodes.OK).json({ userName: user.name, userId: user._id });
 };
 
 export {
