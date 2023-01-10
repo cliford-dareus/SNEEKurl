@@ -6,7 +6,7 @@ import Dashboard from './pages/dashboard';
  
 function App() {
   return (
-    <div className="w-full h-screen bg-black flex flex-col justify-center items-center">
+    <div className="w-full h-full bg-black flex flex-col justify-center items-center">
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Dashboard />}/>

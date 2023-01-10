@@ -27,13 +27,13 @@ const Dashboard = () => {
 
     useEffect(() => {
         
-    }, [])
+    }, [data])
     
   return (
     <div className='text-white h-full w-full'>
         <Header user={user}/>
 
-        <div className='w-full p-4 sm:px-60'>
+        <div className='w-full p-4 lg:px-96 xl:w-1/2 xl:px-4 xl:mx-auto'>
             <div className='my-8'>
                 <span className=''></span>  
                 <h1 className='text-3xl text-center sm:text-6xl'>Quickily and Reliably shortened and save your url for later!</h1>
@@ -53,11 +53,18 @@ const Dashboard = () => {
 
         <div className='w-full p-4 sm:px-60'>
             <h3 className='text-xl'>Recents</h3>
-            <div className='w-full flex gap-4 py-4'>
-                <div className='w-1/2 h-48 bg-blue-800 rounded-md p-4'>
-                    recents
+            <div className='w-full flex flex-col gap-4 py-4'>
+                <div className='w-full h-48 bg-blue-800 rounded-md p-4'>
+                    <div className='flex items-center'>
+                        <h4 className='mr-auto'>SiteName</h4>
+                        <div className='flex gap-4 items-center'>
+                            <p>5</p>
+                            <p>delete</p>
+                            <span>star</span>
+                        </div>
+                    </div>
                 </div>
-                <div className='w-1/2 h-48 bg-blue-800 rounded-md p-4'>
+                <div className='w-full h-48 bg-blue-800 rounded-md p-4'>
                     recents
                 </div>
             </div>
