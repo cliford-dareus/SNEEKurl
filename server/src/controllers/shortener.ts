@@ -56,6 +56,18 @@ const getShort = async (req:Request, res:Response) => {
     res.status(StatusCodes.OK).send(short);
 };
 
+const updateShort =async (req:Request, res: Response) => {
+    const short = req.params.shortUrl;
+
+    const clicksUrl = await Short.findOne({ short: short});
+    if(clicksUrl == null)return res.status(StatusCodes.BAD_REQUEST);
+
+    clicksUrl.favorite = !clicksUrl.favorite;
+    clicksUrl.save();
+
+    res.status(StatusCodes.OK).json(clicksUrl);
+}
+
 const deleteShort = async (req:Request, res: Response) => {
   const short = req.params.shortUrl;
   console.log(short)
@@ -63,4 +75,4 @@ const deleteShort = async (req:Request, res: Response) => {
   res.status(StatusCodes.OK).json({msg: 'Short deleted'});
 }; 
 
-export { getShortenUrl, shortenUrl, deleteShort, visitShort, getShort };
+export { getShortenUrl, shortenUrl, deleteShort, visitShort, getShort, updateShort };
