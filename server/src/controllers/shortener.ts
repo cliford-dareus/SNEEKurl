@@ -49,11 +49,11 @@ const getShort = async (req:Request, res:Response) => {
     };
 
     if(clicks){
-        shortObj.clicks = {Sgt: Number(clicks)}
+        shortObj.clicks = {'$gt': Number(clicks)}
     };
 
     let short = await Short.find(shortObj);
-    console.log(short)
+    res.status(StatusCodes.OK).send(short);
 };
 
 const deleteShort = async (req:Request, res: Response) => {

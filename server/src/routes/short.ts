@@ -3,9 +3,8 @@ import { deleteShort, getShortenUrl, shortenUrl, visitShort, getShort } from '..
 
 const router = express.Router();
 
-router.get('/all', getShortenUrl);
-router.post('/', shortenUrl);
-router.get('/:shortUrl', visitShort).delete('/:shortUrl', deleteShort);
-router.get('/filter', getShort);
+router.route('/all').get(getShort).get(getShortenUrl);
+router.route('/').post(shortenUrl);
+router.route('/:shortUrl').get(visitShort).delete(deleteShort);
 
 export default router;
