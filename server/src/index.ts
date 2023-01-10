@@ -8,6 +8,7 @@ import connectDB from './db/connect';
 dotenv.config();
 
 import authRouter from './routes/auth';
+import shortRouter from './routes/short';
 
 import notfoundMiddleware from './middlewares/NotFound';
 import errorHandlerMiddleware from './middlewares/errorHandler';
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/short', shortRouter);
 
 //custom middleware
 app.use(notfoundMiddleware);
@@ -33,7 +35,7 @@ const PORT = process.env.PORT || 4000;
 
 const start = async () => {
     try {
-        await connectDB(process.env.MONGO_URI!)
+        connectDB(process.env.MONGO_URI!)
         app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
     } catch (error) {
         console.log(error);

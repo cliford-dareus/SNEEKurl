@@ -35,7 +35,7 @@ const loginUser = async ( req:Request, res: Response ) => {
         throw new Unauthenticated('Credentials Invalid');
     };
 
-    const isPasswordCorrect = await user.comparePassword(password);
+    const isPasswordCorrect = user.comparePassword(password);
 
     if(!isPasswordCorrect){
         throw new BadRequest('Credentials Invalid');
@@ -49,7 +49,7 @@ const loginUser = async ( req:Request, res: Response ) => {
         secure: false,
         signed: true,
         expires: new Date(Date.now() + oneDay),
-      });
+    });
 
     res.status(StatusCodes.OK).json({ userName: user.name, userId: user._id });
 };
