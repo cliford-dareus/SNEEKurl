@@ -11,11 +11,11 @@ const Dashboard = () => {
     const [ url, seturl ] = useState<string>('');
     const dispatch = useAppDispatch();
 
-    const handleChange = (event: ChangeEvent<HTMLInputElement>)=> {
-        seturl( event.target.value)
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) =>{
+        seturl( event.target.value);
     };
 
-    const onSubmit = async (event: FormEvent<HTMLFormElement>)=> {
+    const onSubmit = async (event: FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
         const body = { full: url};
 
@@ -29,15 +29,18 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
+        
     }, [data]);
+
+    console.log(data)
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between'>
         <Header user={user}/>
         <div className='w-full h-5/6 flex flex-col gap-4 justify-between'>
-            <div className='w-full flex flex-col p-4 lg:px-96 xl:w-1/2 xl:px-4 xl:mx-auto'>
+            <div className='w-full flex flex-col p-4 lg:px-80 xl:w-2/5 xl:px-0 xl:mx-auto'>
                 <div className=''>
-                    <div className='my-8'>
+                    <div className='my-16'>
                         <span className=''></span>  
                         <h1 className='text-3xl text-center sm:text-4xl'>Quickily and Reliably shortened and save your url for later!</h1>
                     </div>
@@ -55,16 +58,37 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            <div className='w-full h-2/5 p-4 rounded-md bg-blue-800 md:w-3/4 md:mx-auto md:px-4'>
+            <div className='w-full h-1/2 p-4 rounded-md bg-blue-800 md:w-3/4 md:mx-auto md:px-4'>
+                <h3>Latest URL</h3>
                 { data.length > 0 ? (
-                    <div>
-                        {
-                            data.map((item:any) => {
-                                return(
-                                    <p>{item.full}</p>
-                                )
-                            })
-                        }
+                    <div className='w-full h-full'>
+                        <table className='w-full table-fixed'>
+                            <thead>
+                                <tr className='border-b'>
+                                    <th className='w-8 text-left'>Full</th>
+                                    <th className='w-4 text-left'>Visits</th>
+                                    <th className='w-8 text-left'>Short</th>
+                                    <th className='w-4'></th>
+                                    <th className='w-4'></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {data?.slice(0,6).map((site: any) => {
+                                    return(
+                                        <tr className='overflow-hidden h-8 border-b'>
+                                            <td className='w-8 truncate overflow-hidden'>{site.full}</td>
+                                            <td className='w-4 px-2'>{site.clicks}</td>
+                                            <td className='w-8'>{site.short}</td>
+                                            <td className='w-4'><button>D</button></td>
+                                            <td className='w-4'><button>D</button></td>
+                                        </tr>
+                                    )
+                                })
+                                }
+                            </tbody>
+                        </table>
+                       
                     </div>): 
                     (<h3 className='text-white'>Loadind...</h3>
                 ) }
@@ -72,6 +96,6 @@ const Dashboard = () => {
         </div>
     </div>
   )
-}
+};
 
 export default Dashboard;
