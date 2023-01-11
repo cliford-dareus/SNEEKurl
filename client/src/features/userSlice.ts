@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 export interface UserInterface {
     name: string;
     userId: string;
 };
 
+const user = localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')!): ''
+
 const initialState: UserInterface = {
-    name: '',
-    userId: ''
+    name: user?.userName || '',
+    userId: user?.userId || ''
 };
 
 const userSlice = createSlice({
@@ -16,7 +17,10 @@ const userSlice = createSlice({
     reducers: {
         setUser: (state, actions) => {
             state.name = actions.payload.userName, state.userId = actions.payload.userId
-        }
+            localStorage.setItem('user', JSON.stringify(actions.payload));
+        },
+        // clear user
+            // clear localStorage
     }
 });
 

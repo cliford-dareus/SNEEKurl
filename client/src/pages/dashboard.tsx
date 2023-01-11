@@ -27,7 +27,6 @@ const Dashboard = () => {
             if(!body) return;
             await adduser(body);
             seturl('');
-            refetch();
         } catch (error) {
             console.log(error);
         }
@@ -35,12 +34,10 @@ const Dashboard = () => {
 
     const deletefn =async (short: string) => {
         deleteUser(short);
-        refetch();
     };
 
     const favoritefn = async (short: string) => {
         favoriteShort(short);
-        refetch();
     };
 
     useEffect(() => {
@@ -89,7 +86,10 @@ const Dashboard = () => {
                             <tbody>
                                 {data?.slice(0,6).map((site: any) => {
                                     return(
-                                        <tr className='overflow-hidden h-8 border-b'>
+                                        <tr 
+                                            className='overflow-hidden h-8 border-b'
+                                            onClick={() => console.log(site.full)}
+                                        >
                                             <td className='w-8 truncate overflow-hidden'>{site.full}</td>
                                             <td className='w-4 px-2'>{site.clicks}</td>
                                             <td className='w-8'>{site.short}</td>

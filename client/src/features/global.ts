@@ -12,7 +12,7 @@ const globalSlice = createSlice({
     name: 'global',
     initialState,
     reducers:{
-
+        
     }
 });
 

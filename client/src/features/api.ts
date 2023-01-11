@@ -5,6 +5,7 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:4080/api/v1'
     }),
+    tagTypes: ['short', 'user'],
     endpoints: (build) => ({
         registerUser: build.mutation({
             query:(body) => ({
@@ -25,25 +26,29 @@ export const apiSlice = createApi({
                 url:'/short',
                 method: 'POST',
                 body
-            })
+            }),
+            invalidatesTags: ['short']
         }),
         getUrls: build.query({
             query: () => ({
                 url: '/short/all',
                 method: 'GET'
-            })
+            }),
+            providesTags: ['short']
         }),
         deleteUrl: build.mutation({
             query: (params) => ({
                 url: `/short/${params}`,
                 method: 'DELETE'
-            })
+            }),
+            invalidatesTags: ['short']
         }),
         favoriteUrl: build.mutation({
             query: (params) => ({
                 url: `/short/${params}`,
                 method: 'PATCH'
-            })
+            }),
+            invalidatesTags: ['short']
         })
     })
 });
