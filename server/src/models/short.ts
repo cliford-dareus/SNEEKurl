@@ -21,6 +21,7 @@ const ShortSchema = new mongoose.Schema({
 });
 
 ShortSchema.pre('save',function(){
+    if (this.isModified('short')) return;
     const ID = nanoid(10);
     this.short = ID;
 });

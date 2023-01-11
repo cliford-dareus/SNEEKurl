@@ -26,16 +26,16 @@ const visitShort =async (req:Request, res:Response) => {
     const clicksUrl = req.params.shortUrl;
 
     const url = await Short.findOne({ short: clicksUrl});
-    if (url == null) return res.sendStatus(404)
+    if (url == null) return res.sendStatus(404);
 
-    url.clicks++;
-    url.save()
+    await url.update({
+        clicks: url.clicks++,
+    });
 
     res.redirect(url.full!);
 };
 
 const getShort = async (req:Request, res:Response) => {
-    console.log(req.query)
     const { favorite, clicks } = req.query;
     interface IShort {
         favorite?: boolean;
@@ -57,16 +57,17 @@ const getShort = async (req:Request, res:Response) => {
 };
 
 const updateShort =async (req:Request, res: Response) => {
-    const short = req.params.shortUrl;
+    const shortUrl = req.params.shortUrl;
 
-    const clicksUrl = await Short.findOne({ short: short});
+    const clicksUrl = await Short.findOne({ short: shortUrl });
     if(clicksUrl == null)return res.status(StatusCodes.BAD_REQUEST);
 
-    clicksUrl.favorite = !clicksUrl.favorite;
-    clicksUrl.save();
-
+    await clicksUrl.update({
+        favorite: !clicksUrl.favorite,
+    })
+   
     res.status(StatusCodes.OK).json(clicksUrl);
-}
+};
 
 const deleteShort = async (req:Request, res: Response) => {
   const short = req.params.shortUrl;

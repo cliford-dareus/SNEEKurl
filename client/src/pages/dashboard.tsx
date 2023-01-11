@@ -1,13 +1,17 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../app/hook';
-import { useAddUrlMutation, useGetUrlsQuery } from '../features/api';
+import { useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation } from '../features/api';
 import Header from '../components/Header';
 import type { RootState } from '../app/store';
+
+import { IoTrashBinOutline, IoHeartOutline, IoHeartSharp } from 'react-icons/io5';
 
 const Dashboard = () => {
     const user = useAppSelector((state: RootState) => state.user);
     const [ adduser, { data: userDate }] = useAddUrlMutation();
-    const { data =[] , isLoading, isError, refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
+    const [ favoriteShort ] = useFavoriteUrlMutation();
+    const [ deleteUser] = useDeleteUrlMutation();
+    const { data =[] , refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
     const [ url, seturl ] = useState<string>('');
     const dispatch = useAppDispatch();
 
@@ -23,16 +27,25 @@ const Dashboard = () => {
             if(!body) return;
             await adduser(body);
             seturl('');
+            refetch();
         } catch (error) {
             console.log(error);
         }
     };
 
+    const deletefn =async (short: string) => {
+        deleteUser(short);
+        refetch();
+    };
+
+    const favoritefn = async (short: string) => {
+        favoriteShort(short);
+        refetch();
+    };
+
     useEffect(() => {
         
     }, [data]);
-
-    console.log(data)
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between'>
@@ -80,8 +93,22 @@ const Dashboard = () => {
                                             <td className='w-8 truncate overflow-hidden'>{site.full}</td>
                                             <td className='w-4 px-2'>{site.clicks}</td>
                                             <td className='w-8'>{site.short}</td>
-                                            <td className='w-4'><button>D</button></td>
-                                            <td className='w-4'><button>D</button></td>
+                                            <td className='w-4'>
+                                                <button
+                                                    className='w-full h-full flex items-center justify-center' 
+                                                    onClick={()=> deletefn(site.short)}
+                                                >
+                                                    <IoTrashBinOutline />
+                                                </button>
+                                            </td>
+                                            <td className='w-4'>
+                                                <button
+                                                    className='w-full h-full flex items-center justify-center'
+                                                    onClick={() => favoritefn(site.short)}
+                                                >
+                                                    {site.favorite? <IoHeartSharp /> : <IoHeartOutline/>}
+                                                </button>
+                                            </td>
                                         </tr>
                                     )
                                 })
@@ -90,7 +117,9 @@ const Dashboard = () => {
                         </table>
                        
                     </div>): 
-                    (<h3 className='text-white'>Loadind...</h3>
+                    (<div className='text-white'>
+                        Login 
+                    </div>
                 ) }
             </div>
         </div>

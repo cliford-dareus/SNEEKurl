@@ -32,8 +32,20 @@ export const apiSlice = createApi({
                 url: '/short/all',
                 method: 'GET'
             })
+        }),
+        deleteUrl: build.mutation({
+            query: (params) => ({
+                url: `/short/${params}`,
+                method: 'DELETE'
+            })
+        }),
+        favoriteUrl: build.mutation({
+            query: (params) => ({
+                url: `/short/${params}`,
+                method: 'PATCH'
+            })
         })
     })
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery } = apiSlice;
+export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation } = apiSlice;
