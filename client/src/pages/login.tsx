@@ -11,7 +11,7 @@ interface UserInterface {
 };
 
 const Login = () => {
-    const [ loginUser, { data: data }] = useLoginUserMutation();
+    const [ loginUser, { data: data , isSuccess: isSuccess}] = useLoginUserMutation();
     const [ userInfo, setUserInfo ] = useState<UserInterface>({ name: '', password: '' });
     const user = useAppSelector((state) => state.user);
     const dispatch = useAppDispatch();
@@ -35,7 +35,7 @@ const Login = () => {
         try {
             await loginUser(body);
             setUserInfo({ name: '', password: '' });
-            navigate('/');
+            
         } catch (error) {
             console.log(error);
         }
@@ -43,6 +43,7 @@ const Login = () => {
 
     useEffect(() => {
         dispatch(setUser({...data}));
+        if(isSuccess) navigate('/')
     }, [data]);
     
   return (

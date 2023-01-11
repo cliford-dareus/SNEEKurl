@@ -17,7 +17,7 @@ const shortenUrl =async (req:Request, res: Response ) => {
 
     const short = await Short.create({
         full
-    }); 
+    });
 
     res.status(StatusCodes.CREATED).json(short);
 };
