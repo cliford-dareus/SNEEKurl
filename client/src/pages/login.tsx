@@ -4,7 +4,6 @@ import InputForm from '../components/InputForm';
 import { useAppDispatch, useAppSelector } from '../app/hook';
 import { setUser } from '../features/userSlice';
 import { useNavigate } from 'react-router-dom';
-
 interface UserInterface {
     name: string;
     password: string;
@@ -29,22 +28,22 @@ const Login = () => {
             console.log('Please provide an email and password')
             return (<div className='text-white bg-white w-10 absolute h-11'>Please provide an email and password</div>)
         };
-        
+
         const body = { name, password };
 
         try {
             await loginUser(body);
             setUserInfo({ name: '', password: '' });
-            
         } catch (error) {
             console.log(error);
         }
     };
 
     useEffect(() => {
+        if(!data)return;
         dispatch(setUser({...data}));
         if(isSuccess) navigate('/')
-    }, [data]);
+    },[data]);
     
   return (
     <div className='w-11/12 flex flex-col items-center sm:w-6/12'>
@@ -77,6 +76,6 @@ const Login = () => {
         </form>
     </div>
   )
-}
+};
 
 export default Login;

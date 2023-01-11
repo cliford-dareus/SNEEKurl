@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../app/hook';
-import { useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useVisitUrlQuery } from '../features/api';
+import { useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation } from '../features/api';
 import Header from '../components/Header';
 import type { RootState } from '../app/store';
 
@@ -13,9 +13,8 @@ const Dashboard = () => {
     const [ favoriteShort ] = useFavoriteUrlMutation();
     const [ deleteUser] = useDeleteUrlMutation();
     const { data =[]} = useGetUrlsQuery({refetchOnMountOrArgChange: true});
-
+user.userId
     const [ url, seturl ] = useState<string>('');
-    const dispatch = useAppDispatch();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) =>{
         seturl( event.target.value);
@@ -41,10 +40,6 @@ const Dashboard = () => {
     const favoritefn = async (short: string) => {
         favoriteShort(short);
     };
-
-    useEffect(() => {
-        
-    }, [data]);
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between'>
