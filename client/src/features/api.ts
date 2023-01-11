@@ -32,7 +32,6 @@ export const apiSlice = createApi({
         getUrls: build.query({
             query: () => ({
                 url: '/short/all',
-                method: 'GET'
             }),
             providesTags: ['short']
         }),
@@ -49,8 +48,13 @@ export const apiSlice = createApi({
                 method: 'PATCH'
             }),
             invalidatesTags: ['short']
+        }),
+        visitUrl: build.query({
+            query: (params) => ({
+                url: `/short/${params}`
+            })
         })
     })
 });
 
-export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation } = apiSlice;
+export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useVisitUrlQuery } = apiSlice;
