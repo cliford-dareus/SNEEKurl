@@ -7,7 +7,7 @@ import type { RootState } from '../app/store';
 const Dashboard = () => {
     const user = useAppSelector((state: RootState) => state.user);
     const [ adduser, { data: userDate }] = useAddUrlMutation();
-    const { data , isLoading, isError } = useGetUrlsQuery();
+    const { data =[] , isLoading, isError, refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
     const [ url, seturl ] = useState<string>('');
     const dispatch = useAppDispatch();
 
@@ -29,8 +29,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        
-    }, [data])
+    }, [data]);
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between'>
@@ -48,6 +47,7 @@ const Dashboard = () => {
                             type="text" 
                             className='w-11/12 py-1 px-2 rounded-md bg-transparent outline-none border-b '
                             placeholder='Enter Url'
+                            value={url}
                             onChange={handleChange}
                         />
                         <button className='bg-blue-800 py-2 px-8 rounded-md mt-4'>Shorten</button>
@@ -56,15 +56,17 @@ const Dashboard = () => {
             </div>
 
             <div className='w-full h-2/5 p-4 rounded-md bg-blue-800 md:w-3/4 md:mx-auto md:px-4'>
-                { true? (
+                { data.length > 0 ? (
                     <div>
                         {
-                            data?.map((url: any) => {
-                                <p className='text-white'>{url.full}</p>
+                            data.map((item:any) => {
+                                return(
+                                    <p>{item.full}</p>
+                                )
                             })
                         }
                     </div>): 
-                    (<h3>Loadind...</h3>
+                    (<h3 className='text-white'>Loadind...</h3>
                 ) }
             </div>
         </div>

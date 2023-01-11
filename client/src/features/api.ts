@@ -28,7 +28,10 @@ export const apiSlice = createApi({
             })
         }),
         getUrls: build.query({
-            query: () => '/short/all'
+            query: () => ({
+                url: '/short/all',
+                method: 'GET'
+            })
         })
     })
 });
