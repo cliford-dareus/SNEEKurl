@@ -8,12 +8,13 @@ import { IoTrashBinOutline, IoHeartOutline, IoHeartSharp, IoArrowRedoOutline } f
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
-    const user = useAppSelector((state: RootState) => state.user);
     const [ addUrl ] = useAddUrlMutation();
     const [ favoriteShort ] = useFavoriteUrlMutation();
     const [ deleteUser] = useDeleteUrlMutation();
-    const { data =[]} = useGetUrlsQuery({refetchOnMountOrArgChange: true});
-user.userId
+    const { data =[], refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
+    
+    const user = useAppSelector((state: RootState) => state.user);
+
     const [ url, seturl ] = useState<string>('');
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) =>{
@@ -40,8 +41,6 @@ user.userId
     const favoritefn = async (short: string) => {
         favoriteShort(short);
     };
-
-    console.log(data)
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between'>
@@ -49,9 +48,9 @@ user.userId
         <div className='w-full h-5/6 flex flex-col gap-4 justify-between'>
             <div className='w-full flex flex-col p-4 md:w-1/2 md:px-0 md:mx-auto lg:w-2/6'>
                 <div className=''>
-                    <div className='my-16'>
+                    <div className='my-16 lg:my-10'>
                         <span className=''></span>  
-                        <h1 className='text-3xl text-center sm:text-4xl'>Quickily and Reliably shortened and save your url for later!</h1>
+                        <h1 className='text-3xl font-bold text-center sm:text-4xl lg:text-7xl'>Quickily and Reliably shortened and save your url for later!</h1>
                     </div>
 
                     <form className='w-full rounded-md flex flex-col items-center' onSubmit={onSubmit}>
@@ -115,6 +114,7 @@ user.userId
                                                     href={`http://localhost:4080/api/v1/short/${site.short}`} 
                                                     target='_blank'
                                                     data-original-title='null'
+                                                    onClick={() => refetch()}
                                                 >
                                                     <IoArrowRedoOutline />
                                                 </a>
