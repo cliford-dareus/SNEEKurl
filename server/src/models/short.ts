@@ -21,6 +21,10 @@ const ShortSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         autopopulate: true,
         ref: 'User'
+    },
+    isLogin: {
+        type: Boolean,
+        default: false
     }
 });
 

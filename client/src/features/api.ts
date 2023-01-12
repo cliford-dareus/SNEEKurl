@@ -1,9 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery, axiosBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../app/store';
+import axios from 'axios';
+import type { AxiosRequestConfig, AxiosError } from 'axios';
 
 export const apiSlice = createApi({
     reducerPath: 'UrlApi',
-    baseQuery: fetchBaseQuery({
+    baseQuery: axiosBaseQuery({
         baseUrl: 'http://localhost:4080/api/v1',
         prepareHeaders: (headers, { getState}) => {
             const token = (getState() as RootState).user.token;
@@ -66,5 +68,7 @@ export const apiSlice = createApi({
         })
     })
 });
+
+
 
 export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useVisitUrlQuery } = apiSlice;

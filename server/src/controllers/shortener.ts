@@ -10,6 +10,7 @@ const getShortenUrl =async (req:Request, res:Response) => {
     res.status(StatusCodes.OK).json(short);
 };
 
+// create short Url
 const shortenUrl =async (req:Request, res: Response ) => {
     const { full } = req.body;
     console.log(req.user)
