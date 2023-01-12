@@ -40,6 +40,8 @@ user.userId
     const favoritefn = async (short: string) => {
         favoriteShort(short);
     };
+
+    console.log(data)
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between'>

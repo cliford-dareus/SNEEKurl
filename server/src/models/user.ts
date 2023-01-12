@@ -6,7 +6,7 @@ export interface IUser extends Document {
     email: string,
     password: string,
     isVerified: boolean,
-    comparePassword(candidatePassword: string): boolean,
+    comparePassword(candidatePassword: string): Promise<Error | boolean>,
 }
 
 const UserSchema = new mongoose.Schema({
@@ -44,7 +44,7 @@ UserSchema.pre('save', async function () {
 UserSchema.methods.comparePassword = async function (candidatePassword: string) {
     const isMatch = await bcrypt.compare( candidatePassword, this.password );
     return isMatch;
-}
+};
 
 const User = mongoose.model<IUser>('User', UserSchema);
 export default User;

@@ -4,19 +4,21 @@ import { BadRequest } from '../errors/index';
 import Short from "../models/short";
 
 const getShortenUrl =async (req:Request, res:Response) => {
-    const short = await Short.find({});
+    const  userId  = req.secret;
+
+    const short = await Short.find();
     res.status(StatusCodes.OK).json(short);
 };
 
 const shortenUrl =async (req:Request, res: Response ) => {
     const { full } = req.body;
-    console.log(full);
+    console.log(req.user)
     if(!full){
         throw new BadRequest('Enter a url to shorten')
     };
 
     const short = await Short.create({
-        full
+        full,
     });
 
     res.status(StatusCodes.CREATED).json(short);
@@ -29,7 +31,7 @@ const visitShort =async (req:Request, res:Response) => {
     if (url == null) return res.sendStatus(404);
 
     await url.update({
-        clicks: url.clicks++,
+        clicks: url.clicks = url.clicks + 1,
     });
 
     res.redirect(url.full!);
@@ -37,6 +39,7 @@ const visitShort =async (req:Request, res:Response) => {
 
 const getShort = async (req:Request, res:Response) => {
     const { favorite, clicks } = req.query;
+    const { userId } = req.user;
     interface IShort {
         favorite?: boolean;
         clicks?: any

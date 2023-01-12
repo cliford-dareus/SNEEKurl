@@ -4,11 +4,10 @@ import { nanoid } from 'nanoid';
 const ShortSchema = new mongoose.Schema({
     full: { 
         type: String,
-        require: true
+        required: true
     },
     short: { 
         type: String,
-        require: true
     },
     favorite: {
         type: Boolean,
@@ -17,6 +16,11 @@ const ShortSchema = new mongoose.Schema({
     clicks: {
         type: Number,
         default: 0
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        autopopulate: true,
+        ref: 'User'
     }
 });
 

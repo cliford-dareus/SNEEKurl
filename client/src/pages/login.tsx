@@ -42,6 +42,7 @@ const Login = () => {
     useEffect(() => {
         if(!data)return;
         dispatch(setUser({...data}));
+        console.log(data)
         if(isSuccess) navigate('/')
     },[data]);
     

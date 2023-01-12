@@ -1,9 +1,19 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { RootState } from '../app/store';
 
 export const apiSlice = createApi({
     reducerPath: 'UrlApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:4080/api/v1'
+        baseUrl: 'http://localhost:4080/api/v1',
+        prepareHeaders: (headers, { getState}) => {
+            const token = (getState() as RootState).user.token;
+            
+            if (token) {
+                headers.set('authorization', `Bearer ${token}`)
+            };
+
+            return headers;
+        }
     }),
     tagTypes: ['short', 'user'],
     endpoints: (build) => ({
@@ -31,7 +41,7 @@ export const apiSlice = createApi({
         }),
         getUrls: build.query({
             query: () => ({
-                url: '/short/all',
+                url: `/short/all`,
             }),
             providesTags: ['short']
         }),

@@ -17,7 +17,7 @@ import errorHandlerMiddleware from './middlewares/errorHandler';
 const app = express();
 
 app.use(morgan('combined'));
-app.use(cors());
+app.use(cors({ origin:true, credentials:true }));
 app.use(helmet());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
