@@ -7,18 +7,19 @@ import type { RootState } from '../app/store';
 
 import { IoTrashBinOutline, IoHeartOutline, IoHeartSharp, IoArrowRedoOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
+import { Site } from '../types/types';
 
 const Dashboard = () => {
     const [ addUrl ] = useAddUrlMutation();
     const [ favoriteShort ] = useFavoriteUrlMutation();
     const [ deleteUser] = useDeleteUrlMutation();
-    const { data =[], refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
+    const { data = [] , refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
 
     const [ isModalOpen, setIsModalOpen ] = useState<boolean>(true);
-    const [ modalData, setModalData ] = useState();
+    const [ modalData, setModalData ] = useState<Site>();
     
     const user = useAppSelector((state: RootState) => state.user);
-
+    
     const [ url, seturl ] = useState<string>('');
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) =>{
@@ -92,7 +93,7 @@ const Dashboard = () => {
                             </thead>
 
                             <tbody>
-                                {data?.slice(0,6).map((site: any) => {
+                                {data?.slice(0,6).map((site: Site) => {
                                     return(
                                         <tr 
                                             onClick={() => {

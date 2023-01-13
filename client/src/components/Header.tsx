@@ -1,8 +1,9 @@
 import { useWindowSize, Size } from '../Utils/windowSize';
 import { Link } from 'react-router-dom';
 import { IoMoon, IoMoonOutline } from 'react-icons/io5';
+import { UserInterface } from '../features/userSlice';
 
-const Header = ({ user }:any) => {
+const Header = ({ user }:{ user: UserInterface }) => {
   const size: Size = useWindowSize();
   const isMobile = size.width! < 768;
  
