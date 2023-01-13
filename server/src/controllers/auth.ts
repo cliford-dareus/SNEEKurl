@@ -47,7 +47,7 @@ const loginUser = async ( req:Request, res: Response ) => {
     res.cookie('accessToken', accessTokenJWT, {
         signed: true,
         httpOnly: true,
-        // expires: Date.now() + oneDay
+        // expires: new Date(Date.now()) + oneDay
     });
 
     res.clearCookie('accessToken_not_login');
@@ -55,8 +55,18 @@ const loginUser = async ( req:Request, res: Response ) => {
     res.status(StatusCodes.OK).json({ userName: user.name, userId: user._id, accessTokenJWT });
 };
 
+const logOutUser =async ( req:Request, res: Response ) => {
+    res.cookie('accessToken', 'logout', {
+        httpOnly: true,
+        expires: new Date(Date.now()),
+    });
+
+    res.status(StatusCodes.OK).json({ msg: 'user logged out!' });
+};
+
 export {
     registerUser,
-    loginUser
+    loginUser,
+    logOutUser
 };
 

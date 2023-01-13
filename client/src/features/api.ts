@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { RootState } from '../app/store';
 
 export const apiSlice = createApi({
     reducerPath: 'UrlApi',
@@ -22,6 +21,14 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body,
                 credentials: 'include'
+            }),
+            invalidatesTags: ['user']
+        }),
+        logoutUser: build.mutation({
+            query: ()=> ({
+                url: '/auth/logout',
+                method: 'POST',
+                credentials: 'include'
             })
         }),
         addUrl: build.mutation({
@@ -38,7 +45,7 @@ export const apiSlice = createApi({
                 url: `/short/all`,
                 credentials: 'include'
             }),
-            providesTags: ['short']
+            providesTags: ['short', 'user']
         }),
         deleteUrl: build.mutation({
             query: (params) => ({
@@ -67,4 +74,4 @@ export const apiSlice = createApi({
 
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useVisitUrlQuery } = apiSlice;
+export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useVisitUrlQuery, useLogoutUserMutation } = apiSlice;

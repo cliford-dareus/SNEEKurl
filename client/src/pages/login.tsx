@@ -1,22 +1,21 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useLoginUserMutation } from "../features/api";
 import InputForm from "../components/InputForm";
-import { useAppDispatch, useAppSelector } from "../app/hook";
+import { useAppDispatch } from "../app/hook";
 import { setUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
 interface UserInterface {
   name: string;
   password: string;
-}
+};
 
 const Login = () => {
-  const [loginUser, { data: data, isSuccess: isSuccess }] =
-    useLoginUserMutation();
-  const [userInfo, setUserInfo] = useState<UserInterface>({
+  const [loginUser, { data: data, isSuccess: isSuccess }] = useLoginUserMutation();
+  const [ userInfo, setUserInfo ] = useState<UserInterface>({
     name: "",
     password: "",
   });
-  const user = useAppSelector((state) => state.user);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -50,7 +49,6 @@ const Login = () => {
   useEffect(() => {
     if (!data) return;
     dispatch(setUser({ ...data }));
-    console.log(data);
     if (isSuccess) navigate("/");
   }, [data]);
 

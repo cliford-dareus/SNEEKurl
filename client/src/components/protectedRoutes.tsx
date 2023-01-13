@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ProtectedRoutes = ({ children, ...rest }: Props) => {
-  const user = useAppSelector((state) => state.user.token);
+  const user = useAppSelector((state) => state.user.userId);
   return user ? <Outlet /> : <Navigate to="/login" />;
 };
 

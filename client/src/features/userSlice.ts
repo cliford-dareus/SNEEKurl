@@ -20,11 +20,14 @@ const userSlice = createSlice({
         setUser: (state, actions) => {
             state.name = actions.payload.userName, state.userId = actions.payload.userId, state.token = actions.payload.accessTokenJWT
             localStorage.setItem('user', JSON.stringify(actions.payload));
+            console.log(actions)
         },
-        // clear user
-            // clear localStorage
+        deleteUser: (state) => {
+            state.name = '', state.userId = '', state.token = ''
+            localStorage.removeItem("user");
+        }
     }
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, deleteUser } = userSlice.actions;
 export default userSlice.reducer;
