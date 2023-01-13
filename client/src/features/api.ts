@@ -1,21 +1,10 @@
-import { createApi, fetchBaseQuery, axiosBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { RootState } from '../app/store';
-import axios from 'axios';
-import type { AxiosRequestConfig, AxiosError } from 'axios';
 
 export const apiSlice = createApi({
     reducerPath: 'UrlApi',
-    baseQuery: axiosBaseQuery({
+    baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:4080/api/v1',
-        prepareHeaders: (headers, { getState}) => {
-            const token = (getState() as RootState).user.token;
-            
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`)
-            };
-
-            return headers;
-        }
     }),
     tagTypes: ['short', 'user'],
     endpoints: (build) => ({
@@ -23,47 +12,54 @@ export const apiSlice = createApi({
             query:(body) => ({
                 url: '/auth/register',
                 method: 'POST',
-                body
+                body,
+                credentials: 'include'
             })
         }),
         loginUser: build.mutation({
             query:(body) => ({
                 url: '/auth/login',
                 method: 'POST',
-                body
+                body,
+                credentials: 'include'
             })
         }),
         addUrl: build.mutation({
             query: (body) => ({
                 url:'/short',
                 method: 'POST',
-                body
+                body,
+                credentials: 'include'
             }),
             invalidatesTags: ['short']
         }),
         getUrls: build.query({
             query: () => ({
                 url: `/short/all`,
+                credentials: 'include'
             }),
             providesTags: ['short']
         }),
         deleteUrl: build.mutation({
             query: (params) => ({
                 url: `/short/${params}`,
-                method: 'DELETE'
+                method: 'DELETE',
+                credentials: 'include'
             }),
             invalidatesTags: ['short']
         }),
         favoriteUrl: build.mutation({
             query: (params) => ({
                 url: `/short/${params}`,
-                method: 'PATCH'
+                method: 'PATCH',
+                credentials: 'include'
             }),
             invalidatesTags: ['short']
         }),
         visitUrl: build.query({
             query: (params) => ({
-                url: `/short/${params}`
+                url: `/short/${params}`,
+                credentials: 'include'
             })
         })
     })

@@ -4,25 +4,46 @@ import { BadRequest } from '../errors/index';
 import Short from "../models/short";
 
 const getShortenUrl =async (req:Request, res:Response) => {
-    const  userId  = req.secret;
+    const { guest, userId } = req.user;
+    console.log(userId)
 
-    const short = await Short.find();
-    res.status(StatusCodes.OK).json(short);
+    if(guest){
+        const short = await Short.find({ creatorId: guest});
+        res.status(StatusCodes.OK).json(short);
+    }else{
+       const short = await Short.find({ creatorId: userId});
+        res.status(StatusCodes.OK).json(short); 
+    }
+
+    
 };
 
 // create short Url
 const shortenUrl =async (req:Request, res: Response ) => {
     const { full } = req.body;
-    console.log(req.user)
+    const { guest, login } = req.user;
+
     if(!full){
         throw new BadRequest('Enter a url to shorten')
     };
 
+    if(guest){
+        const short = await Short.create({
+            full,
+            creatorId: guest
+        });
+
+        res.status(StatusCodes.CREATED).json({short, guest})
+        return
+    };
+
     const short = await Short.create({
         full,
+        isLogin: true,
+        creatorId: login
     });
 
-    res.status(StatusCodes.CREATED).json(short);
+    res.status(StatusCodes.CREATED).json({short});
 };
 
 const visitShort =async (req:Request, res:Response) => {

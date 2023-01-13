@@ -2,27 +2,25 @@ import { NextFunction, Request, Response } from "express";
 import { BadRequest, Unauthenticated } from "../errors";
 import jwt from 'jsonwebtoken';
 
+
 const authorize = async (req: Request, res: Response, next: NextFunction): Promise<Response | void> => {
-    const  headers  = req.headers.authorization;
-
-    if (!headers || !headers.startsWith('Bearer ')) {
-        return next(new BadRequest('Not authorized'));
-    };
-
-    const token = headers?.split(' ')[1];
+    const { accessToken, accessToken_not_login } = req.signedCookies; 
 
     try {
-        const isValidToken = jwt.verify(token, process.env.JWT_SECRET!);
+        if(accessToken){
+            const payload = jwt.verify(accessToken, process.env.JWT_SECRET!);
+            
+            req.user = payload;
+            next();
+        }
 
-        if(!isValidToken){
-            throw new Unauthenticated('Authentication Failed');
+        else{
+            const payload = jwt.verify(accessToken_not_login, process.env.JWT_SECRET!);
+            req.user = payload;
+            next();
         };
-
-        req.user = isValidToken;
-        next();
-        
     } catch (error) {
-        console.log(error);
+        console.log(error);    
     }
 };
 

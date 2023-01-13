@@ -44,6 +44,14 @@ const loginUser = async ( req:Request, res: Response ) => {
     const oneDay = 1000 * 60 * 60 * 24;
     const accessTokenJWT = jwt.sign({ userId: user._id, name: user.name }, process.env.JWT_SECRET!,{expiresIn: oneDay});
 
+    res.cookie('accessToken', accessTokenJWT, {
+        signed: true,
+        httpOnly: true,
+        // expires: Date.now() + oneDay
+    });
+
+    res.clearCookie('accessToken_not_login');
+
     res.status(StatusCodes.OK).json({ userName: user.name, userId: user._id, accessTokenJWT });
 };
 

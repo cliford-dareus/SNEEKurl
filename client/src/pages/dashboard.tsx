@@ -23,7 +23,8 @@ const Dashboard = () => {
 
     const onSubmit = async (event: FormEvent<HTMLFormElement>) =>{
         event.preventDefault();
-        const body = { full: url};
+
+        const body = { full: url, isLogin: user? true: false};
 
         try {
             if(!body) return;

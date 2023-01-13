@@ -25,6 +25,9 @@ const ShortSchema = new mongoose.Schema({
     isLogin: {
         type: Boolean,
         default: false
+    },
+    creatorId: {
+        type: String,
     }
 });
 
