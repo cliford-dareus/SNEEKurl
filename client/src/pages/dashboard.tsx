@@ -1,13 +1,13 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
-import { useAppSelector, useAppDispatch } from '../app/hook';
+import { ChangeEvent, FormEvent, useState } from 'react'
+import { useAppSelector } from '../app/hook';
 import { useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation } from '../features/api';
-import Header from '../components/Header';
 import UrlModal from '../components/urlModal';
 import type { RootState } from '../app/store';
 
 import { IoTrashBinOutline, IoHeartOutline, IoHeartSharp, IoArrowRedoOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { Site } from '../types/types';
+import Header from '../components/Header';
 
 const Dashboard = () => {
     const [ addUrl ] = useAddUrlMutation();
@@ -15,13 +15,12 @@ const Dashboard = () => {
     const [ deleteUser] = useDeleteUrlMutation();
     const { data = [] , refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
 
-    const [ isModalOpen, setIsModalOpen ] = useState<boolean>(true);
+    const [ isModalOpen, setIsModalOpen ] = useState<boolean>(false);
     const [ modalData, setModalData ] = useState<Site>();
+    const [ url, seturl ] = useState<string>('');
     
     const user = useAppSelector((state: RootState) => state.user);
     
-    const [ url, seturl ] = useState<string>('');
-
     const handleChange = (event: ChangeEvent<HTMLInputElement>) =>{
         seturl( event.target.value);
     };
@@ -50,10 +49,9 @@ const Dashboard = () => {
     
   return (
     <div className='text-white h-full w-full flex flex-col justify-between relative'>
-        {/* Header */}
         <Header user={user}/>
         {/* Showcase */}
-        <div className='w-full h-5/6 flex flex-col gap-4 justify-between'>
+        <div className='w-full h-full flex flex-col gap-4 justify-between'>
             <div className='w-full flex flex-col p-4 md:w-1/2 md:px-0 md:mx-auto lg:w-2/6'>
                 <div className=''>
                     <div className='my-16 lg:my-10'>

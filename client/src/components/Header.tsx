@@ -9,9 +9,9 @@ const Header = ({ user }:{ user: UserInterface }) => {
  
   return (
     <header className='w-full text-white p-4 flex justify-between items-center border-b sm:px-12'>
-        <span className='text-white text-xl lg:text-5xl font-bold'>SNEEK<i className='text-blue-600'>URL</i></span>
+        <Link to='/' className='text-white text-xl lg:text-5xl font-bold'>SNEEK<i className='text-blue-600'>URL</i></Link>
 
-        <nav className={`${isMobile ? 'w-1/2 absolute h-1 hover:h-auto overflow-hidden right-1/2 translate-x-1/2 top-20': ''}`}>
+        <nav className={`${isMobile ? 'w-1/2 absolute h-1 hover:h-auto overflow-hidden right-1/2 translate-x-1/2 top-20 z-10': ''}`}>
           <ul className={`${isMobile? 'flex flex-col gap-4 justify-center items-center bg-blue-800 p-4': 'md:flex md:gap-4'}`}>
             <li className='text-xl uppercase'> 
               <Link to='/recent'>Recent</Link>

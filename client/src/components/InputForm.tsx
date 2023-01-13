@@ -1,13 +1,4 @@
-import { ChangeEventHandler } from "react";
-
-
-interface IProps {
-    placeholder: string;
-    type: string;
-    name: string;
-    value: string;
-    fn: ChangeEventHandler
-}
+import { IProps } from "../types/types";
 
 const InputForm = ({ name, value, fn, placeholder,type }: IProps) => {
   return (
