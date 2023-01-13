@@ -2,6 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 import { useAppSelector, useAppDispatch } from '../app/hook';
 import { useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation } from '../features/api';
 import Header from '../components/Header';
+import UrlModal from '../components/urlModal';
 import type { RootState } from '../app/store';
 
 import { IoTrashBinOutline, IoHeartOutline, IoHeartSharp, IoArrowRedoOutline } from 'react-icons/io5';
@@ -12,6 +13,9 @@ const Dashboard = () => {
     const [ favoriteShort ] = useFavoriteUrlMutation();
     const [ deleteUser] = useDeleteUrlMutation();
     const { data =[], refetch } = useGetUrlsQuery({refetchOnMountOrArgChange: true});
+
+    const [ isModalOpen, setIsModalOpen ] = useState<boolean>(true);
+    const [ modalData, setModalData ] = useState();
     
     const user = useAppSelector((state: RootState) => state.user);
 
@@ -44,8 +48,10 @@ const Dashboard = () => {
     };
     
   return (
-    <div className='text-white h-full w-full flex flex-col justify-between'>
+    <div className='text-white h-full w-full flex flex-col justify-between relative'>
+        {/* Header */}
         <Header user={user}/>
+        {/* Showcase */}
         <div className='w-full h-5/6 flex flex-col gap-4 justify-between'>
             <div className='w-full flex flex-col p-4 md:w-1/2 md:px-0 md:mx-auto lg:w-2/6'>
                 <div className=''>
@@ -66,7 +72,9 @@ const Dashboard = () => {
                     </form>
                 </div>
             </div>
-
+            {/* Modal */}
+            {isModalOpen? <UrlModal data={modalData} close={setIsModalOpen}/> : ''}
+            {/* Table */}
             <div className='w-full h-1/2 p-4 rounded-md bg-blue-800 md:w-3/5 md:mx-auto md:px-4'>
                 <h3 className='text-xl mb-4'>Recent URL</h3>
                 { user.userId !== '' ? (
@@ -87,6 +95,10 @@ const Dashboard = () => {
                                 {data?.slice(0,6).map((site: any) => {
                                     return(
                                         <tr 
+                                            onClick={() => {
+                                                setIsModalOpen(true)
+                                                setModalData(site)
+                                            }}
                                             key={site.short}
                                             className='overflow-hidden h-8 border-b hover:bg-blue-500'
                                         >
@@ -126,7 +138,6 @@ const Dashboard = () => {
                                 }
                             </tbody>
                         </table>
-                       
                     </div>): 
                     (<div className='text-white h-full flex flex-col gap-4 justify-center items-center px-2 md:px-24'>
                         <p className='text-center text-xl'>Login to save and favorite you most use short URL</p>
