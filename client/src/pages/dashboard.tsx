@@ -1,31 +1,17 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useAppSelector } from "../app/hook";
-import {
-  useAddUrlMutation,
-  useGetUrlsQuery,
-  useDeleteUrlMutation,
-  useFavoriteUrlMutation,
-  useVisitUrlMutation,
-} from "../features/api";
+import { useAddUrlMutation, useGetUrlsQuery } from "../features/api";
 import UrlModal from "../components/urlModal";
 import type { RootState } from "../app/store";
 
-import {
-  IoTrashBinOutline,
-  IoHeartOutline,
-  IoHeartSharp,
-  IoArrowRedoOutline,
-} from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { Site } from "../types/types";
 import Header from "../components/Header";
+import Table from "../components/table";
 
 const Dashboard = () => {
   const [addUrl] = useAddUrlMutation();
-  const [favoriteShort] = useFavoriteUrlMutation();
-  const [deleteUser] = useDeleteUrlMutation();
-  const [visitUrl] = useVisitUrlMutation();
-  const { data = [], refetch } = useGetUrlsQuery({
+  const { data = [] } = useGetUrlsQuery({
     refetchOnMountOrArgChange: true,
   });
 
@@ -53,18 +39,6 @@ const Dashboard = () => {
     }
   };
 
-  const deletefn = async (short: string) => {
-    deleteUser(short);
-  };
-
-  const favoritefn = async (short: string) => {
-    favoriteShort(short);
-  };
-
-  const visitUrlfn = async (short: string) => {
-    visitUrl(short);
-  };
-
   return (
     <div className="text-white h-full w-full flex flex-col justify-between relative">
       <Header user={user} />
@@ -74,7 +48,7 @@ const Dashboard = () => {
           <div className="">
             <div className="my-16 lg:my-10">
               <span className=""></span>
-              <h1 className="text-3xl font-bold text-center sm:text-4xl lg:text-7xl">
+              <h1 className="text-3xl font-bold text-center sm:text-5xl lg:text-5xl xl:text-7xl">
                 Quickily and Reliably shortened and save your url for later!
               </h1>
             </div>
@@ -103,93 +77,34 @@ const Dashboard = () => {
           ""
         )}
         {/* Table */}
-        <div className="w-full h-1/2 p-4 rounded-md bg-blue-800 md:w-3/5 md:mx-auto md:px-4">
+        <div className="w-full h-3/6 p-4 rounded-md bg-blue-800 md:w-3/5 md:mx-auto md:px-4">
           <h3 className="text-xl mb-4">Recent URL</h3>
           {user.userId !== "" ? (
             <div className="w-full h-full">
-              <table className="w-full table-fixed">
-                <thead>
-                  <tr className="border-b">
-                    <th className="w-8 text-left">Full</th>
-                    <th className="w-8 text-left">Short</th>
-                    <th className="w-4 text-left">Visits</th>
-                    <th className="w-4"></th>
-                    <th className="w-4"></th>
-                    <th className="w-4"></th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {data?.slice(0, 6).map((site: Site) => {
-                    return (
-                      <tr
-                        key={site.short}
-                        className="overflow-hidden h-8 border-b hover:bg-blue-500"
-                      >
-                        <td
-                          className="w-8 truncate overflow-hidden"
-                          onClick={() => {
-                            setIsModalOpen(true);
-                            setModalData(site);
-                          }}
-                        >
-                          {site.full}
-                        </td>
-                        <td
-                          className="w-8 truncate overflow-hidden"
-                          onClick={() => {
-                            setIsModalOpen(true);
-                            setModalData(site);
-                          }}
-                        >
-                          {site.short}
-                        </td>
-                        <td className="w-2 px-2">{site.clicks}</td>
-                        <td className="w-2">
-                          <button
-                            className="w-full h-full flex items-center justify-center"
-                            onClick={() => deletefn(site.short)}
-                          >
-                            <IoTrashBinOutline />
-                          </button>
-                        </td>
-                        <td className="w-2">
-                          <button
-                            className="w-full h-full flex items-center justify-center"
-                            onClick={() => favoritefn(site.short)}
-                          >
-                            {site.favorite ? (
-                              <IoHeartSharp />
-                            ) : (
-                              <IoHeartOutline />
-                            )}
-                          </button>
-                        </td>
-                        <td className="w-2">
-                          <a
-                            className="w-full h-full flex items-center justify-center"
-                            href={`http://localhost:4080/api/v1/short/${site.short}`}
-                            target="_blank"
-                            // data-original-title="null"
-                            onClick={() => visitUrlfn(site.short)}
-                          >
-                            <IoArrowRedoOutline />
-                          </a>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+              <Table
+                data={data}
+                setIsModalOpen={setIsModalOpen}
+                setModalData={setModalData}
+              />
             </div>
           ) : (
-            <div className="text-white h-full flex flex-col gap-4 justify-center items-center px-2 md:px-24">
-              <p className="text-center text-xl">
-                Login to save and favorite you most use short URL
-              </p>
-              <Link to="/login" className="border px-8 py-1 rounded-md">
-                Login
-              </Link>
+            <div className="h-4/5">
+              {data?.length !== 0 && !user.userId ? (
+                <Table
+                  data={data}
+                  setIsModalOpen={setIsModalOpen}
+                  setModalData={setModalData}
+                />
+              ) : (
+                <div className="text-white h-full flex flex-col gap-4 justify-center items-center px-2 md:px-24">
+                  <p className="text-center text-xl">
+                    Login to save and favorite you most use short URL
+                  </p>
+                  <Link to="/login" className="border px-8 py-1 rounded-md">
+                    Login
+                  </Link>
+                </div>
+              )}
             </div>
           )}
         </div>

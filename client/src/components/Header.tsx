@@ -53,7 +53,7 @@ const Header = ({ user }: { user: UserInterface }) => {
           <li className="text-xl uppercase">
             <Link to="/favorite">Favorite</Link>
           </li>
-          <li className="text-xl uppercase">
+          <li className="text-xl uppercase md:hidden">
             <button className="text-red-600" onClick={logout}>
               <IoPowerOutline />
             </button>
@@ -61,7 +61,7 @@ const Header = ({ user }: { user: UserInterface }) => {
         </ul>
       </nav>
 
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center lg:w-60 lg:justify-end">
         <div className="flex items-center mr-2">
           <span className="hidden">
             <IoMoon />
