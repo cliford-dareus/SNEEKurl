@@ -8,7 +8,9 @@ const Recent = () => {
   return (
     <div className="text-white w-full h-full">
       <Header user={user} />
-      recent
+      <div>
+        recent
+      </div>
     </div>
   );
 };

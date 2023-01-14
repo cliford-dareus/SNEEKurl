@@ -12,7 +12,7 @@ const Header = ({ user }: { user: UserInterface }) => {
   const isMobile = size.width! < 768;
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState<string>("");
-  const [pop, setPop] = useState(false)
+  const [pop, setPop] = useState(false);
 
   const [logginout] = useLogoutUserMutation();
 
@@ -21,7 +21,7 @@ const Header = ({ user }: { user: UserInterface }) => {
       const data = await logginout({}).unwrap();
       dispatch(deleteUser());
       setMessage(data?.msg);
-      setPop(true)
+      setPop(true);
     } catch (error) {
       console.log(error);
     }
@@ -80,8 +80,7 @@ const Header = ({ user }: { user: UserInterface }) => {
         </p>
         <span className="rounded-full bg-white w-10 h-10 inline-block"></span>
       </div>
-      <Popup msg={message} pop={pop} setPop={setPop}/>
-      
+      <Popup msg={message} pop={pop} setPop={setPop} />
     </header>
   );
 };

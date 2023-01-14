@@ -5,12 +5,12 @@ import {
   IoHeartSharp,
   IoClose,
 } from "react-icons/io5";
-import { Site } from "../types/types";
+import { IModal } from "../types/types";
 import { getSiteUrl } from "../Utils/getSiteUrl";
 import { QRCodeSVG } from "qrcode.react";
 import { useDeleteUrlMutation, useFavoriteUrlMutation } from "../features/api";
 
-const UrlModal = (props: { data: Site | undefined; close: any }) => {
+const UrlModal = (props: IModal) => {
   const [site, setSite] = useState<string>();
 
   const [favoriteShort] = useFavoriteUrlMutation();
@@ -50,7 +50,7 @@ const UrlModal = (props: { data: Site | undefined; close: any }) => {
             <button
               className="text-xl"
               onClick={() => {
-                favoriteShort(props.data?.short)
+                favoriteShort(props.data?.short);
                 props.close();
               }}
             >

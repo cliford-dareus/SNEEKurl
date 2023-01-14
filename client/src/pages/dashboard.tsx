@@ -78,7 +78,7 @@ const Dashboard = () => {
         )}
         {/* Table */}
         <div className="w-full h-3/6 p-4 rounded-md bg-blue-800 md:w-3/5 md:mx-auto md:px-4">
-          <h3 className="text-xl mb-4">Recent URL</h3>
+          <h3 className=" text-lg md:text-xl mb-4">Recent URL</h3>
           {user.userId !== "" ? (
             <div className="w-full h-full">
               <Table
@@ -89,7 +89,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="h-4/5">
-              {data?.length !== 0 && !user.userId ? (
+              {data?.length !== 0 && !user.userId && data !== null ? (
                 <Table
                   data={data}
                   setIsModalOpen={setIsModalOpen}

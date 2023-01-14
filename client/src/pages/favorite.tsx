@@ -8,8 +8,10 @@ const Favorite = () => {
   return (
     <div className="text-white w-full h-full">
       <Header user={user} />
-      <h1 className="text-white">favorite</h1>
-      <div>ddddddddddddd</div>
+      <div>
+        <h1 className="text-white">favorite</h1>
+        <div>ddddddddddddd</div>
+      </div>
     </div>
   );
 };

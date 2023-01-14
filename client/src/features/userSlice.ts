@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-export interface UserInterface {
-    name: string;
-    userId: string;
-    token: string
-};
+import { UserInterface } from "../types/types";
 
 const user = localStorage.getItem('user')? JSON.parse(localStorage.getItem('user')!): ''
 

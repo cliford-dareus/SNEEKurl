@@ -4,10 +4,7 @@ import InputForm from "../components/InputForm";
 import { useAppDispatch } from "../app/hook";
 import { setUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";
-interface UserInterface {
-  name: string;
-  password: string;
-};
+import { UserInterface } from "../types/types";
 
 const Login = () => {
   const [loginUser, { data: data, isSuccess: isSuccess }] = useLoginUserMutation();

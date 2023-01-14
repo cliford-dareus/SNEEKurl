@@ -1,4 +1,3 @@
-import React from "react";
 import {
   IoTrashBinOutline,
   IoHeartOutline,
@@ -11,17 +10,9 @@ import {
   useVisitUrlMutation,
 } from "../features/api";
 
-import { Site } from "../types/types";
+import { ITable, Site } from "../types/types";
 
-const Table = ({
-  data,
-  setIsModalOpen,
-  setModalData,
-}: {
-  data: any;
-  setIsModalOpen: any;
-  setModalData: any;
-}) => {
+const Table = ({ data, setIsModalOpen, setModalData }: ITable) => {
   const [favoriteShort] = useFavoriteUrlMutation();
   const [deleteUser] = useDeleteUrlMutation();
   const [visitUrl] = useVisitUrlMutation();
