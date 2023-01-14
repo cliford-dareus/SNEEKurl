@@ -5,6 +5,7 @@ import {
   useGetUrlsQuery,
   useDeleteUrlMutation,
   useFavoriteUrlMutation,
+  useVisitUrlMutation,
 } from "../features/api";
 import UrlModal from "../components/urlModal";
 import type { RootState } from "../app/store";
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const [addUrl] = useAddUrlMutation();
   const [favoriteShort] = useFavoriteUrlMutation();
   const [deleteUser] = useDeleteUrlMutation();
+  const [visitUrl] = useVisitUrlMutation();
   const { data = [], refetch } = useGetUrlsQuery({
     refetchOnMountOrArgChange: true,
   });
@@ -57,6 +59,10 @@ const Dashboard = () => {
 
   const favoritefn = async (short: string) => {
     favoriteShort(short);
+  };
+
+  const visitUrlfn = async (short: string) => {
+    visitUrl(short);
   };
 
   return (
@@ -164,8 +170,8 @@ const Dashboard = () => {
                             className="w-full h-full flex items-center justify-center"
                             href={`http://localhost:4080/api/v1/short/${site.short}`}
                             target="_blank"
-                            data-original-title="null"
-                            onClick={() => refetch()}
+                            // data-original-title="null"
+                            onClick={() => visitUrlfn(site.short)}
                           >
                             <IoArrowRedoOutline />
                           </a>

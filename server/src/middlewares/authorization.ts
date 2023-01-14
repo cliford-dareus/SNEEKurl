@@ -14,10 +14,13 @@ const authorize = async (req: Request, res: Response, next: NextFunction): Promi
             next();
         }
 
-        else{
+        else if(accessToken){
             const payload = jwt.verify(accessToken_not_login, process.env.JWT_SECRET!);
             req.user = payload;
             next();
+        }else{
+            req.user = 'no data'
+            next()
         };
     } catch (error) {
         console.log(error);    

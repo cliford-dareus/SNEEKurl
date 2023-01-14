@@ -5,19 +5,18 @@ import Short from "../models/short";
 
 const getShortenUrl =async (req:Request, res:Response) => {
     const { guest, userId } = req.user;
-    console.log(userId)
 
     if(guest){
         const short = await Short.find({ creatorId: guest});
         res.status(StatusCodes.OK).json(short);
-    }else{
+    }else if(userId){
        const short = await Short.find({ creatorId: userId});
         res.status(StatusCodes.OK).json(short); 
+    }else{
+        res.status(StatusCodes.NO_CONTENT).json([]);
     }
-
-    
 };
-
+ 
 // create short Url
 const shortenUrl =async (req:Request, res: Response ) => {
     const { full } = req.body;

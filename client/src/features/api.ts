@@ -22,7 +22,7 @@ export const apiSlice = createApi({
                 body,
                 credentials: 'include'
             }),
-            invalidatesTags: ['user']
+            invalidatesTags: ['short']
         }),
         logoutUser: build.mutation({
             query: ()=> ({
@@ -63,15 +63,16 @@ export const apiSlice = createApi({
             }),
             invalidatesTags: ['short']
         }),
-        visitUrl: build.query({
+        visitUrl: build.mutation({
             query: (params) => ({
                 url: `/short/${params}`,
                 credentials: 'include'
-            })
+            }),
+            invalidatesTags: ['short']
         })
     })
 });
 
 
 
-export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useVisitUrlQuery, useLogoutUserMutation } = apiSlice;
+export const { useRegisterUserMutation, useLoginUserMutation, useAddUrlMutation, useGetUrlsQuery, useDeleteUrlMutation, useFavoriteUrlMutation, useLogoutUserMutation, useVisitUrlMutation } = apiSlice;
