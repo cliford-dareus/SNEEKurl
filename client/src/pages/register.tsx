@@ -40,21 +40,21 @@ const Register = () => {
           name="name"
           type="text"
           placeholder="Name"
-          value={userInfo.name}
+          value={userInfo.name!}
           fn={handleChange}
         />
         <InputForm
           name="email"
           type="text"
           placeholder="Email"
-          value={userInfo.email}
+          value={userInfo.email!}
           fn={handleChange}
         />
         <InputForm
           name="password"
           type="password"
           placeholder="Password"
-          value={userInfo.password}
+          value={userInfo.password!}
           fn={handleChange}
         />
 

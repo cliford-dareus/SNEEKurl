@@ -41,25 +41,23 @@ const Dashboard = () => {
 
   return (
     <div className="text-white h-full w-full flex flex-col justify-between relative">
-      <Header user={user} />
-      {/* Showcase */}
       <div className="w-full h-full flex flex-col gap-4 justify-between">
-        <div className="w-full flex flex-col p-4 md:w-1/2 md:px-0 md:mx-auto lg:w-2/6">
+        <div className="w-full flex flex-col p-4 md:w-1/2 md:p-0 md:mx-auto lg:max-w-[850px]">
           <div className="">
-            <div className="my-16 lg:my-10">
+            <div className="my-16 lg:mt-[10em] lg:mb-8">
               <span className=""></span>
-              <h1 className="text-3xl font-bold text-center sm:text-5xl lg:text-5xl xl:text-7xl">
+              <h1 className="text-center font-semibold sm:text-5xl lg:text-[64px] xl:text-7xl">
                 Quickily and Reliably shortened and save your url for later!
               </h1>
             </div>
 
             <form
-              className="w-full rounded-md flex flex-col items-center"
+              className="max-w-[450px] mx-auto rounded-md flex flex-col items-center"
               onSubmit={onSubmit}
             >
               <input
                 type="text"
-                className="w-11/12 py-1 px-2 rounded-md bg-transparent outline-none border-b "
+                className="w-full py-1 px-2 mb-[1em] rounded-md bg-transparent outline-none border"
                 placeholder="Enter Url"
                 value={url}
                 onChange={handleChange}
@@ -76,8 +74,9 @@ const Dashboard = () => {
         ) : (
           ""
         )}
+
         {/* Table */}
-        <div className="w-full h-3/6 p-4 rounded-md bg-blue-800 md:w-3/5 md:mx-auto md:px-4">
+        <div className="w-full h-[350px] p-4 rounded-md bg-blue-800 md:w-[650px] md:mx-auto md:px-4">
           <h3 className=" text-lg md:text-xl mb-4">Recent URL</h3>
           {user.userId !== "" ? (
             <div className="w-full h-full">

@@ -1,13 +1,16 @@
 import { useWindowSize, Size } from "../Utils/windowSize";
 import { Link } from "react-router-dom";
 import { IoMoon, IoMoonOutline, IoPowerOutline } from "react-icons/io5";
-import { deleteUser, UserInterface } from "../features/userSlice";
+import { deleteUser } from "../features/userSlice";
 import { useLogoutUserMutation } from "../features/api";
-import { useAppDispatch } from "../app/hook";
+import { useAppDispatch, useAppSelector } from "../app/hook";
 import { useState } from "react";
 import Popup from "./popup";
+import { UserInterface } from "../types/types";
+import { RootState } from "../app/store";
 
-const Header = ({ user }: { user: UserInterface }) => {
+const Header = () => {
+  const user = useAppSelector((state: RootState) => state.user);
   const size: Size = useWindowSize();
   const isMobile = size.width! < 768;
   const dispatch = useAppDispatch();
@@ -28,59 +31,61 @@ const Header = ({ user }: { user: UserInterface }) => {
   };
 
   return (
-    <header className="w-full text-white p-4 flex justify-between items-center border-b sm:px-12">
-      <Link to="/" className="text-white text-xl lg:text-5xl font-bold">
-        SNEEK<i className="text-blue-600">URL</i>
-      </Link>
+    <header className="fixed w-full text-white p-4 flex justify-between items-center border-b sm:px-12">
+      <div className="container w-full flex items-center mx-auto justify-between">
+        <Link to="/" className="text-white text-xl lg:text-5xl font-bold">
+          SNEEK<i className="text-blue-600">URL</i>
+        </Link>
 
-      <nav
-        className={`${
-          isMobile
-            ? "w-1/2 absolute h-1 hover:h-auto overflow-hidden right-1/2 translate-x-1/2 top-20 z-10"
-            : ""
-        }`}
-      >
-        <ul
+        <nav
           className={`${
             isMobile
-              ? "flex flex-col gap-4 justify-center items-center bg-blue-800 p-4"
-              : "md:flex md:gap-4"
+              ? "w-1/2 absolute h-1 hover:h-auto overflow-hidden right-1/2 translate-x-1/2 top-20 z-10"
+              : ""
           }`}
         >
-          <li className="text-xl uppercase">
-            <Link to="/recent">Recent</Link>
-          </li>
-          <li className="text-xl uppercase">
-            <Link to="/favorite">Favorite</Link>
-          </li>
-          <li className="text-xl uppercase md:hidden">
-            <button className="text-red-600" onClick={logout}>
-              <IoPowerOutline />
-            </button>
-          </li>
-        </ul>
-      </nav>
+          <ul
+            className={`${
+              isMobile
+                ? "flex flex-col gap-4 justify-center items-center bg-blue-800 p-4"
+                : "md:flex md:gap-4"
+            }`}
+          >
+            <li className="text-xl uppercase">
+              <Link to="/recent">Recent</Link>
+            </li>
+            <li className="text-xl uppercase">
+              <Link to="/favorite">Favorite</Link>
+            </li>
+            <li className="text-xl uppercase md:hidden">
+              <button className="text-red-600" onClick={logout}>
+                <IoPowerOutline />
+              </button>
+            </li>
+          </ul>
+        </nav>
 
-      <div className="flex gap-4 items-center lg:w-60 lg:justify-end">
-        <div className="flex items-center mr-2">
-          <span className="hidden">
-            <IoMoon />
-          </span>
-          <span className="">
-            <IoMoonOutline />
-          </span>
+        <div className="flex gap-4 items-center lg:w-60 lg:justify-end">
+          <div className="flex items-center mr-2">
+            <span className="hidden">
+              <IoMoon />
+            </span>
+            <span className="">
+              <IoMoonOutline />
+            </span>
+          </div>
+          <p className="text-sm lg:text-lg">
+            Welcome,
+            {user ? (
+              <span className="font-bold ml-2">{user.name}</span>
+            ) : (
+              <span className="text-white">Guest</span>
+            )}
+          </p>
+          <span className="rounded-full bg-white w-10 h-10 inline-block"></span>
         </div>
-        <p className="text-sm lg:text-lg">
-          Welcome,
-          {user ? (
-            <span className="font-bold ml-2">{user.name}</span>
-          ) : (
-            <span className="text-white">Guest</span>
-          )}
-        </p>
-        <span className="rounded-full bg-white w-10 h-10 inline-block"></span>
+        <Popup msg={message} pop={pop} setPop={setPop} />
       </div>
-      <Popup msg={message} pop={pop} setPop={setPop} />
     </header>
   );
 };

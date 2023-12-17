@@ -13,7 +13,6 @@ import shortRouter from './routes/short';
 import notfoundMiddleware from './middlewares/NotFound';
 import errorHandlerMiddleware from './middlewares/errorHandler';
 
-
 const app = express();
 
 app.use(morgan('combined'));

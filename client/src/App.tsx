@@ -6,13 +6,16 @@ import Dashboard from './pages/dashboard';
 import ProtectedRoutes from './components/protectedRoutes';
 import Recent from './pages/recent';
 import Favorite from './pages/favorite';
+import Layout from './components/layout';
  
 function App() {
   return (
     <div className="w-full h-screen overflow-hidden bg-black flex flex-col justify-center items-center">
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Dashboard />}/>
+          <Route element={<Layout/>}>
+            <Route path='/' element={<Dashboard />}/>
+          </Route>
           <Route path='/login' element={<Login />}/>
           <Route path='/register' element={<Register />}/>
 

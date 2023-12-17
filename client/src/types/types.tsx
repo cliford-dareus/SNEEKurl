@@ -29,7 +29,7 @@ export interface Props {
 
 export interface IModal {
   data: Site | undefined;
-  close: () => boolean;
+  close: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export interface ITable {

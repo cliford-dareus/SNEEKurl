@@ -51,7 +51,7 @@ const UrlModal = (props: IModal) => {
               className="text-xl"
               onClick={() => {
                 favoriteShort(props.data?.short);
-                props.close();
+                props.close(false);
               }}
             >
               {props.data?.favorite ? <IoHeartSharp /> : <IoHeartOutline />}
@@ -61,7 +61,7 @@ const UrlModal = (props: IModal) => {
                 className="flex items-center gap-2"
                 onClick={() => {
                   deleteUser(props.data?.short);
-                  props.close();
+                  props.close(false);
                 }}
               >
                 <IoTrashBinOutline />
@@ -85,7 +85,7 @@ const UrlModal = (props: IModal) => {
         </div>
         <span
           className="absolute top-4 right-4 text-3xl"
-          onClick={() => props.close()}
+          onClick={() => props.close(false)}
         >
           <IoClose />
         </span>

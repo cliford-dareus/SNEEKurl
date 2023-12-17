@@ -7,8 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { UserInterface } from "../types/types";
 
 const Login = () => {
-  const [loginUser, { data: data, isSuccess: isSuccess }] = useLoginUserMutation();
-  const [ userInfo, setUserInfo ] = useState<UserInterface>({
+  const [loginUser, { data: data, isSuccess: isSuccess }] =
+    useLoginUserMutation();
+  const [userInfo, setUserInfo] = useState<UserInterface>({
     name: "",
     password: "",
   });
@@ -61,14 +62,14 @@ const Login = () => {
           name="name"
           type="text"
           placeholder="Name"
-          value={userInfo.name}
+          value={userInfo.name!}
           fn={handleChange}
         />
         <InputForm
           name="password"
           type="text"
           placeholder="Password"
-          value={userInfo.password}
+          value={userInfo.password!}
           fn={handleChange}
         />
 

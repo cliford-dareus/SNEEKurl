@@ -4,11 +4,12 @@ import { apiSlice } from "../features/api";
 import userReducer from "../features/userSlice";
 
 export const store = configureStore({
-    reducer: {
-        user: userReducer,
-        [apiSlice.reducerPath]: apiSlice.reducer,
-    },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(apiSlice.middleware)
+  reducer: {
+    user: userReducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 });
 
 setupListeners(store.dispatch);
