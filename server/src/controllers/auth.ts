@@ -22,14 +22,13 @@ const registerUser = async (req: Request, res: Response) => {
   res.status(StatusCodes.CREATED).json(user);
 };
 
-
 const loginUser = async (req: Request, res: Response) => {
   const { name, password } = req.body;
-  
+
   // 1- check if user already have a guest coookie
-  // 2- check if the guest coookie has document in database 
+  // 2- check if the guest coookie has document in database
   // 3- if YES, update guest coookie with user coookie and id
-  
+
   if (!name || !password) {
     throw new BadRequest("Please Provide a name and Password!");
   }
