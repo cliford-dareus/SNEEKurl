@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useRegisterUserMutation } from "../features/api";
 import { UserInterface } from "../types/types";
-import InputForm from "../components/InputForm";
+import InputForm from "../components/ui/Input";
 
 const Register = () => {
   const [registerUser, { isLoading }] = useRegisterUserMutation();

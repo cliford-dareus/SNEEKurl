@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useLoginUserMutation } from "../features/api";
-import InputForm from "../components/InputForm";
+import InputForm from "../components/ui/Input";
 import { useAppDispatch } from "../app/hook";
 import { setUser } from "../features/userSlice";
 import { useNavigate } from "react-router-dom";

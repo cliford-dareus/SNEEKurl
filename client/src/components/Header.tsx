@@ -5,9 +5,9 @@ import { deleteUser } from "../features/userSlice";
 import { useLogoutUserMutation } from "../features/api";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { useState } from "react";
-import Popup from "./popup";
 import { UserInterface } from "../types/types";
 import { RootState } from "../app/store";
+import Button from "./ui/button";
 
 const Header = () => {
   const user = useAppSelector((state: RootState) => state.user);
@@ -31,60 +31,35 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full text-white p-4 flex justify-between items-center border-b sm:px-12">
-      <div className="container w-full flex items-center mx-auto justify-between">
-        <Link to="/" className="text-white text-xl lg:text-5xl font-bold">
-          SNEEK<i className="text-blue-600">URL</i>
+    <header className="fixed z-50 w-full text-white p-4 flex justify-between items-center sm:px-12">
+      <div className="container mx-auto flex justify-between">
+        <Link className="w-[84px]" to="/">
+          SNEEK
         </Link>
 
-        <nav
-          className={`${
-            isMobile
-              ? "w-1/2 absolute h-1 hover:h-auto overflow-hidden right-1/2 translate-x-1/2 top-20 z-10"
-              : ""
-          }`}
-        >
-          <ul
-            className={`${
-              isMobile
-                ? "flex flex-col gap-4 justify-center items-center bg-blue-800 p-4"
-                : "md:flex md:gap-4"
-            }`}
-          >
-            <li className="text-xl uppercase">
-              <Link to="/recent">Recent</Link>
+        <nav className="">
+          <ul className="flex gap-4 h-full w-full items-center">
+            <li className="hover:border flex justify-center items-center">
+              <Link className="px-4" to="/modal">
+                Your Urls
+              </Link>
             </li>
-            <li className="text-xl uppercase">
-              <Link to="/favorite">Favorite</Link>
+            <li className="hover:border flex justify-center items-center">
+              <Link className="px-4" to="">
+                Products
+              </Link>
             </li>
-            <li className="text-xl uppercase md:hidden">
-              <button className="text-red-600" onClick={logout}>
-                <IoPowerOutline />
-              </button>
+            <li className="hover:border flex justify-center items-center">
+              <Link className="px-4" to="">
+                Docs
+              </Link>
             </li>
           </ul>
         </nav>
 
-        <div className="flex gap-4 items-center lg:w-60 lg:justify-end">
-          <div className="flex items-center mr-2">
-            <span className="hidden">
-              <IoMoon />
-            </span>
-            <span className="">
-              <IoMoonOutline />
-            </span>
-          </div>
-          <p className="text-sm lg:text-lg">
-            Welcome,
-            {user ? (
-              <span className="font-bold ml-2">{user.name}</span>
-            ) : (
-              <span className="text-white">Guest</span>
-            )}
-          </p>
-          <span className="rounded-full bg-white w-10 h-10 inline-block"></span>
+        <div className="">
+          <Button>Sign In</Button>
         </div>
-        <Popup msg={message} pop={pop} setPop={setPop} />
       </div>
     </header>
   );

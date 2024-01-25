@@ -6,11 +6,11 @@ type Props = {}
 
 const Layout = (props: Props) => {
   return (
-    <div className='w-full h-full relative'>
+    <div className='relative'>
         <Header/>
-        <div className='w-full h-full overflow-hidden'>
+        <main className='pt-16'>
             {<Outlet/>}
-        </div>
+        </main>
     </div>
   )
 }
