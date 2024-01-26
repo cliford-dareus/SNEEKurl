@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useAppSelector } from "../app/hook";
-import { useAddUrlMutation, useGetUrlsQuery } from "../features/api";
+// import { useAddUrlMutation, useGetUrlsQuery } from "../features/urlslice";
 import type { RootState } from "../app/store";
 
 import { Outlet } from "react-router-dom";
@@ -11,9 +11,9 @@ const Dashboard = () => {
   return (
     <>
       <section className="container mx-auto p-4 flex justify-center text-center flex-col relative">
-        <div className="mt-32">
+        <div className="mt-28">
           <span className="px-4 py-1 bg-red-500 rounded-full">+1k github</span>
-          <h1 className="text-5xl mt-2 max-w-[950px] mx-auto">
+          <h1 className="text-7xl mt-5 max-w-[950px] mx-auto">
             Link small, connect big! Your shortcut to instant connections.
           </h1>
         </div>

@@ -18,6 +18,8 @@ const Urlform = (props: Props) => {
 
   const onsubmit: SubmitHandler<IFormValues> = (data) => {
     alert(JSON.stringify(data));
+    if (data["back-half"]) {
+    }
   };
 
   const input1Value = watch("long1");
