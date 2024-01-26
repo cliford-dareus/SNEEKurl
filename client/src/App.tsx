@@ -8,6 +8,7 @@ import Favorite from "./pages/favorite";
 import Layout from "./components/layout";
 import Myurl from "./components/myurl";
 import Login from "./features/auth/Login";
+import Register from "./features/auth/register";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          {/* <Route path="/register" element={<Register />} /> */}
+          <Route path="/register" element={<Register />} />
 
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />}>
@@ -29,7 +30,6 @@ function App() {
           </Route>
         </Routes>
       </BrowserRouter>
-      //{" "}
     </div>
   );
 }

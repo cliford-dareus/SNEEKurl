@@ -56,7 +56,9 @@ const Header = () => {
         </nav>
 
         <div className="">
-          <Button>Sign In</Button>
+          <Button>
+            <Link to="/login">Sign In</Link>{" "}
+          </Button>
         </div>
       </div>
     </header>
