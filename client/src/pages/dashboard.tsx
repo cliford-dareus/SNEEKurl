@@ -5,8 +5,9 @@ import type { RootState } from "../app/store";
 
 import { Outlet } from "react-router-dom";
 import Urlform from "../features/url/urlform";
-import Qrform from "../components/qrform";
+import Qrform from "../features/qr/qrform";
 import UrlManager from "../features/url/urlmanager";
+import QrManager from "../features/qr/qrmanager";
 
 const Dashboard = () => {
   return (
@@ -30,7 +31,7 @@ const Dashboard = () => {
               <h2 className="text-start font-bold text-2xl">
                 Create a QR Code
               </h2>
-              <Qrform />
+              <QrManager />
             </div>
           </div>
         </div>

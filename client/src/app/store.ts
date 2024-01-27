@@ -2,11 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/dist/query";
 import { urlapi } from "./services/urlapi";
 // import { apiSlice } from "../features/urlslice";
-// import userReducer from "../features/userSlice";
+import qrReducer from "../features/qr/qrslice";
 
 export const store = configureStore({
   reducer: {
     // user: userReducer,
+    qr: qrReducer,
     [urlapi.reducerPath]: urlapi.reducer
   },
   middleware: (getDefaultMiddleware) =>

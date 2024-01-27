@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { IoMoon, IoMoonOutline, IoPowerOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "../app/hook";
 import { useState } from "react";
-import { UserInterface } from "../types/types";
+import { UserInterface } from "../Utils/types/types";
 import { RootState } from "../app/store";
 import Button from "./ui/button";
 

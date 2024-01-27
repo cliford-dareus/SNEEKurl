@@ -1,8 +1,12 @@
 import React from "react";
-import Label from "./ui/label";
-import Input from "./ui/Input";
-import Button from "./ui/button";
+import Label from "../../components/ui/label";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/button";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { createQr } from "./qrslice";
+import { useAppSelector } from "../../app/hook";
+import { RootState } from "../../app/store";
 
 type Props = {};
 
@@ -14,11 +18,12 @@ export type IQrFormValues = {
 
 const Qrform = (props: Props) => {
   const { register, handleSubmit } = useForm<IQrFormValues>();
+  const dispatch = useDispatch();
 
   const onsubmit: SubmitHandler<IQrFormValues> = (data) => {
-    alert(JSON.stringify(data));
+    dispatch(createQr({ url: data.domain, size: data.size }));
   };
-  
+
   return (
     <form
       className="w-full flex flex-col mt-4 gap-4"

@@ -7,7 +7,7 @@ import Recent from "./pages/recent";
 import Favorite from "./pages/favorite";
 import Layout from "./components/layout";
 import Myurl from "./components/myurl";
-import Login from "./features/auth/Login";
+import Login from "./features/auth/login";
 import Register from "./features/auth/register";
 
 function App() {

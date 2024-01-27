@@ -11,7 +11,6 @@ import {
   MutationDefinition,
 } from "@reduxjs/toolkit/dist/query";
 import { UrlRequest, UrlResponse } from "../../app/services/urlapi";
-import { useDispatch } from "react-redux";
 
 type Props = {
   shortenFn: MutationTrigger<
@@ -37,7 +36,6 @@ export type IFormValues = {
 };
 
 const Urlform = ({ shortenFn }: Props) => {
-  const dispatch = useDispatch();
   const { register, handleSubmit, control, watch } = useForm<
     IFormValues | any
   >();

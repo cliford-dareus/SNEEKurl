@@ -1,7 +1,7 @@
 import { Path, UseFormRegister } from "react-hook-form";
-import { IProps } from "../../types/types";
+import { IProps } from "../../Utils/types/types";
 import { IFormValues } from "../../features/url/urlform";
-import { IQrFormValues } from "../qrform";
+import { IQrFormValues } from "../../features/qr/qrform";
 import { IUserFormValues } from "../../features/auth/login";
 
 type Props = {
