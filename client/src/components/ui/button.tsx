@@ -13,10 +13,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         {...props}
-        className={classNames(
-          "px-4 py-1 flex justify-center items-center bg-red-500 rounded-full gap-2",
-          classnames
-        )}
+        className={classNames("px-4 py-1 inline-flex justify-center items-center bg-red-500 rounded-full gap-2",classnames)}
       >
         {children}
       </button>

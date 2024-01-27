@@ -21,13 +21,13 @@ const Dashboard = () => {
         </div>
 
         <div className="mt-8">
-          <div className="flex flex-col md:flex-row mx-auto gap-8  max-w-[950px] ">
-            <div className="max-w-[450px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
+          <div className="flex flex-col md:flex-row mx-auto gap-8  max-w-[1000px] ">
+            <div className="max-w-[600px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
               <h2 className="text-start font-bold text-2xl">Shorten a URL</h2>
               <UrlManager />
             </div>
 
-            <div className="max-w-[450px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
+            <div className="max-w-[600px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
               <h2 className="text-start font-bold text-2xl">
                 Create a QR Code
               </h2>

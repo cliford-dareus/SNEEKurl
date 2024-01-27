@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { createQr } from "./qrslice";
 import { useAppSelector } from "../../app/hook";
 import { RootState } from "../../app/store";
+import Select from "../../components/ui/select";
 
 type Props = {};
 
@@ -21,7 +22,9 @@ const Qrform = (props: Props) => {
   const dispatch = useDispatch();
 
   const onsubmit: SubmitHandler<IQrFormValues> = (data) => {
-    dispatch(createQr({ url: data.domain, size: data.size }));
+    dispatch(
+      createQr({ url: data.domain, size: data.size, logoSrc: data.image })
+    );
   };
 
   return (
@@ -40,15 +43,20 @@ const Qrform = (props: Props) => {
       </div>
       <div className="flex flex-col items-start">
         <Label>Chosse a size</Label>
-        <Input
-          register={register}
-          label="size"
-          placeholder="Enter long url..."
-          hidden={false}
-        />
+        <Select
+          classnames="w-full rounded-full py-1 px-4 text-slate-600"
+          {...register("size")}
+        >
+          <option value="">----Choose a size----</option>
+          {[100, 200, 300].map((size) => (
+            <option key={size} value={size} className="">
+              {size}
+            </option>
+          ))}
+        </Select>
       </div>
       <div className="flex flex-col items-start">
-        <Label>Add logo(Optional)</Label>
+        <Label>Add logo url(Optional)</Label>
         <Input
           register={register}
           label="image"

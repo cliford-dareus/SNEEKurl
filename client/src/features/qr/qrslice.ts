@@ -33,8 +33,11 @@ const qrSlice = createSlice({
       state.isSuccess = true;
       state.isLoading = false;
     },
+    removeQr: (state) => {
+      state.isSuccess = false;
+    }
   },
 });
 
-export const { createQr } = qrSlice.actions;
+export const { createQr, removeQr } = qrSlice.actions;
 export default qrSlice.reducer;

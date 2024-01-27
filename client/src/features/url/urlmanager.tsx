@@ -19,6 +19,7 @@ import {
   LuShare,
 } from "react-icons/lu";
 import Popover from "../../components/ui/popover";
+import { downlaodSvg } from "../../Utils/downloadQr";
 
 type Props = {};
 type IResultProps = {
@@ -32,23 +33,23 @@ const QrButton = ({ data }: { data: UrlResponse }) => {
   const [open, setOpen] = useState(false);
   const downLoadRef = useRef<HTMLAnchorElement | null>(null);
 
-  const downloadQrCode = () => {
-    const svgElement = document.querySelector("#qr-svg") as HTMLElement | null;
-    const anchoElement = downLoadRef.current;
+  // const downloadQrCode = () => {
+  //   const svgElement = document.querySelector("#qr-svg") as HTMLElement | null;
+  //   const anchoElement = downLoadRef.current;
 
-    if (!svgElement) throw new Error("<svg> not found in the DOM");
+  //   if (!svgElement) throw new Error("<svg> not found in the DOM");
 
-    const svgData = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgData], {
-      type: "image/svg+xml;charset=utf-8",
-    });
-    const svgUrl = URL.createObjectURL(svgBlob);
+  //   const svgData = new XMLSerializer().serializeToString(svgElement);
+  //   const svgBlob = new Blob([svgData], {
+  //     type: "image/svg+xml;charset=utf-8",
+  //   });
+  //   const svgUrl = URL.createObjectURL(svgBlob);
 
-    if (!anchoElement) throw new Error("<svg> not found in the DOM");
-    anchoElement.href = svgUrl;
-    anchoElement.download = "QR code.svg";
-    anchoElement.click();
-  };
+  //   if (!anchoElement) throw new Error("<svg> not found in the DOM");
+  //   anchoElement.href = svgUrl;
+  //   anchoElement.download = "QR code.svg";
+  //   anchoElement.click();
+  // };
 
   return (
     <Button
@@ -65,8 +66,11 @@ const QrButton = ({ data }: { data: UrlResponse }) => {
             className="w-full"
             value={`${URLs}/${data.short.short}`}
           />
-          <Button classnames="mt-4" onClick={() => downloadQrCode}>
-            <a href="" ref={downLoadRef} onClick={downloadQrCode}>
+          <Button classnames="mt-4">
+            <a
+              href=""
+              onClick={(event) => downlaodSvg("qr-canvas", event, 'svg')}
+            >
               Download Svg
             </a>
           </Button>
