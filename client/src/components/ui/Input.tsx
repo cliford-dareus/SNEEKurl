@@ -1,11 +1,13 @@
 import { Path, UseFormRegister } from "react-hook-form";
 import { IProps } from "../../types/types";
-import { IFormValues } from "../urlform";
+import { IFormValues } from "../../features/url/urlform";
 import { IQrFormValues } from "../qrform";
-import { IUserFormValues } from "../../features/auth/Login";
+import { IUserFormValues } from "../../features/auth/login";
 
 type Props = {
-  register: UseFormRegister<IFormValues | IQrFormValues | IUserFormValues | any>;
+  register: UseFormRegister<
+    IFormValues | IQrFormValues | IUserFormValues | any
+  >;
   label: Path<IFormValues | IQrFormValues | IUserFormValues>;
   placeholder: string;
   hidden: boolean;

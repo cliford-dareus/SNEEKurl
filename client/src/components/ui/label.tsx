@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react'
+import classNames from "classnames";
+import React, { ReactNode } from "react";
 
 type Props = {
-    children: ReactNode
-}
+  children: ReactNode;
+  classnames?: string;
+};
 
-const Label = ({children}: Props) => {
-  return (
-    <label>{children}</label>
-  )
-}
+const Label = ({ children, classnames }: Props) => {
+  return <label className={classNames(classnames)}>{children}</label>;
+};
 
-export default Label
+export default Label;

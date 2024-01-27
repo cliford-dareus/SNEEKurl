@@ -1,28 +1,56 @@
-import React from "react";
-import Label from "./ui/label";
-import Input from "./ui/Input";
-import Button from "./ui/button";
+import Label from "../../components/ui/label";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/button";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
+import { MutationTrigger } from "@reduxjs/toolkit/dist/query/react/buildHooks";
+import {
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+  FetchBaseQueryMeta,
+  MutationDefinition,
+} from "@reduxjs/toolkit/dist/query";
+import { UrlRequest, UrlResponse } from "../../app/services/urlapi";
+import { useDispatch } from "react-redux";
 
-type Props = {};
+type Props = {
+  shortenFn: MutationTrigger<
+    MutationDefinition<
+      UrlRequest,
+      BaseQueryFn<
+        string | FetchArgs,
+        unknown,
+        FetchBaseQueryError,
+        {},
+        FetchBaseQueryMeta
+      >,
+      never,
+      UrlResponse,
+      "api"
+    >
+  >;
+};
 
 export type IFormValues = {
   long: string;
   "back-half"?: string;
 };
 
-const Urlform = (props: Props) => {
+const Urlform = ({ shortenFn }: Props) => {
+  const dispatch = useDispatch();
   const { register, handleSubmit, control, watch } = useForm<
     IFormValues | any
   >();
 
-  const onsubmit: SubmitHandler<IFormValues> = (data) => {
-    alert(JSON.stringify(data));
-    if (data["back-half"]) {
+  const onsubmit: SubmitHandler<IFormValues> = async(data) => {
+    if (!data["back-half"]) {
+      shortenFn({longUrl: data["long"]});
     }
+
+    shortenFn({ longUrl: data["long"], backhalf: data["back-half"] });
   };
 
-  const input1Value = watch("long1");
+  const input1Value = watch("long");
 
   return (
     <>
@@ -33,7 +61,7 @@ const Urlform = (props: Props) => {
         <div className="flex flex-col items-start">
           <Label>Paste long Url</Label>
           <Controller
-            name="long1"
+            name="long"
             control={control}
             render={({ field }) => (
               <input

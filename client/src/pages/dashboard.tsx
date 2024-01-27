@@ -4,8 +4,9 @@ import { useAppSelector } from "../app/hook";
 import type { RootState } from "../app/store";
 
 import { Outlet } from "react-router-dom";
-import Urlform from "../components/urlform";
+import Urlform from "../features/url/urlform";
 import Qrform from "../components/qrform";
+import UrlManager from "../features/url/urlmanager";
 
 const Dashboard = () => {
   return (
@@ -22,7 +23,7 @@ const Dashboard = () => {
           <div className="flex flex-col md:flex-row mx-auto gap-8  max-w-[950px] ">
             <div className="max-w-[450px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
               <h2 className="text-start font-bold text-2xl">Shorten a URL</h2>
-              <Urlform />
+              <UrlManager />
             </div>
 
             <div className="max-w-[450px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
