@@ -38,15 +38,15 @@ export const urlapi = createApi({
   endpoints: (builder) => ({
     shortenUrl: builder.mutation<UrlResponse, UrlRequest>({
       query: (credentials) => ({
-        url: "/api/v1/short",
+        url: "/api/v1/create",
         method: "POST",
         body: credentials,
       }),
     }),
-    protected: builder.mutation<{ message: string }, void>({
-      query: () => "protected",
+    getUrls: builder.query<Url[], any>({
+      query: () => "/api/v1/all",
     }),
   }),
 });
 
-export const { useShortenUrlMutation, useProtectedMutation } = urlapi;
+export const { useShortenUrlMutation, useGetUrlsQuery } = urlapi;

@@ -1,14 +1,16 @@
 import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import Qrform from "./qrform";
-import { useAppSelector } from "../../app/hook";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { RootState } from "../../app/store";
 import Button from "../../components/ui/button";
 import { downlaodSvg } from "../../Utils/downloadQr";
 import classNames from "classnames";
+import { removeQr } from "./qrslice";
 
 type Props = {};
 
 const QrResult = () => {
+  const dispatch = useAppDispatch();
   const { qr } = useAppSelector((state: RootState) => state.qr);
 
   const imageSetting = {
@@ -62,7 +64,7 @@ const QrResult = () => {
         </div>
       </div>
 
-      <Button>Generate another</Button>
+      <Button onClick={() => dispatch(removeQr())}>Generate another</Button>
       <p className="mt-2">Lorem ipsum dolor sit.</p>
     </div>
   );

@@ -1,9 +1,7 @@
 import {
   Dispatch,
   SetStateAction,
-  forwardRef,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import { UrlResponse, useShortenUrlMutation } from "../../app/services/urlapi";
@@ -31,31 +29,11 @@ const URLs = "http://localhost:4080";
 
 const QrButton = ({ data }: { data: UrlResponse }) => {
   const [open, setOpen] = useState(false);
-  const downLoadRef = useRef<HTMLAnchorElement | null>(null);
-
-  // const downloadQrCode = () => {
-  //   const svgElement = document.querySelector("#qr-svg") as HTMLElement | null;
-  //   const anchoElement = downLoadRef.current;
-
-  //   if (!svgElement) throw new Error("<svg> not found in the DOM");
-
-  //   const svgData = new XMLSerializer().serializeToString(svgElement);
-  //   const svgBlob = new Blob([svgData], {
-  //     type: "image/svg+xml;charset=utf-8",
-  //   });
-  //   const svgUrl = URL.createObjectURL(svgBlob);
-
-  //   if (!anchoElement) throw new Error("<svg> not found in the DOM");
-  //   anchoElement.href = svgUrl;
-  //   anchoElement.download = "QR code.svg";
-  //   anchoElement.click();
-  // };
 
   return (
     <Button
       classnames="relative"
       onClick={() => setOpen(!open)}
-      onBlur={() => setOpen(false)}
     >
       <LuQrCode />
       Qr
@@ -66,8 +44,9 @@ const QrButton = ({ data }: { data: UrlResponse }) => {
             className="w-full"
             value={`${URLs}/${data.short.short}`}
           />
-          <Button classnames="mt-4">
+          <Button classnames="mt-4 relative z-50 isolate">
             <a
+            className=""
               href=""
               onClick={(event) => downlaodSvg("qr-canvas", event, 'svg')}
             >
