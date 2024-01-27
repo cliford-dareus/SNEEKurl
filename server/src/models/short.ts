@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { nanoid } from 'nanoid';
 
 const ShortSchema = new mongoose.Schema({
-    full: { 
+    longUrl: { 
         type: String,
         required: true
     },

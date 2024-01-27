@@ -19,16 +19,16 @@ const getShortenUrl = async (req: Request, res: Response) => {
 
 // create short Url
 const shortenUrl = async (req: Request, res: Response) => {
-  const { full } = req.body;
+  const { longUrl } = req.body;
   const { guest, login } = req.user;
 
-  if (!full) {
+  if (!longUrl) {
     throw new BadRequest("Enter a url to shorten");
   }
 
   if (guest) {
     const short = await Short.create({
-      full,
+      longUrl,
       creatorId: guest,
     });
 
@@ -37,7 +37,7 @@ const shortenUrl = async (req: Request, res: Response) => {
   }
 
   const short = await Short.create({
-    full,
+    longUrl,
     isLogin: true,
     creatorId: login,
   });
@@ -55,7 +55,7 @@ const visitShort = async (req: Request, res: Response) => {
     clicks: (url.clicks = url.clicks + 1),
   });
 
-  res.redirect(url.full!);
+  res.redirect(url.longUrl!);
 };
 
 const getShort = async (req: Request, res: Response) => {
