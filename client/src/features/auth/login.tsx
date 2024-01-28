@@ -61,6 +61,12 @@ const Login = (props: Props) => {
             <Button>Continue</Button>
           </form>
 
+          <div>
+            <Button>
+              <a href="http://localhost:4080/auth/github">Sign With Github</a>
+            </Button>
+          </div>
+
           <div className="mt-16">
             <span>
               By clicking "Continue", you agree to the Terms of Service and

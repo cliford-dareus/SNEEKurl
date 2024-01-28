@@ -59,6 +59,10 @@ const Header = () => {
           <Button>
             <Link to="/login">Sign In</Link>{" "}
           </Button>
+
+          <Button>
+            <a href="http://localhost:4080/logout">Sign Out</a>
+          </Button>
         </div>
       </div>
     </header>
