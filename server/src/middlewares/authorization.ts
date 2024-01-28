@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequest, Unauthenticated } from "../errors";
+import { BadRequest, Unauthenticated } from "../lib/errors";
 import jwt from "jsonwebtoken";
 
 const authorize = async (
