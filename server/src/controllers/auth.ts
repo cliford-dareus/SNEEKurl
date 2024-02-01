@@ -1,77 +1,97 @@
-// import { Request, Response } from "express";
-// import { StatusCodes } from "http-status-codes";
-// import { Unauthenticated, BadRequest, NotFound } from "../lib/errors";
-// import jwt from "jsonwebtoken";
-// import User from "../models/user";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { Unauthenticated, BadRequest, NotFound } from "../lib/errors";
+import jwt from "jsonwebtoken";
+import User from "../models/user";
+import { jwt_compare } from "../config/jwt";
 
-// const registerUser = async (req: Request, res: Response) => {
-//   const { name, email, password } = req.body;
+const register = async (req: any, res: Response) => {
+  const session_sid = req.signedCookies["session.sid"];
+  const { username, email, password } = req.body;
 
-//   const isAlreadyExist = await User.find({ email });
+  try {
+    const exist = await User.findOne({ email });
+    // const guest_account = await User.findOne({
+    //   clientId: req.session.client_id,
+    // });
+    if (exist) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .send({ message: "Bad credentials..." });
+    }
 
-//   if (isAlreadyExist.length > 0) {
-//     throw new BadRequest("Email already exists");
-//   }
+    const done = await User.findOneAndDelete({ clientId: req.session.client_id });
+    const user  = await User.create({
+        username,
+        password,
+        email,
+        clientId: req.session.client_id,
+        freemium: done?.freemium 
+    })
 
-//   const user = await User.create({
-//     name,
-//     email,
-//     password,
-//   });
+    res
+      .status(StatusCodes.CREATED)
+      .json({ message: "User created", user: { username: user.username } });
+  } catch (error) {
+    res.status(StatusCodes.BAD_GATEWAY);
+  }
+};
 
-//   res.status(StatusCodes.CREATED).json(user);
-// };
+const login = async (req: Request, res: Response) => {
+  const { username, password } = req.body;
 
-// const loginUser = async (req: Request, res: Response) => {
-//   const { name, password } = req.body;
+  // 1- check if user already have a guest coookie
+  // 2- check if the guest coookie has document in database
+  // 3- if YES, update guest coookie with user coookie and id
 
-//   // 1- check if user already have a guest coookie
-//   // 2- check if the guest coookie has document in database
-//   // 3- if YES, update guest coookie with user coookie and id
+  if (!username || !password)
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .send({ message: "Please provide an username and password..." });
 
-//   if (!name || !password) {
-//     throw new BadRequest("Please Provide a name and Password!");
-//   }
+  try {
+    const user = await User.findOne({ username });
 
-//   const user = await User.findOne({ name });
+    if (!user)
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .send({ message: "Bad credentials..." });
 
-//   if (!user) {
-//     throw new Unauthenticated("Credentials Invalid");
-//   }
+    const isPasswordCorrect = await jwt_compare(password, user.password);
 
-//   const isPasswordCorrect = user.comparePassword(password);
+    if (!isPasswordCorrect)
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .send({ message: "Bad credentials..." });
 
-//   if (!isPasswordCorrect) {
-//     throw new BadRequest("Credentials Invalid");
-//   }
+    const payload = jwt.sign(
+      { user_id: user._id, user_name: user.username },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1d" }
+    );
 
-//   const oneDay = 1000 * 60 * 60 * 24;
-//   const accessTokenJWT = jwt.sign(
-//     { userId: user._id, name: user.name },
-//     process.env.JWT_SECRET!,
-//     { expiresIn: oneDay }
-//   );
+    res.cookie("auth.sid", payload, {
+      httpOnly: true,
+      signed: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
 
-//   res.cookie("accessToken", accessTokenJWT, {
-//     signed: true,
-//     httpOnly: true,
-//     // expires: new Date(Date.now()) + oneDay
-//   });
+    res.status(StatusCodes.ACCEPTED).json({
+      message: "Login successful",
+      user: {
+        username: user.username,
+      },
+    });
+  } catch (error) {}
+};
 
-//   res.clearCookie("accessToken_not_login");
+const logout = async (req: Request, res: Response) => {
+  res.cookie("accessToken", "logout", {
+    httpOnly: true,
+    expires: new Date(Date.now()),
+  });
 
-//   res
-//     .status(StatusCodes.OK)
-//     .json({ userName: user.name, userId: user._id, accessTokenJWT });
-// };
+  res.status(StatusCodes.OK).json({ msg: "user logged out!" });
+};
 
-// const logOutUser = async (req: Request, res: Response) => {
-//   res.cookie("accessToken", "logout", {
-//     httpOnly: true,
-//     expires: new Date(Date.now()),
-//   });
-
-//   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
-// };
-
-// export { registerUser, loginUser, logOutUser };
+export { register, login, logout };
