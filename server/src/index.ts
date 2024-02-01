@@ -16,7 +16,6 @@ import authRouter from "./routes/auth";
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 import User from "./models/user";
-import isFreemiumDone from "./middlewares/checkFreemium";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -45,13 +44,13 @@ app.use(
   })
 );
 
-app.use((_, res, next) => {
-  res.header("Access-Control-Allow-Origin", ["http://localhost:5173"]);
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// app.use((_, res, next) => {
+//   res.header("Access-Control-Allow-Origin", ["http://localhost:5173"]);
+//   res.header("Access-Control-Allow-Credentials", "true");
+//   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+//   res.header("Access-Control-Allow-Headers", "Content-Type");
+//   next();
+// });
 
 app.use(
   session({
@@ -78,7 +77,7 @@ app.use("/auth", authRouter);
 
 app.post("/sneekurl/fp", async (req: any, res) => {
   const { client_id } = req.query;
-  req.session.client_id = client_id;
+  req.session.client_id = client_id
 
   try {
     const not_found_user = await User.findOne({
@@ -86,7 +85,7 @@ app.post("/sneekurl/fp", async (req: any, res) => {
     });
 
     if (not_found_user) {
-      return;
+      return res.status(201).send();
     }
 
     const user = {
@@ -97,16 +96,12 @@ app.post("/sneekurl/fp", async (req: any, res) => {
     };
 
     User.create(user);
-    res.status(200).send()
+    res.status(200).send();
   } catch (error) {
     res.status(401).send();
   }
-
 });
 
-app.get("/account", isFreemiumDone, (req: any, res) => {
-  res.status(200).send();
-});
 
 //custom middleware
 // app.use(notfoundMiddleware);

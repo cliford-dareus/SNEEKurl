@@ -1,13 +1,17 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Unauthenticated, BadRequest, NotFound } from "../lib/errors";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 import { jwt_compare } from "../config/jwt";
 
 const register = async (req: any, res: Response) => {
-  const session_sid = req.signedCookies["session.sid"];
+  // const session_sid = req.signedCookies["session.sid"];
   const { username, email, password } = req.body;
+
+  if (!username || !password || !email)
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .send({ message: "Please provide an username and password..." });
 
   try {
     const exist = await User.findOne({ email });
@@ -86,11 +90,8 @@ const login = async (req: Request, res: Response) => {
 };
 
 const logout = async (req: Request, res: Response) => {
-  res.cookie("accessToken", "logout", {
-    httpOnly: true,
-    expires: new Date(Date.now()),
-  });
-
+  // req.session.resetMaxAge()
+  res.clearCookie("auth.sid");
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };
 
