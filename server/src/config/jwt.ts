@@ -14,7 +14,7 @@ const cookieExtractor = function (req: Request) {
   let token = null;
 
   if (req && req.signedCookies) {
-    token = req.cookies["jwt"];
+    token = req.signedCookies["auth.sid"];
   }
   return token;
 };

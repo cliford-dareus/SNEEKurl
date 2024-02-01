@@ -11,7 +11,7 @@ import passport from "passport";
 dotenv.config();
 
 import authRouter from "./routes/auth";
-// import shortRouter from "./routes/short";
+import shortRouter from "./routes/short";
 
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
@@ -74,10 +74,12 @@ app.use(passport.initialize());
 require("./config/strategy");
 
 app.use("/auth", authRouter);
+app.use("/short", shortRouter);
 
 app.post("/sneekurl/fp", async (req: any, res) => {
   const { client_id } = req.query;
   req.session.client_id = client_id
+  req.session.isAuthenticated = false;
 
   try {
     const not_found_user = await User.findOne({

@@ -24,14 +24,16 @@ const register = async (req: any, res: Response) => {
         .send({ message: "Bad credentials..." });
     }
 
-    const done = await User.findOneAndDelete({ clientId: req.session.client_id });
-    const user  = await User.create({
-        username,
-        password,
-        email,
-        clientId: req.session.client_id,
-        freemium: done?.freemium 
-    })
+    const done = await User.findOneAndDelete({
+      clientId: req.session.client_id,
+    });
+    const user = await User.create({
+      username,
+      password,
+      email,
+      clientId: req.session.client_id,
+      freemium: done?.freemium,
+    });
 
     res
       .status(StatusCodes.CREATED)
@@ -41,7 +43,7 @@ const register = async (req: any, res: Response) => {
   }
 };
 
-const login = async (req: Request, res: Response) => {
+const login = async (req: any, res: Response) => {
   const { username, password } = req.body;
 
   // 1- check if user already have a guest coookie
@@ -80,6 +82,8 @@ const login = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
+    req.session.isAuthenticated = false;
+
     res.status(StatusCodes.ACCEPTED).json({
       message: "Login successful",
       user: {
@@ -89,8 +93,9 @@ const login = async (req: Request, res: Response) => {
   } catch (error) {}
 };
 
-const logout = async (req: Request, res: Response) => {
+const logout = async (req: any, res: Response) => {
   // req.session.resetMaxAge()
+  req.session.isAuthenticated = false;
   res.clearCookie("auth.sid");
   res.status(StatusCodes.OK).json({ msg: "user logged out!" });
 };

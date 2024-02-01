@@ -1,18 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import User from "../models/user";
 import passport from "passport";
+import { StatusCodes } from "http-status-codes";
 
-const isFreemiumDone = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+const isFreemiumDone = async (req: any, res: Response, next: NextFunction) => {
   const session_sid = req.signedCookies["session.sid"];
   const auth_sid = req.signedCookies["auth.sid"];
 
   passport.authenticate(
     "jwt",
-    { session: false },
+    { session: true },
     async (err: any, result: any) => {
       if (err) {
         console.log(err);
@@ -20,12 +17,18 @@ const isFreemiumDone = async (
 
       if (!result) {
         try {
-          const user = await User.findOne({ clientId: session_sid });
+          const clientId = req.session.client_id;
+          const user = await User.findOne({ clientId });
 
-          if (!user) res.status(404).send();
-    
-          if (user?.freemium == 0)
-            return res.status(200).send({ message: "Freemium is done" });
+          if (!user)
+            res
+              .status(StatusCodes.BAD_REQUEST)
+              .send({ message: "User not found" });
+
+          if (user?.freemium! <= 0)
+            return res
+              .status(StatusCodes.PAYMENT_REQUIRED)
+              .send({ message: "Freemium is done" });
 
           next();
         } catch (error) {
