@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { Link } from "react-router-dom";
+import { useAppDispatch } from "../../app/hook";
 
 type Props = {};
 
@@ -11,11 +12,17 @@ export type IUserFormValues = {
   password: string;
 };
 
+const GITHUB_CLIENT_ID = "Iv1.d40e80f10f6f9dcf";
+
 const Login = (props: Props) => {
   const { register, handleSubmit } = useForm<IUserFormValues>();
-
+const dispatch = useAppDispatch()
   const onsubmit: SubmitHandler<IUserFormValues> = (data) => {
-    alert(data);
+    try {
+      // dispatch()
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -62,9 +69,7 @@ const Login = (props: Props) => {
           </form>
 
           <div>
-            <Button>
-              <a href="http://localhost:4080/auth/github">Sign With Github</a>
-            </Button>
+            <Button>Sign With Github</Button>
           </div>
 
           <div className="mt-16">

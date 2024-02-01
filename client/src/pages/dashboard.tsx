@@ -1,15 +1,20 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useAppSelector } from "../app/hook";
 // import { useAddUrlMutation, useGetUrlsQuery } from "../features/urlslice";
 import type { RootState } from "../app/store";
 
 import { Outlet } from "react-router-dom";
-import Urlform from "../features/url/urlform";
-import Qrform from "../features/qr/qrform";
 import UrlManager from "../features/url/urlmanager";
 import QrManager from "../features/qr/qrmanager";
+import Button from "../components/ui/button";
 
 const Dashboard = () => {
+  const getAccount = async () => {
+    const response = await fetch(`http://localhost:4080/account`, {
+      credentials: "include",
+    });
+  };
+
   return (
     <>
       <section className="container mx-auto p-4 flex justify-center text-center flex-col relative">
@@ -43,6 +48,7 @@ const Dashboard = () => {
 
       <section className="container mx-auto p-4 h-screen mt-16">
         <h2>Features</h2>
+        <Button onClick={() => getAccount()}>acount</Button>
       </section>
     </>
   );

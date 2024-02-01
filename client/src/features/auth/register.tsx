@@ -2,6 +2,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { Link } from "react-router-dom";
+import { useRegisterMutation } from "../../app/services/auth";
 
 type Props = {};
 
@@ -12,10 +13,16 @@ export type IUserFormValues = {
 };
 
 const Register = (props: Props) => {
+  const [useRegister, { isLoading, isSuccess }] = useRegisterMutation();
   const { register, handleSubmit } = useForm<IUserFormValues>();
 
-  const onsubmit: SubmitHandler<IUserFormValues> = (data) => {
-    alert(data);
+  const onsubmit: SubmitHandler<IUserFormValues> = async (data) => {
+    await useRegister({
+      username: data.name,
+      password: data.password,
+      email: data.email,
+    });
+    
   };
 
   return (
@@ -33,7 +40,9 @@ const Register = (props: Props) => {
             <h2 className="text-2xl">Register</h2>
             <div className="flex gap-2 items-center">
               <span>or</span>
-              <Link className="underline" to="/login">login</Link>
+              <Link className="underline" to="/login">
+                login
+              </Link>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
@@ -9,8 +9,38 @@ import Layout from "./components/layout";
 import Myurl from "./components/myurl";
 import Login from "./features/auth/login";
 import Register from "./features/auth/register";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 function App() {
+  const fpPromise = FingerprintJS.load();
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const fp = await fpPromise;
+        const result = await fp.get();
+
+        console.log(result);
+
+        // await fetch("http://localhost:4080", {
+        //   credentials: "include",
+        // });
+        await fetch(
+          `http://localhost:4080/sneekurl/fp?client_id=${result.visitorId}`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: { Accept: "application/json" },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getUser();
+  }, []);
+
   return (
     <div className=" bg-black">
       <BrowserRouter>

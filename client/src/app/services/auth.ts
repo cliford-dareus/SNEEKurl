@@ -15,23 +15,30 @@ export interface LoginRequest {
   username: string;
   password: string;
 }
+export interface RegisterRequest {
+  email: string
+  username: string;
+  password: string;
+}
+
+const baseQuery = fetchBaseQuery({
+  baseUrl: "http://localhost:4080/auth",
+  credentials: "include", // Set credentials to "include"
+});
 
 export const api = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: "/",
-    // prepareHeaders: (headers, { getState }) => {
-    //   By default, if we have a token in the store, let's use that for authenticated requests
-    //   const token = (getState() as RootState).auth.token;
-    //   if (token) {
-    //     headers.set("authorization", `Bearer ${token}`);
-    //   }
-    //   return headers;
-    // },
-  }),
+  baseQuery,
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (credentials) => ({
-        url: "login",
+        url: "/login",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
+    register: builder.mutation<UserResponse, RegisterRequest>({
+      query: (credentials) => ({
+        url: "/register",
         method: "POST",
         body: credentials,
       }),
@@ -42,4 +49,4 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation, useProtectedMutation } = api;
+export const { useLoginMutation, useProtectedMutation, useRegisterMutation } = api;
