@@ -40,9 +40,10 @@ const Urlform = ({ shortenFn }: Props) => {
     IFormValues | any
   >();
 
-  const onsubmit: SubmitHandler<IFormValues> = async(data) => {
-    if (!data["back-half"]) {
-      shortenFn({longUrl: data["long"]});
+  const onsubmit: SubmitHandler<IFormValues> = async (data) => {
+    if (data["back-half"] === "") {
+      shortenFn({ longUrl: data["long"] });
+      return
     }
 
     shortenFn({ longUrl: data["long"], backhalf: data["back-half"] });

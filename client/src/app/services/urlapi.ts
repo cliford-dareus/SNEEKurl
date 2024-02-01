@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
-const URL = "http://localhost:4080";
+const URL = "http://localhost:4080/short";
 export interface Url {
   longUrl: string;
   favorite: boolean;
@@ -23,22 +23,17 @@ export interface UrlRequest {
   backhalf?: string;
 }
 
+const baseQuery = fetchBaseQuery({
+  baseUrl: URL,
+  credentials: "include", // Set credentials to "include"
+});
+
 export const urlapi = createApi({
-  baseQuery: fetchBaseQuery({
-    baseUrl: URL,
-    // prepareHeaders: (headers, { getState }) => {
-    //   By default, if we have a token in the store, let's use that for authenticated requests
-    //   const token = (getState() as RootState).auth.token;
-    //   if (token) {
-    //     headers.set("authorization", `Bearer ${token}`);
-    //   }
-    //   return headers;
-    // },
-  }),
+  baseQuery,
   endpoints: (builder) => ({
     shortenUrl: builder.mutation<UrlResponse, UrlRequest>({
       query: (credentials) => ({
-        url: "/api/v1/create",
+        url: "/create",
         method: "POST",
         body: credentials,
       }),
