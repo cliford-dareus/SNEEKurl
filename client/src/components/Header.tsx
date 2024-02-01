@@ -6,9 +6,10 @@ import { useState } from "react";
 import { UserInterface } from "../Utils/types/types";
 import { RootState } from "../app/store";
 import Button from "./ui/button";
+import { AuthState, selectCurrentUser } from "../features/auth/authslice";
 
 const Header = () => {
-  const user = useAppSelector((state: RootState) => state.user);
+  const user = useAppSelector(selectCurrentUser) as AuthState;
   const size: Size = useWindowSize();
   const isMobile = size.width! < 768;
   const dispatch = useAppDispatch();
@@ -27,6 +28,8 @@ const Header = () => {
     //   console.log(error);
     // }
   };
+
+  console.log(user)
 
   return (
     <header className="fixed z-50 w-full text-white p-4 flex justify-between items-center sm:px-12">
@@ -56,9 +59,15 @@ const Header = () => {
         </nav>
 
         <div className="">
-          <Button>
-            <Link to="/login">Sign In</Link>{" "}
-          </Button>
+          {!user.user.username? (
+            <Button>
+              <Link to="/login">Sign In</Link>{" "}
+            </Button>
+          ) : (
+            <div className="">
+              <p>{user.user.username}</p>
+            </div>
+          )}
 
           <Button>
             <a href="http://localhost:4080/logout">Sign Out</a>

@@ -2,8 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
 export interface User {
-  first_name: string;
-  last_name: string;
+  username: string;
 }
 
 export interface UserResponse {
@@ -26,7 +25,8 @@ const baseQuery = fetchBaseQuery({
   credentials: "include", // Set credentials to "include"
 });
 
-export const api = createApi({
+export const authApi = createApi({
+  reducerPath: "authApi",
   baseQuery,
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
@@ -49,4 +49,4 @@ export const api = createApi({
   }),
 });
 
-export const { useLoginMutation, useProtectedMutation, useRegisterMutation } = api;
+export const { useLoginMutation, useProtectedMutation, useRegisterMutation } = authApi;

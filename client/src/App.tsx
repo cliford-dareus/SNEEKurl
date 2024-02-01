@@ -19,12 +19,7 @@ function App() {
       try {
         const fp = await fpPromise;
         const result = await fp.get();
-
-        console.log(result);
-
-        // await fetch("http://localhost:4080", {
-        //   credentials: "include",
-        // });
+        
         await fetch(
           `http://localhost:4080/sneekurl/fp?client_id=${result.visitorId}`,
           {

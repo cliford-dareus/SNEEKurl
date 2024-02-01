@@ -1,29 +1,48 @@
 import { SubmitHandler, useForm } from "react-hook-form";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
-import { Link } from "react-router-dom";
-import { useAppDispatch } from "../../app/hook";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../app/services/auth";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
+import { AuthState, selectCurrentUser, setCredentials } from "./authslice";
+import { useEffect } from "react";
 
 type Props = {};
 
 export type IUserFormValues = {
-  name: string;
+  username: string;
   email: string;
   password: string;
 };
 
-const GITHUB_CLIENT_ID = "Iv1.d40e80f10f6f9dcf";
-
 const Login = (props: Props) => {
+  const user = useAppSelector(selectCurrentUser) as AuthState;
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [useLogin, { isLoading, isError }] = useLoginMutation();
   const { register, handleSubmit } = useForm<IUserFormValues>();
-const dispatch = useAppDispatch()
-  const onsubmit: SubmitHandler<IUserFormValues> = (data) => {
+
+  const onsubmit: SubmitHandler<IUserFormValues> = async (formData) => {
     try {
-      // dispatch()
+      const data = await useLogin({
+        username: formData.username,
+        password: formData.password,
+      }).unwrap();
+
+      dispatch(
+        setCredentials({ user: data.user.username, token: "data.token" })
+      );
+      navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (user.user.username) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="w-screen h-screen flex justify-center items-center">
@@ -53,8 +72,8 @@ const dispatch = useAppDispatch()
           >
             <Input
               register={register}
-              label="email"
-              placeholder="Enter your email address"
+              label="username"
+              placeholder="Enter your username"
               hidden={false}
             />
 

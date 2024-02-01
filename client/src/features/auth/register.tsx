@@ -7,7 +7,7 @@ import { useRegisterMutation } from "../../app/services/auth";
 type Props = {};
 
 export type IUserFormValues = {
-  name: string;
+  username: string;
   email: string;
   password: string;
 };
@@ -18,7 +18,7 @@ const Register = (props: Props) => {
 
   const onsubmit: SubmitHandler<IUserFormValues> = async (data) => {
     await useRegister({
-      username: data.name,
+      username: data.username,
       password: data.password,
       email: data.email,
     });
@@ -53,7 +53,7 @@ const Register = (props: Props) => {
           >
             <Input
               register={register}
-              label="name"
+              label="username"
               placeholder="Enter a username"
               hidden={false}
             />
