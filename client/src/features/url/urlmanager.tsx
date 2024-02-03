@@ -1,9 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { UrlResponse, useShortenUrlMutation } from "../../app/services/urlapi";
 import Urlform from "./urlform";
 import Button from "../../components/ui/button";
@@ -16,7 +11,7 @@ import {
   LuQrCode,
   LuShare,
 } from "react-icons/lu";
-import Popover from "../../components/ui/popover";
+import { PopoverContainer, Popover } from "../../components/ui/popover";
 import { downlaodSvg } from "../../Utils/downloadQr";
 
 type Props = {};
@@ -31,31 +26,29 @@ const QrButton = ({ data }: { data: UrlResponse }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Button
-      classnames="relative"
-      onClick={() => setOpen(!open)}
-    >
-      <LuQrCode />
-      Qr
-      {open && (
-        <Popover classnames="flex flex-col items-center justify-center">
-          <QRCodeSVG
-            id="qr-svg"
-            className="w-full"
-            value={`${URLs}/${data.short.short}`}
-          />
-          <Button classnames="mt-4 relative z-50 isolate">
-            <a
-            className=""
-              href=""
-              onClick={(event) => downlaodSvg("qr-canvas", event, 'svg')}
-            >
-              Download Svg
-            </a>
-          </Button>
-        </Popover>
-      )}
-    </Button>
+    <PopoverContainer triggerFn={setOpen}>
+      <Button classnames="relative" onClick={() => setOpen(!open)}>
+        <LuQrCode />
+        Qr
+        {open && (
+          <Popover classnames="flex flex-col items-center justify-center">
+            <QRCodeSVG
+              id="qr-svg"
+              className="w-full"
+              value={`${URLs}/${data.short.short}`}
+            />
+            <Button classnames="mt-4 relative z-50 isolate">
+              <a
+                className=""
+                onClick={(event) => downlaodSvg("qr-svg", event, "svg")}
+              >
+                Download Svg
+              </a>
+            </Button>
+          </Popover>
+        )}
+      </Button>
+    </PopoverContainer>
   );
 };
 
@@ -63,21 +56,22 @@ const ShareButton = ({ data }: { data: UrlResponse }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <Button
-      classnames="relative"
-      onClick={() => setOpen(!open)}
-      onBlur={() => setOpen(false)}
-    >
-      <LuShare />
-      Share
-      {open && (
-        <Popover classnames="flex flex-col items-center justify-center">
-          <Button classnames="mt-4">Facebook</Button>
-          <Button classnames="mt-4">Mail</Button>
-          <Button classnames="mt-4">Twitter/X</Button>
-        </Popover>
-      )}
-    </Button>
+    <PopoverContainer triggerFn={setOpen}>
+      <Button
+        classnames="relative"
+        onClick={() => setOpen(!open)}
+      >
+        <LuShare />
+        Share
+        {open && (
+          <Popover classnames="flex flex-col items-center justify-center">
+            <Button classnames="mt-4">Facebook</Button>
+            <Button classnames="mt-4">Mail</Button>
+            <Button classnames="mt-4">Twitter/X</Button>
+          </Popover>
+        )}
+      </Button>
+    </PopoverContainer>
   );
 };
 
@@ -143,6 +137,14 @@ const UrlManager = (props: Props) => {
   useEffect(() => {
     setShowResult(data);
   }, [isSuccess]);
+
+  if (isLoading) {
+    return (
+      <div className="">
+        <span>Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <div>

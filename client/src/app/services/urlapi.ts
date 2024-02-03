@@ -4,12 +4,11 @@ import { RootState } from "../store";
 const URL = "http://localhost:4080/short";
 export interface Url {
   longUrl: string;
-  favorite: boolean;
-  clicks: number;
+  short: string;
+  favorite: string[];
   isLogin: boolean;
   creatorId: string;
   _id: string;
-  short: string;
   __v: number;
 }
 
@@ -38,8 +37,15 @@ export const urlapi = createApi({
         body: credentials,
       }),
     }),
-    getUrls: builder.query<Url[], any>({
-      query: () => "/api/v1/all",
+    getUrls: builder.query<Url[], void>({
+      query: () => "/urls?page=1",
+    }),
+    editUrl: builder.mutation<UrlResponse, UrlRequest>({
+      query: () => ({
+        url: "/edit",
+        method: "PUT",
+        body: 'credentials',
+      }),
     }),
   }),
 });
