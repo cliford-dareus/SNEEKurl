@@ -17,6 +17,10 @@ export interface UrlResponse {
   guest?: string;
 }
 
+export interface UrlsResponse {
+  urls: Url[];
+}
+
 export interface UrlRequest {
   longUrl: string;
   backhalf?: string;
@@ -37,14 +41,14 @@ export const urlapi = createApi({
         body: credentials,
       }),
     }),
-    getUrls: builder.query<Url[], void>({
+    getUrls: builder.query<UrlsResponse, void>({
       query: () => "/urls?page=1",
     }),
     editUrl: builder.mutation<UrlResponse, UrlRequest>({
       query: () => ({
         url: "/edit",
         method: "PUT",
-        body: 'credentials',
+        body: "credentials",
       }),
     }),
   }),

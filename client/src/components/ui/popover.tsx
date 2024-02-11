@@ -43,8 +43,8 @@ const Popover = ({ classnames, children }: Props) => {
   return (
     <div
       className={classNames(
-        classnames,
-        "absolute min-w-[200px] p-4 bg-slate-300 rounded-lg top-0 z-20"
+        "absolute min-w-[200px] p-4 bg-slate-300 rounded-lg top-0 z-20  animate-slide-up-fade  items-center border border-gray-200 drop-shadow-lg",
+        classnames
       )}
     >
       {children}

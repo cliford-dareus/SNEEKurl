@@ -1,36 +1,69 @@
 import { useState } from "react";
-import Sheet from "./ui/sheet";
+import { Sheet, SheetContent } from "./ui/sheet";
 import Button from "./ui/button";
-import { useGetUrlsQuery } from "../app/services/urlapi";
+import { Url, useGetUrlsQuery } from "../app/services/urlapi";
 import { Popover, PopoverContainer } from "./ui/popover";
-import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
+import {
+  LuChevronLeft,
+  LuChevronRight,
+  LuForward,
+  LuLink2,
+  LuMoreVertical,
+  LuQrCode,
+} from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
+import { getSiteUrl } from "../Utils/getSiteUrl";
 
-type Props = {};
+type Props = {
+  url: Url;
+};
 
-const UrlItem = ({}) => {
+const UrlItem = ({ url }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex p-4 gap-8 shadow-md">
+    <div className="flex p-4 gap-8 shadow-md bg-slate-300 rounded-lg">
       <div>
-        <img className="w-[50px] h-[50px] rounded-full" src="" alt="" />
+        <img
+          className="w-[30px] h-[30px] rounded-full"
+          src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
+            url.longUrl
+          )}`}
+          loading="lazy"
+          alt="site favicon"
+        />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-[60%]">
         <div className="text-left">
-          <p>https://www.sneek/TeY73NOP</p>
-          <p>https://codepen.io/mudrenok/pen/NbbJmz?editors=1100</p>
+          <p className="text-blue-700 flex gap-2 items-center">
+            <LuLink2 />
+            sneek.co/{url.short}
+          </p>
+          <p className="truncate">{url.longUrl}</p>
         </div>
 
-        <div className="flex gap-4">
-          <Button>Visit</Button>
-          <Button>Visit</Button>
-          <Button>QR</Button>
+        <div className="flex gap-4 items-center">
+          <a
+            className=""
+            href={`http://localhost:4080/short/${url.short}`}
+            target="_blank"
+            data-original-title="null"
+            // onClick={() => refetch()}
+          >
+            <LuForward size={22} />
+          </a>
+          <div className="cursor-pointer">Visit</div>
+          <div className="cursor-pointer">
+            <LuQrCode size={22} />
+          </div>
         </div>
       </div>
 
       <PopoverContainer classnames="ml-auto" triggerFn={setOpen}>
-        <Button onClick={() => setOpen(!open)}>edit</Button>
+        <div className="cursor-pointer" onClick={() => setOpen(!open)}>
+          <LuMoreVertical size={24} />
+        </div>
 
         {open && (
           <Popover classnames="right-0 top-6 flex flex-col gap-2 z-50">
@@ -45,40 +78,43 @@ const UrlItem = ({}) => {
 };
 
 const Myurl = (props: Props) => {
-  const { data, isLoading, isError } = useGetUrlsQuery();
-
-  console.log(data);
+  const Navigate = useNavigate();
+  const { data, isLoading, isError, isSuccess } = useGetUrlsQuery();
 
   return (
-    <Sheet classnames="fixed top-0 right-0 bottom-0 w-[40%] bg-red-400 py-20">
-      <div className="p-4">
-        <h2>Your URLS</h2>
+    <>
+      <Sheet triggerFn={() => Navigate("..")} />
+      <SheetContent classnames="fixed top-0 right-0 bottom-0 w-[35%] bg-red-400 py-10">
+        <div className="p-4">
+          <h2>Your URLS</h2>
 
-        {data ? (
-          <div className="">
-            <h2>No Recent</h2>
-          </div>
-        ) : (
-          <div className="">
-            {[1, 2, 3].map((i) => (
-              <UrlItem key={i} />
-            ))}
+          {!data ? (
+            <div className="">
+              <h2>No Recent</h2>
+            </div>
+          ) : (
+            <div className="w-full">
+              <div className="flex flex-col gap-2">
+                {data &&
+                  data.urls?.map((url) => <UrlItem key={url._id} url={url} />)}
+              </div>
 
-            <div className="mt-4">
-              <div className="flex gap-4 items-center justify-center">
-                <Button classnames="px-8">
-                  <LuChevronLeft size={24} />
-                </Button>
-                <Button classnames="px-8">1</Button>
-                <Button classnames="px-8">
-                  <LuChevronRight size={24} />
-                </Button>
+              <div className="mt-4">
+                <div className="flex gap-4 items-center justify-center">
+                  <Button classnames="px-8">
+                    <LuChevronLeft size={24} />
+                  </Button>
+                  <Button classnames="px-8">1</Button>
+                  <Button classnames="px-8">
+                    <LuChevronRight size={24} />
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
-    </Sheet>
+          )}
+        </div>
+      </SheetContent>
+    </>
   );
 };
 

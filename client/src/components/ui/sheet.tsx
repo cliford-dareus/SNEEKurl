@@ -1,17 +1,44 @@
 import classNames from "classnames";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 
 type Props = {
-  children: ReactNode;
-  classnames: string;
+  classnames?: string;
+  triggerFn?: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const Sheet = ({ children, classnames }: Props) => {
+type ContentProps = {
+  children: ReactNode;
+  classnames?: string;
+};
+
+const Sheet = ({classnames, triggerFn}: Props) => {
+  const Ref = useRef<HTMLDivElement | null>(null);
+
+  const handleClickOutside = (event: any) => {
+    if (Ref.current && Ref.current.contains(event.target) && triggerFn) {
+      triggerFn("");
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
+
   return (
-    <div className="fixed inset-0 z-40 bg-gray-200 bg-opacity-10 backdrop-blur-md">
-      <div className={classNames(classnames, "blur-0")}>{children}</div>
-    </div>
+    <div
+      ref={Ref}
+      className={classNames(
+        "fixed inset-0 z-50 bg-gray-200 bg-opacity-10 backdrop-blur-md isolate"
+      )}
+    />
   );
 };
 
-export default Sheet;
+const SheetContent = ({ children, classnames }: ContentProps) => {
+  return <div className={classNames(classnames, "blur-0 z-50 ")}>{children}</div>;
+};
+export { Sheet, SheetContent };
