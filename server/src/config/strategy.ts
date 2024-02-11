@@ -1,8 +1,7 @@
 import passport from "passport";
 import User from "../models/user";
-import mongoose from "mongoose";
 import JwtStrategy, { JwtFromRequestFunction } from "passport-jwt";
-import { cookieExtractor } from "./jwt";
+import { cookieExtractor } from "../lib/utils/jwt";
 const Strategy = JwtStrategy.Strategy;
 
 export interface PassportOptions {
@@ -16,7 +15,7 @@ opts.jwtFromRequest = cookieExtractor;
 
 passport.use(
   new Strategy(opts, (user, done) => {
-    console.log(user)
+    console.log(user);
     console.log(user);
     User.findOne({ id: user.id })
       .then((user) => {
@@ -33,16 +32,3 @@ passport.use(
       });
   })
 );
-
-// Type for the serializeUser function
-// const serializeUser = (user: any, done: DoneCallback) => {
-//   done(null, user.id);
-// };
-
-// Use the serializeUser function with your Passport setup
-// passport.serializeUser(serializeUser);
-
-// passport.deserializeUser(function (user: any, done) {
-//   const userd = User.findById(user?.id);
-//   done(null, userd);
-// });

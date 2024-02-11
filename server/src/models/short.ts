@@ -7,19 +7,26 @@ interface IShort extends Document {
   isShareable: boolean;
   favorites: { type: ObjectId; ref: string }[];
   user: { type: ObjectId; ref: string };
+  metadata: {}
 }
 
-const ShortSchema = new mongoose.Schema<IShort>({
-  longUrl: { type: String, required: true },
-  short: { type: String },
-  favorites: [{ type: mongoose.Types.ObjectId, ref: "User" }],
-  isShareable: { type: Boolean, default: false },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
+const ShortSchema = new mongoose.Schema<IShort>(
+  {
+    longUrl: { type: String, required: true },
+    short: { type: String },
+    favorites: [{ type: mongoose.Types.ObjectId, ref: "User" }],
+    isShareable: { type: Boolean, default: false },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    metadata: {}
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 ShortSchema.pre("save", function () {
   if (this.isModified("short")) return;

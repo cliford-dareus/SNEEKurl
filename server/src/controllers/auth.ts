@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
-import { jwt_compare } from "../config/jwt";
+import { jwt_compare } from "../lib/utils/jwt";
 
 const register = async (req: any, res: Response) => {
   // const session_sid = req.signedCookies["session.sid"];
@@ -45,10 +45,6 @@ const register = async (req: any, res: Response) => {
 
 const login = async (req: any, res: Response) => {
   const { username, password } = req.body;
-
-  // 1- check if user already have a guest coookie
-  // 2- check if the guest coookie has document in database
-  // 3- if YES, update guest coookie with user coookie and id
 
   if (!username || !password)
     return res
