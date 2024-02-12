@@ -39,6 +39,7 @@ const Login = (props: Props) => {
           user: {
             username: data.user.username,
             stripe_account_id: data.user.stripe_account_id,
+            isVerified: data.user.isVerified,
           },
         })
       );

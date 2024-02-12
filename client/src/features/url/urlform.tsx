@@ -13,21 +13,7 @@ import {
 import { UrlRequest, UrlResponse } from "../../app/services/urlapi";
 
 type Props = {
-  shortenFn: MutationTrigger<
-    MutationDefinition<
-      UrlRequest,
-      BaseQueryFn<
-        string | FetchArgs,
-        unknown,
-        FetchBaseQueryError,
-        {},
-        FetchBaseQueryMeta
-      >,
-      never,
-      UrlResponse,
-      "api"
-    >
-  >;
+  shortenFn: any;
 };
 
 export type IFormValues = {

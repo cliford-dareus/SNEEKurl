@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from "../app/hook";
 import { useEffect, useState } from "react";
 import { RootState } from "../app/store";
 import Button from "./ui/button";
-import { AuthState, selectCurrentUser } from "../features/auth/authslice";
+import { AuthState, removeCredentials, selectCurrentUser } from "../features/auth/authslice";
 import { LuMoon, LuSunDim, LuUserCircle2 } from "react-icons/lu";
+import { useLogoutUserMutation } from "../app/services/auth";
 
 const Header = () => {
   const user = useAppSelector(selectCurrentUser) as AuthState;
-  // const [logginout] = useLogoutUserMutation();
+  const [logoutUser] = useLogoutUserMutation();
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState<string>("");
   const [darkMode, setDarkMode] = useState(false);
@@ -24,17 +25,17 @@ const Header = () => {
     }
   }, [darkMode]);
 
-  console.log(user)
+  // console.log(user)
 
 
   const logout = async () => {
-    // try {
-    //   const data = await logginout({}).unwrap();
-    //   dispatch(deleteUser());
-    //   setMessage(data?.msg);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const data = await logoutUser().unwrap();
+      dispatch(removeCredentials());
+      // setMessage(data?.msg);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 
@@ -86,8 +87,8 @@ const Header = () => {
             </Button>
           )}
 
-          <Button>
-            <a href="http://localhost:4080/logout">Sign Out</a>
+          <Button onClick={logout}>
+           Sign Out
           </Button>
         </div>
       </div>

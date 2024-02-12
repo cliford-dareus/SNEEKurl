@@ -4,6 +4,7 @@ import { RootState } from "../store";
 export interface User {
   username: string;
   stripe_account_id: string;
+  isVerified: boolean;
 }
 
 export interface UserResponse {
@@ -16,14 +17,17 @@ export interface LoginRequest {
   password: string;
 }
 export interface RegisterRequest {
-  email: string
+  email: string;
   username: string;
   password: string;
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:4080/auth",
+  baseUrl: "http://localhost:4080",
   credentials: "include", // Set credentials to "include"
+  headers: {
+    Accept: "application/json",
+  },
 });
 
 export const authApi = createApi({
@@ -32,22 +36,40 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<UserResponse, LoginRequest>({
       query: (credentials) => ({
-        url: "/login",
+        url: "/auth/login",
         method: "POST",
         body: credentials,
       }),
     }),
     register: builder.mutation<UserResponse, RegisterRequest>({
       query: (credentials) => ({
-        url: "/register",
+        url: "/auth/register",
         method: "POST",
         body: credentials,
+      }),
+    }),
+    logoutUser: builder.mutation<UserResponse, void>({
+      query: () => ({
+        url: "/auth/logout",
+        method: "POST",
       }),
     }),
     protected: builder.mutation<{ message: string }, void>({
       query: () => "protected",
     }),
+    identifyUser: builder.mutation<UserResponse, any>({
+      query: (result: any) => ({
+        url: `/sneekurl/fp?client_id=${result.visitorId}`,
+        method: "POST",
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useProtectedMutation, useRegisterMutation } = authApi;
+export const {
+  useLoginMutation,
+  useProtectedMutation,
+  useRegisterMutation,
+  useLogoutUserMutation,
+  useIdentifyUserMutation
+} = authApi;

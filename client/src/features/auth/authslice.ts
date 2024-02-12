@@ -5,6 +5,7 @@ import type { RootState } from "../../app/store";
 type User = {
   username: string;
   stripe_account_id: string;
+  isVerified: boolean;
 };
 
 export type AuthState = {
@@ -23,17 +24,21 @@ const authslice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      {
-        payload: { user },
-      }: PayloadAction<{ user: User }>
+      { payload: { user } }: PayloadAction<{ user: User }>
     ) => {
-        state.token = localStorage.getItem("token") as string,
-        state.user.username = user.username,
-        state.user.stripe_account_id = user.stripe_account_id;
+      (state.token = localStorage.getItem("token") as string),
+        (state.user.username = user.username),
+        (state.user.stripe_account_id = user.stripe_account_id);
+    },
+    removeCredentials: (state) => {
+      localStorage.removeItem("token");
+      (state.token = ""),
+        (state.user.username = ""),
+        (state.user.stripe_account_id = "");
     },
   },
 });
 
 export const selectCurrentUser = (state: RootState) => state.auth;
-export const { setCredentials } = authslice.actions;
+export const { setCredentials, removeCredentials } = authslice.actions;
 export default authslice.reducer;

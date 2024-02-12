@@ -82,7 +82,8 @@ const Pricing = (props: Props) => {
   }
 
   useEffect(() => {
-    const active_plan = data?.subscription.data.filter(
+    if (!data) return;
+    const active_plan = data?.subscription?.data.filter(
       (x: any) => x.status === "active"
     )[0];
     setActivePlan(active_plan);

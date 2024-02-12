@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Recent from "./pages/recent";
@@ -13,23 +12,32 @@ import Report from "./pages/test";
 import ProtectedRoutes from "./Utils/protectedRoutes";
 import Pricing from "./pages/pricing";
 import Checkout from "./components/checkout";
+import { useIdentifyUserMutation } from "./app/services/auth";
+import { setCredentials } from "./features/auth/authslice";
+import useLocalStorage from "./Utils/hooks/use-local-storage";
+import { useAppDispatch } from "./app/hook";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const [values, setValue] = useLocalStorage("token", "");
+  const [identify] = useIdentifyUserMutation();
   const fpPromise = FingerprintJS.load();
 
   useEffect(() => {
     const getUser = async () => {
+      const fp = await fpPromise;
+      const result = await fp.get();
       try {
-        const fp = await fpPromise;
-        const result = await fp.get();
-
-        await fetch(
-          `http://localhost:4080/sneekurl/fp?client_id=${result.visitorId}`,
-          {
-            method: "POST",
-            credentials: "include",
-            headers: { Accept: "application/json" },
-          }
+        const data = await identify(result).unwrap();
+        data.token && setValue(JSON.stringify(data.token));
+        dispatch(
+          setCredentials({
+            user: {
+              username: data.user.username,
+              stripe_account_id: data.user.stripe_account_id,
+              isVerified: data.user.isVerified,
+            },
+          })
         );
       } catch (error) {
         console.log(error);

@@ -99,7 +99,7 @@ const UrlResult = ({ data, setShowResult }: IResultProps) => {
           <input
             readOnly
             className="w-full rounded-full text-black py-1 px-4 select-none"
-            value={data?.short.longUrl}
+            value={data?.short?.longUrl}
           />
         </div>
 
@@ -111,7 +111,7 @@ const UrlResult = ({ data, setShowResult }: IResultProps) => {
           <input
             readOnly
             className="w-full rounded-full text-black py-1 px-4 select-none"
-            value={`${URLs}/${data?.short.short}`}
+            value={`${URLs}/${data?.short?.short}`}
           />
         </div>
       </div>
@@ -145,7 +145,7 @@ const UrlManager = (props: Props) => {
     );
   }
 
-  if (data?.message && !user.username) {
+  if (data?.message) {
     return (
       <div className="flex flex-col mt-4 ">
         <p className="text-xl font-bold  text-red-500">{data.message}</p>
