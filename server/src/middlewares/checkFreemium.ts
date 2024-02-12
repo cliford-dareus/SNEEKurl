@@ -4,9 +4,6 @@ import passport from "passport";
 import { StatusCodes } from "http-status-codes";
 
 const isFreemiumDone = async (req: any, res: Response, next: NextFunction) => {
-  const session_sid = req.signedCookies["session.sid"];
-  const auth_sid = req.signedCookies["auth.sid"];
-
   passport.authenticate(
     "jwt",
     { session: true },
@@ -15,11 +12,11 @@ const isFreemiumDone = async (req: any, res: Response, next: NextFunction) => {
         console.log(err);
       }
 
+      const clientId = req.session.client_id;
+      const user = await User.findOne({ clientId });
+
       if (!result) {
         try {
-          const clientId = req.session.client_id;
-          const user = await User.findOne({ clientId });
-
           if (!user)
             res
               .status(StatusCodes.BAD_REQUEST)
@@ -29,13 +26,14 @@ const isFreemiumDone = async (req: any, res: Response, next: NextFunction) => {
             return res
               .status(StatusCodes.OK)
               .send({ message: "Freemium is done" });
-
+              
+          req.user = user;
           next();
         } catch (error) {
           console.log(error);
         }
       } else {
-        req.user = result.user;
+        req.user = user;
         next();
       }
     }

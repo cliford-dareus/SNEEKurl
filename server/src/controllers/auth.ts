@@ -78,15 +78,16 @@ const login = async (req: any, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    req.session.isAuthenticated = false;
+    req.session.isAuthenticated = true;
 
-    res.status(StatusCodes.ACCEPTED).json({
+    res.status(StatusCodes.OK).json({
       message: "Login successful",
       user: {
         username: user.username,
         stripe_account_id: user.stripe_account_id,
+        isVerified: true
       },
-      token: payload
+      token: payload,
     });
   } catch (error) {}
 };

@@ -34,6 +34,10 @@ const create = async (req: any, res: Response) => {
           user: user?._id,
         });
 
+        await User.findByIdAndUpdate(user?._id, {
+          max_link: user.max_link! - 1,
+        });
+
         res.status(StatusCodes.OK).json({
           short,
         });
@@ -49,6 +53,10 @@ const create = async (req: any, res: Response) => {
         const short = await Short.create({
           longUrl,
           user: user?._id,
+        });
+
+        await User.findByIdAndUpdate(user?._id, {
+          max_link: user.max_link! - 1,
         });
 
         res.status(StatusCodes.OK).json({
@@ -90,7 +98,7 @@ const getUrls = async (req: any, res: Response) => {
   }
 
   try {
-    const urls = await Short.find({ user: user._id }).skip(2).limit(limit);
+    const urls = await Short.find({ user: user._id }).limit(limit);
     res.status(StatusCodes.OK).json({ urls });
   } catch (error) {
     res

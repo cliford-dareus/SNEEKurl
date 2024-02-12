@@ -39,12 +39,13 @@ const create_subscription = async (req: Request, res: Response) => {
       (price) => price.unit_amount! / 100 === plan_price
     );
 
-    plan = choosing_plan[0].id;
+    plan = choosing_plan[0];
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).send();
   }
 
   const customer = await User.findOne({ username });
+  console.log(customer)
 
   if (!customer?.stripe_account_id) {
     // create a new customer in stripe
@@ -68,12 +69,22 @@ const create_subscription = async (req: Request, res: Response) => {
         customer: new_customer.stripe_account_id as string,
         items: [
           {
-            price: plan,
+            price: plan?.id,
           },
         ],
         payment_behavior: "default_incomplete",
         expand: ["latest_invoice.payment_intent"],
       });
+
+      await User.findByIdAndUpdate(
+        { _id: customer?._id },
+        {
+          $set: {
+            subscription_end: subscription.current_period_end,
+            max_link: plan?.metadata.max_link,
+          },
+        }
+      );
 
       res.status(StatusCodes.OK).send({
         subscriptionId: subscription.id,
@@ -91,12 +102,22 @@ const create_subscription = async (req: Request, res: Response) => {
       customer: customer?.stripe_account_id as string,
       items: [
         {
-          price: plan,
+          price: plan?.id,
         },
       ],
       payment_behavior: "default_incomplete",
       expand: ["latest_invoice.payment_intent"],
     });
+
+    await User.findByIdAndUpdate(
+      { _id: customer?._id },
+      {
+        $set: {
+          subscription_end: subscription.current_period_end,
+          max_link: plan?.metadata.max_link,
+        },
+      }
+    );
 
     res.status(StatusCodes.OK).send({
       subscriptionId: subscription.id,

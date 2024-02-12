@@ -8,7 +8,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./lib/db/connect";
 import bodyParser from "body-parser";
 import passport from "passport";
-import stripe from "./config/stripe";
+import jwt from "jsonwebtoken";
 dotenv.config();
 
 import authRouter from "./routes/auth";
@@ -47,7 +47,6 @@ app.use(
   })
 );
 
-
 app.use(
   session({
     name: "session.sid",
@@ -75,7 +74,8 @@ app.use("/stripe", stripeRouter);
 
 app.post("/sneekurl/fp", async (req: any, res) => {
   const { client_id } = req.query;
-  req.session.client_id = client_id
+  const auth_sid = req.signedCookies["auth.sid"];
+  req.session.client_id = client_id;
   req.session.isAuthenticated = false;
 
   try {
@@ -83,19 +83,60 @@ app.post("/sneekurl/fp", async (req: any, res) => {
       clientId: req.session.client_id,
     });
 
-    if (not_found_user) {
-      return res.status(201).send();
+    if (not_found_user && auth_sid) {
+      const decoded_payload = jwt.verify(
+        auth_sid,
+        process.env.JWT_SECRET!
+      ) as jwt.JwtPayload;
+
+      const isVerified =
+        decoded_payload["user_id"] === not_found_user._id.toString() &&
+        decoded_payload["user_name"] === not_found_user.username.toString();
+
+      if (isVerified) {
+        req.session.isAuthenticated = true;
+
+        const payload = jwt.sign(
+          { user_id: not_found_user._id, user_name: not_found_user.username },
+          process.env.JWT_SECRET!,
+          { expiresIn: "1d" }
+        );
+
+        res.cookie("auth.sid", payload, {
+          httpOnly: true,
+          signed: true,
+          maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        return res.status(200).send({
+          message: "Login successful",
+          user: {
+            username: not_found_user.username,
+            stripe_account_id: not_found_user.stripe_account_id,
+            isVerified: true,
+          },
+          token: payload,
+        });
+      }
+    } else if (not_found_user) {
+      res.status(200).send({
+        message: "login as Guest",
+        user: {
+          username: "Guest",
+          isVerified: false,
+        },
+      });
+    } else {
+      const user = {
+        username: "guest",
+        email: "user@example.com",
+        password: req.session.client_id,
+        clientId: req.session.client_id,
+      };
+
+      await User.create(user);
+      res.status(200).send({ message: "Guest created" });
     }
-
-    const user = {
-      username: "user",
-      email: "user@example.com",
-      password: req.session.client_id,
-      clientId: req.session.client_id,
-    };
-
-    User.create(user);
-    res.status(200).send();
   } catch (error) {
     res.status(401).send();
   }

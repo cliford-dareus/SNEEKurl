@@ -15,8 +15,6 @@ opts.jwtFromRequest = cookieExtractor;
 
 passport.use(
   new Strategy(opts, (user, done) => {
-    console.log(user);
-    console.log(user);
     User.findOne({ id: user.id })
       .then((user) => {
         if (user) {
@@ -27,7 +25,6 @@ passport.use(
         }
       })
       .catch((err) => {
-        console.log(err);
         return done(err, false);
       });
   })

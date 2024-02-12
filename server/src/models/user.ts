@@ -12,7 +12,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   freemium?: number; // Make freemium optional;
   subscription_end?: Date;
-  subscription_credits: number; // Make subscription credits optional
+  max_link: number; // Make subscription credits optional
   comparePassword(candidatePassword: string): Promise<Error | boolean>;
 }
 
@@ -32,9 +32,9 @@ const UserSchema = new Schema<IUser>(
     profile: { type: String },
     provider: { type: String },
     isVerified: { type: Boolean, default: false },
-    freemium: { type: Number, default: 5 },
     subscription_end: { type: Date },
-    subscription_credits: { type: Number },
+    freemium: { type: Number, default: 5 },
+    max_link: { type: Number, default: 5 },
   },
   {
     timestamps: true,
