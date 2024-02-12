@@ -7,6 +7,6 @@ import isFreemiumDone from "../middlewares/checkFreemium";
 const router = express.Router();
 
 router.route("/create").post(isFreemiumDone, create);
-router.route("/urls").get(getUrls);
+router.route("/urls").get( getUrls);
 
 export default router;

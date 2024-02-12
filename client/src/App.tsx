@@ -11,6 +11,8 @@ import Register from "./features/auth/register";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import Report from "./pages/test";
 import ProtectedRoutes from "./Utils/protectedRoutes";
+import Pricing from "./pages/pricing";
+import Checkout from "./components/checkout";
 
 function App() {
   const fpPromise = FingerprintJS.load();
@@ -46,6 +48,9 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path="/test" element={<Report />} />
+            <Route path="/pricing" element={<Pricing />}>
+              <Route path="checkout" element={<Checkout />} />
+            </Route>
             <Route path="/" element={<Dashboard />}>
               <Route path="/yoururl" element={<Myurl />} />
             </Route>

@@ -15,6 +15,7 @@ export interface Url {
 export interface UrlResponse {
   short: Url;
   guest?: string;
+  message?: string;
 }
 
 export interface UrlsResponse {
@@ -32,6 +33,7 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const urlapi = createApi({
+  reducerPath: 'urlapi',
   baseQuery,
   endpoints: (builder) => ({
     shortenUrl: builder.mutation<UrlResponse, UrlRequest>({

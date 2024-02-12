@@ -1,21 +1,24 @@
-import express, { NextFunction, Request, Response } from "express";
-import session, { Session, SessionData } from "express-session";
+import express from "express";
+import session from "express-session";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 import connectDB from "./lib/db/connect";
+import bodyParser from "body-parser";
 import passport from "passport";
+import stripe from "./config/stripe";
 dotenv.config();
 
 import authRouter from "./routes/auth";
 import shortRouter from "./routes/short";
+import stripeRouter from "./routes/stripe";
 
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 import User from "./models/user";
+import { webhook } from "./config/webhook";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -44,13 +47,6 @@ app.use(
   })
 );
 
-// app.use((_, res, next) => {
-//   res.header("Access-Control-Allow-Origin", ["http://localhost:5173"]);
-//   res.header("Access-Control-Allow-Credentials", "true");
-//   res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-//   res.header("Access-Control-Allow-Headers", "Content-Type");
-//   next();
-// });
 
 app.use(
   session({
@@ -75,6 +71,7 @@ require("./config/strategy");
 
 app.use("/auth", authRouter);
 app.use("/short", shortRouter);
+app.use("/stripe", stripeRouter);
 
 app.post("/sneekurl/fp", async (req: any, res) => {
   const { client_id } = req.query;
@@ -104,6 +101,7 @@ app.post("/sneekurl/fp", async (req: any, res) => {
   }
 });
 
+webhook(app, bodyParser);
 
 //custom middleware
 // app.use(notfoundMiddleware);
@@ -119,12 +117,5 @@ const start = async () => {
     console.log(error);
   }
 };
-
-function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
-  if (req.user) {
-    return next();
-  }
-  return res.status(302).location("http://localhost:5173/login").send();
-}
 
 start();

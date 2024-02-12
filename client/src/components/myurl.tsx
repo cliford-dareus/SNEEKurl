@@ -77,7 +77,7 @@ const UrlItem = ({ url }: Props) => {
   );
 };
 
-const Myurl = (props: Props) => {
+const Myurl = () => {
   const Navigate = useNavigate();
   const { data, isLoading, isError, isSuccess } = useGetUrlsQuery();
 

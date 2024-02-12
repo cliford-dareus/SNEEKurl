@@ -3,6 +3,7 @@ import { RootState } from "../store";
 
 export interface User {
   username: string;
+  stripe_account_id: string;
 }
 
 export interface UserResponse {

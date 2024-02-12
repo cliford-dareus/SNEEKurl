@@ -84,7 +84,9 @@ const login = async (req: any, res: Response) => {
       message: "Login successful",
       user: {
         username: user.username,
+        stripe_account_id: user.stripe_account_id,
       },
+      token: payload
     });
   } catch (error) {}
 };

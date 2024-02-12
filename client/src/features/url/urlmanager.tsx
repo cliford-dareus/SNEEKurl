@@ -13,6 +13,7 @@ import {
 } from "react-icons/lu";
 import { PopoverContainer, Popover } from "../../components/ui/popover";
 import { downlaodSvg } from "../../Utils/downloadQr";
+import { useAppSelector } from "../../app/hook";
 
 type Props = {};
 type IResultProps = {
@@ -57,10 +58,7 @@ const ShareButton = ({ data }: { data: UrlResponse }) => {
 
   return (
     <PopoverContainer triggerFn={setOpen}>
-      <Button
-        classnames="relative"
-        onClick={() => setOpen(!open)}
-      >
+      <Button classnames="relative" onClick={() => setOpen(!open)}>
         <LuShare />
         Share
         {open && (
@@ -128,6 +126,7 @@ const UrlResult = ({ data, setShowResult }: IResultProps) => {
 };
 
 const UrlManager = (props: Props) => {
+  const user = useAppSelector((state) => state.auth.user);
   const [showResult, setShowResult] = useState<UrlResponse | undefined>(
     undefined
   );
@@ -142,6 +141,19 @@ const UrlManager = (props: Props) => {
     return (
       <div className="">
         <span>Loading...</span>
+      </div>
+    );
+  }
+
+  if (data?.message && !user.username) {
+    return (
+      <div className="flex flex-col mt-4 ">
+        <p className="text-xl font-bold  text-red-500">{data.message}</p>
+        <p className="my-2">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa
+          perspiciatis, totam molestiae labore saepe harum?
+        </p>
+        <Button classnames="mt-auto">Create your free account</Button>
       </div>
     );
   }

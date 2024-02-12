@@ -11,6 +11,8 @@
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^4.2.2",
     "@reduxjs/toolkit": "^1.9.1",
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^2.4.0",
     "axios": "^1.2.2",
     "classnames": "^2.5.1",
     "qrcode.react": "^3.1.0",

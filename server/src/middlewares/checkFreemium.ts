@@ -27,7 +27,7 @@ const isFreemiumDone = async (req: any, res: Response, next: NextFunction) => {
 
           if (user?.freemium! <= 0)
             return res
-              .status(StatusCodes.PAYMENT_REQUIRED)
+              .status(StatusCodes.OK)
               .send({ message: "Freemium is done" });
 
           next();

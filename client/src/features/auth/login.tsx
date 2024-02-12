@@ -6,6 +6,7 @@ import { useLoginMutation } from "../../app/services/auth";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { AuthState, selectCurrentUser, setCredentials } from "./authslice";
 import { useEffect } from "react";
+import useLocalStorage from "../../Utils/hooks/use-local-storage";
 
 type Props = {};
 
@@ -19,6 +20,8 @@ const Login = (props: Props) => {
   const user = useAppSelector(selectCurrentUser) as AuthState;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [Value, setValue] = useLocalStorage("token", '');
+
   const [useLogin, { isLoading, isError }] = useLoginMutation();
   const { register, handleSubmit } = useForm<IUserFormValues>();
 
@@ -29,8 +32,15 @@ const Login = (props: Props) => {
         password: formData.password,
       }).unwrap();
 
+      setValue(JSON.stringify(data.token));
+
       dispatch(
-        setCredentials({ user: data.user.username, token: "data.token" })
+        setCredentials({
+          user: {
+            username: data.user.username,
+            stripe_account_id: data.user.stripe_account_id,
+          },
+        })
       );
       navigate("/", { replace: true });
     } catch (error) {
@@ -39,7 +49,7 @@ const Login = (props: Props) => {
   };
 
   useEffect(() => {
-    if (user.user.username) {
+    if (user.token) {
       navigate("/");
     }
   }, []);

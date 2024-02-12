@@ -10,12 +10,9 @@ import { LuMoon, LuSunDim, LuUserCircle2 } from "react-icons/lu";
 
 const Header = () => {
   const user = useAppSelector(selectCurrentUser) as AuthState;
-  const size: Size = useWindowSize();
-  const isMobile = size.width! < 768;
+  // const [logginout] = useLogoutUserMutation();
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState<string>("");
-  const [pop, setPop] = useState(false);
-
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -27,20 +24,19 @@ const Header = () => {
     }
   }, [darkMode]);
 
-  // const [logginout] = useLogoutUserMutation();
+  console.log(user)
+
 
   const logout = async () => {
     // try {
     //   const data = await logginout({}).unwrap();
     //   dispatch(deleteUser());
     //   setMessage(data?.msg);
-    //   setPop(true);
     // } catch (error) {
     //   console.log(error);
     // }
   };
 
-  console.log(user);
 
   return (
     <header className="fixed z-40 w-full text-black dark:text-white p-4 flex justify-between items-center sm:px-12">
@@ -62,6 +58,11 @@ const Header = () => {
               </Link>
             </li>
             <li className="hover:border-b flex justify-center items-center w-28">
+              <Link className="px-4" to="/pricing">
+                Pricing
+              </Link>
+            </li>
+            <li className="hover:border-b flex justify-center items-center w-28">
               <Link className="px-4" to="">
                 Docs
               </Link>
@@ -74,7 +75,7 @@ const Header = () => {
             {!darkMode ? <LuMoon size={24} /> : <LuSunDim  size={24}/>}
           </div>
 
-          {!user.user.username ? (
+          {!user.token ? (
             <Button>
               <Link to="/login">Sign In</Link>{" "}
             </Button>

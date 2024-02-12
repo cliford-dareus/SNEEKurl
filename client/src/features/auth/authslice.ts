@@ -4,23 +4,32 @@ import type { RootState } from "../../app/store";
 
 type User = {
   username: string;
-}
-
- export type AuthState = {
-  user: User;
-  token: string | null;
+  stripe_account_id: string;
 };
+
+export type AuthState = {
+  user: User;
+  token: string;
+};
+
+const initialState = {
+  user: {},
+  token: localStorage.getItem("token"),
+} as AuthState;
 
 const authslice = createSlice({
   name: "auth",
-  initialState: { user: {}, token: null } as AuthState,
+  initialState,
   reducers: {
     setCredentials: (
       state,
-      { payload: { user, token } }: PayloadAction<{ user: string; token: string }>
+      {
+        payload: { user },
+      }: PayloadAction<{ user: User }>
     ) => {
-      state.user.username = user;
-      state.token = token;
+        state.token = localStorage.getItem("token") as string,
+        state.user.username = user.username,
+        state.user.stripe_account_id = user.stripe_account_id;
     },
   },
 });
