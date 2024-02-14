@@ -55,6 +55,7 @@ const SubcriptionOptions = [
 ];
 
 const Pricing = (props: Props) => {
+  const { data, refetch } = useRetrieveSubscriptionQuery();
   const Navigate = useNavigate();
   const [create_subscription, { isLoading }] = useCreateSubscriptionMutation();
   const [activeplan, setActivePlan] = useState<any | null>(null);
@@ -63,8 +64,6 @@ const Pricing = (props: Props) => {
     subscriptionId: string;
     client_secret: string;
   } | null>(null);
-
-  const { data } = useRetrieveSubscriptionQuery();
 
   const handleSubscription = async (price: any) => {
     const payload = { plan_price: price, username: user.username };
@@ -83,9 +82,14 @@ const Pricing = (props: Props) => {
 
   useEffect(() => {
     if (!data) return;
+
     const active_plan = data?.subscription?.data.filter(
       (x: any) => x.status === "active"
     )[0];
+
+    if (!active_plan) {
+      refetch();
+    }
     setActivePlan(active_plan);
   }, [data]);
 
@@ -130,7 +134,7 @@ const Pricing = (props: Props) => {
                     classnames="w-full"
                     onClick={() => handleSubscription(opt.price)}
                   >
-                    {opt.cta}
+                    {!isLoading ? opt.cta : "isLoading..."}
                   </Button>
                 )}
               </div>

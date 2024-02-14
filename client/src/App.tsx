@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Recent from "./pages/recent";
-import Favorite from "./pages/favorite";
+import Favorite from "./pages/links";
 import Layout from "./components/layout";
 import Myurl from "./components/myurl";
 import Login from "./features/auth/login";
@@ -16,6 +16,7 @@ import { useIdentifyUserMutation } from "./app/services/auth";
 import { setCredentials } from "./features/auth/authslice";
 import useLocalStorage from "./Utils/hooks/use-local-storage";
 import { useAppDispatch } from "./app/hook";
+import AdminLayout from "./components/admin-layout";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -62,10 +63,12 @@ function App() {
             <Route path="/" element={<Dashboard />}>
               <Route path="/yoururl" element={<Myurl />} />
             </Route>
-
+          </Route>
+          
+          <Route element={<AdminLayout />}>
             <Route element={<ProtectedRoutes />}>
-              <Route path="/recent" element={<Recent />} />
-              <Route path="/favorite" element={<Favorite />} />
+              <Route path="/links" element={<Favorite />} />
+              <Route path="/account" element={<Recent />} />
             </Route>
           </Route>
         </Routes>

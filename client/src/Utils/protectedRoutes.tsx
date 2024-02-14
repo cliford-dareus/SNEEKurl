@@ -8,7 +8,6 @@ type Props = {
 
 const ProtectedRoutes = () => {
   const user = useAppSelector((state) => state.auth);
-  console.log(user)
   return user.user.username ? <Outlet /> : <Navigate to="/login" />;
 };
 

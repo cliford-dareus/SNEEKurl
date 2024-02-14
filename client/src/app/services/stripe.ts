@@ -16,9 +16,11 @@ const baseQuery = fetchBaseQuery({
 export const stripeApi = createApi({
   reducerPath: "stripeApi",
   baseQuery,
+  tagTypes: ["STRIPE"],
   endpoints: (builder) => ({
     retrieveSubscription: builder.query<any, void>({
       query: () => "/retrieve-subscription",
+      providesTags: ["STRIPE"],
     }),
     createSubscription: builder.mutation<any, Payload>({
       query: (payload) => ({
@@ -26,6 +28,7 @@ export const stripeApi = createApi({
         method: "POST",
         body: payload,
       }),
+      invalidatesTags: ["STRIPE"],
     }),
   }),
 });

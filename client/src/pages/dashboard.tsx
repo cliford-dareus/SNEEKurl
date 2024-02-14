@@ -5,15 +5,19 @@ import type { RootState } from "../app/store";
 
 import { Link, Outlet } from "react-router-dom";
 import UrlManager from "../features/url/urlmanager";
-import QrManager from "../features/qr/qrmanager";
 import Button from "../components/ui/button";
 import { useGetUrlsQuery } from "../app/services/urlapi";
 import { LuForward, LuLink2, LuMoreVertical, LuQrCode } from "react-icons/lu";
 import { Sheet, SheetContent } from "../components/ui/sheet";
+import { QRCodeSVG } from "qrcode.react";
+import { downlaodSvg } from "../Utils/downloadQr";
+
+const URLs = "http://localhost:4080";
 
 const Dashboard = () => {
-  const { data, isLoading, isSuccess } = useGetUrlsQuery();
+  const { data, isLoading, isSuccess } = useGetUrlsQuery(null);
   const [active, setActive] = useState("");
+  const [open, setOpen] = useState("");
 
   return (
     <>
@@ -41,7 +45,7 @@ const Dashboard = () => {
                     className="h-[80px] bg-slate-300 rounded-lg py-2 px-4 flex justify-between items-center"
                   >
                     <div className="w-[70%]">
-                      <div className="flex items-center gap-4 mb-2">
+                      <div className="flex items-center gap-2">
                         <Link
                           className="text-blue-700 flex gap-2 items-center"
                           to={`http://localhost:4080/${url.short}`}
@@ -55,7 +59,37 @@ const Dashboard = () => {
                           </div>
                           <div className="">share</div>
                           <div className="">
-                            <LuQrCode size={22} />
+                            <LuQrCode
+                              size={22}
+                              onClick={() => setOpen(url._id)}
+                              className="cursor-pointer"
+                            />
+
+                            {open === url._id && (
+                              <>
+                                <Sheet classnames="" triggerFn={setOpen} />
+                                <SheetContent classnames=" bg-red-600 top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg p-4">
+                                  <div className="">
+                                    <QRCodeSVG
+                                      id="qr-svg"
+                                      className="w-full"
+                                      size={300}
+                                      value={`${URLs}/${url.short}`}
+                                    />
+                                    <Button classnames="mt-4 relative z-50 isolate">
+                                      <a
+                                        className=""
+                                        onClick={(event) =>
+                                          downlaodSvg("qr-svg", event, "svg")
+                                        }
+                                      >
+                                        Download Svg
+                                      </a>
+                                    </Button>
+                                  </div>
+                                </SheetContent>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -72,7 +106,7 @@ const Dashboard = () => {
 
                       {active === url._id && (
                         <>
-                          <Sheet classnames="" triggerFn={setActive}/>
+                          <Sheet triggerFn={setActive} />
                           <SheetContent classnames="h-[500px] w-[40%] bg-red-600 top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg">
                             {url.longUrl}
                           </SheetContent>

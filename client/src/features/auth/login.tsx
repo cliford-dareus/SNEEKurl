@@ -17,10 +17,10 @@ export type IUserFormValues = {
 };
 
 const Login = (props: Props) => {
-  const user = useAppSelector(selectCurrentUser) as AuthState;
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [Value, setValue] = useLocalStorage("token", '');
+  const user = useAppSelector(selectCurrentUser) as AuthState;
 
   const [useLogin, { isLoading, isError }] = useLoginMutation();
   const { register, handleSubmit } = useForm<IUserFormValues>();
@@ -43,7 +43,7 @@ const Login = (props: Props) => {
           },
         })
       );
-      navigate("/", { replace: true });
+      navigate("/links", { replace: true });
     } catch (error) {
       console.log(error);
     }
@@ -51,7 +51,7 @@ const Login = (props: Props) => {
 
   useEffect(() => {
     if (user.token) {
-      navigate("/");
+      navigate("/links");
     }
   }, []);
 

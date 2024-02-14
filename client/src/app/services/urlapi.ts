@@ -33,8 +33,9 @@ const baseQuery = fetchBaseQuery({
 });
 
 export const urlapi = createApi({
-  reducerPath: 'urlapi',
+  reducerPath: "urlapi",
   baseQuery,
+  tagTypes: ["SHORT"],
   endpoints: (builder) => ({
     shortenUrl: builder.mutation<UrlResponse, UrlRequest>({
       query: (credentials) => ({
@@ -42,9 +43,13 @@ export const urlapi = createApi({
         method: "POST",
         body: credentials,
       }),
+      invalidatesTags: ["SHORT"],
     }),
-    getUrls: builder.query<UrlsResponse, void>({
-      query: () => "/urls?page=1",
+    getUrls: builder.query<UrlsResponse, any>({
+      query: (query) => ({
+        url: `/urls?${query?query:''}`,
+      }),
+      providesTags: ["SHORT"],
     }),
     editUrl: builder.mutation<UrlResponse, UrlRequest>({
       query: () => ({
@@ -52,8 +57,10 @@ export const urlapi = createApi({
         method: "PUT",
         body: "credentials",
       }),
+      invalidatesTags: ["SHORT"],
     }),
   }),
 });
 
-export const { useShortenUrlMutation, useGetUrlsQuery } = urlapi;
+export const { useShortenUrlMutation, useGetUrlsQuery, useEditUrlMutation } =
+  urlapi;
