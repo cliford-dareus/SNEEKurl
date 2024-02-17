@@ -7,7 +7,9 @@ interface IShort extends Document {
   isShareable: boolean;
   favorites: { type: ObjectId; ref: string }[];
   user: { type: ObjectId; ref: string };
-  metadata: {}
+  password?: string;
+  clicks: number;
+  lastClick: Date;
 }
 
 const ShortSchema = new mongoose.Schema<IShort>(
@@ -21,7 +23,9 @@ const ShortSchema = new mongoose.Schema<IShort>(
       ref: "User",
       required: true,
     },
-    metadata: {}
+    password: { type: String },
+    clicks: { type: Number },
+    lastClick: { type: Date },
   },
   {
     timestamps: true,

@@ -65,7 +65,7 @@ const create = async (req: any, res: Response) => {
       } catch (error) {
         res
           .status(StatusCodes.BAD_REQUEST)
-          .send({ message: "Smothing went wrong while creating short..." });
+          .send({ message: "Something went wrong while creating short..." });
       }
     } else {
       const short = await Short.create({
@@ -82,6 +82,7 @@ const create = async (req: any, res: Response) => {
   }
 };
 
+// GET URLS SEARCH
 const getUrls = async (req: any, res: Response) => {
   const client_id = req.session.client_id;
   const { page, skip } = req.query;
@@ -107,4 +108,56 @@ const getUrls = async (req: any, res: Response) => {
   }
 };
 
-export { create, getUrls };
+// UPDATE/EDIT URLS
+const editUrl = async (req: Request, res: Response) => {
+  const { id, longUrl, short, password, isShareable } = req.body;
+
+  const shortExit = await Short.findById(id);
+  if (!shortExit) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Link does not exit" });
+  }
+
+  try {
+    if (password) {
+      await Short.findOneAndUpdate(
+        { _id: id },
+        {
+          $set: {
+            longUrl,
+            short,
+            password,
+            isShareable,
+          },
+        }
+      );
+
+     return res
+        .status(StatusCodes.OK)
+        .send({ message: "Link has been updated"});
+    }
+
+    await Short.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          longUrl,
+          short,
+          isShareable,
+        },
+        $unset: {
+          password,
+        },
+      }
+    );
+
+    res.status(StatusCodes.OK).send({ message: "Link has been updated" });
+  } catch (error) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: "Link could not be updated" });
+  }
+};
+
+export { create, getUrls, editUrl };
