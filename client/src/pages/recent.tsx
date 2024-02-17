@@ -4,13 +4,10 @@ import { RootState } from "../app/store";
 import Header from "../components/Header";
 
 const Recent = () => {
-  const user = useAppSelector((state: RootState) => state.user);
+  const user = useAppSelector((state: RootState) => state.auth);
   return (
-    <div className="text-white w-full h-full">
-      <Header user={user} />
-      <div>
-        recent
-      </div>
+    <div className="w-full h-full">
+      <div>recent</div>
     </div>
   );
 };

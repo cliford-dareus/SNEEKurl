@@ -79,7 +79,7 @@ const UrlItem = ({ url }: Props) => {
 
 const Myurl = () => {
   const Navigate = useNavigate();
-  const { data, isLoading, isError, isSuccess } = useGetUrlsQuery();
+  const { data, isLoading, isError, isSuccess } = useGetUrlsQuery("page=1");
 
   return (
     <>

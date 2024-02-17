@@ -12,12 +12,15 @@ import {
 import { LuMoon, LuSunDim, LuUserCircle2 } from "react-icons/lu";
 import { useLogoutUserMutation } from "../app/services/auth";
 import useLocalStorage from "../Utils/hooks/use-local-storage";
+import useScroll from "../Utils/hooks/use-scroll";
+import classNames from "classnames";
 
 type Props = {
-  isActive: boolean
-}
+  isActive: boolean;
+};
 
 const Header = ({ isActive }: Props) => {
+  const scrolled = useScroll(80);
   const [value, setValue] = useLocalStorage("darkmode", "light");
   const Navigate = useNavigate();
   const user = useAppSelector(selectCurrentUser) as AuthState;
@@ -52,8 +55,13 @@ const Header = ({ isActive }: Props) => {
   }, [darkMode]);
 
   return (
-    <header className="fixed z-40 w-full text-black dark:text-white p-4 flex justify-between items-center sm:px-12">
-      <div className="container mx-auto flex items-center">
+    <header
+      className={classNames(
+        "fixed z-40 w-full text-black dark:text-white flex justify-between items-center transition-all ",
+        scrolled ? "border-b border-gray-200 bg-white/75 backdrop-blur-lg" : ""
+      )}
+    >
+      <div className="container w-full mx-auto flex items-center px-4 h-14">
         <Link className="font-bold text-xl mr-16" to="/">
           SNEEK
         </Link>

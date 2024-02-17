@@ -153,6 +153,7 @@ const Pricing = (props: Props) => {
             </div>
           ))}
         </div>
+        
         <div className="">
           <Outlet />
         </div>

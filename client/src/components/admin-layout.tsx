@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "./Header";
 import { Link, Outlet } from "react-router-dom";
 
@@ -6,9 +5,9 @@ type Props = {};
 
 const AdminLayout = (props: Props) => {
   return (
-    <div className="relative h-screen">
+    <div className="relative">
       <Header isActive={true} />
-      <main className="pt-16 container mx-auto overflow-hidden">
+      <main className="pt-16 container mx-auto overflow-hidden px-4">
         <div className="h-[10vh]"></div>
         <div className="flex h-[80vh]">
           <div className="max-h-screen min-w-[296px] ">

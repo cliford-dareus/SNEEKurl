@@ -6,8 +6,10 @@ export interface Url {
   longUrl: string;
   short: string;
   favorite: string[];
+  isShareable: boolean;
   isLogin: boolean;
   creatorId: string;
+  password?: string;
   _id: string;
   __v: number;
 }
@@ -51,11 +53,11 @@ export const urlapi = createApi({
       }),
       providesTags: ["SHORT"],
     }),
-    editUrl: builder.mutation<UrlResponse, UrlRequest>({
-      query: () => ({
+    editUrl: builder.mutation<UrlResponse, any>({
+      query: (payload) => ({
         url: "/edit",
         method: "PUT",
-        body: "credentials",
+        body: payload,
       }),
       invalidatesTags: ["SHORT"],
     }),

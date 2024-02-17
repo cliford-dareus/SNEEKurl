@@ -5,7 +5,7 @@ type Props = {}
 
 const Layout = (props: Props) => {
   return (
-    <div className='relative'>
+    <div className=''>
         <Header isActive={false}/>
         <main className='pt-16'>
             {<Outlet/>}

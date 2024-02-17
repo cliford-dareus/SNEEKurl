@@ -5,23 +5,73 @@ import type { RootState } from "../app/store";
 
 import { Link, Outlet } from "react-router-dom";
 import UrlManager from "../features/url/urlmanager";
-import Button from "../components/ui/button";
 import { useGetUrlsQuery } from "../app/services/urlapi";
 import { LuForward, LuLink2, LuMoreVertical, LuQrCode } from "react-icons/lu";
-import { Sheet, SheetContent } from "../components/ui/sheet";
-import { QRCodeSVG } from "qrcode.react";
-import { downlaodSvg } from "../Utils/downloadQr";
+import EditQrModal from "../components/ui/modals/edit-qr-modal";
+import EditLinkModal from "../components/ui/modals/edit-link-modal";
 
 const URLs = "http://localhost:4080";
 
+const HomeLinkItem = ({ url }: { url: any }) => {
+  const [active, setActive] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="h-[80px] bg-slate-300 rounded-lg py-2 px-4 flex justify-between items-center">
+      <div className="w-[70%]">
+        <div className="flex items-center gap-2">
+          <Link
+            className="text-blue-700 flex gap-2 items-center"
+            to={`http://localhost:4080/${url.short}`}
+          >
+            <LuLink2 />
+            sneek.co/{url.short}
+          </Link>
+          <div className="flex items-center ml-auto gap-4">
+            <div className="">
+              <LuForward size={22} />
+            </div>
+            <div className="">share</div>
+            <div className="">
+              <LuQrCode
+                size={22}
+                onClick={() => setOpen(true)}
+                className="cursor-pointer"
+              />
+
+              <EditQrModal
+                url={url}
+                editQrActive={open}
+                setQrActive={setOpen}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className=" text-left">
+          <p className="truncate">{url.longUrl}</p>
+        </div>
+      </div>
+      <div className="">
+        <LuMoreVertical size={24} onClick={() => setActive(true)} />
+
+        <EditLinkModal
+          url={url}
+          setEditActive={setActive}
+          editActive={active}
+        />
+      </div>
+    </div>
+  );
+};
+
 const Dashboard = () => {
   const { data, isLoading, isSuccess } = useGetUrlsQuery(null);
-  const [active, setActive] = useState("");
-  const [open, setOpen] = useState("");
+  
 
   return (
     <>
-      <section className="container mx-auto p-4 flex justify-center text-center flex-col relative">
+      <section className="container mx-auto p-4 flex justify-center text-center flex-col">
         <div className="mt-28">
           <span className="px-4 py-1 bg-red-500 rounded-full">+1k github</span>
           <h1 className="text-black dark:text-white text-7xl mt-5 max-w-[950px] mx-auto">
@@ -39,82 +89,7 @@ const Dashboard = () => {
             <div className="max-w-[468px] flex-1 flex flex-col gap-2">
               {/* Only show 4 of the users urls, if empty show 4 skeletons  */}
               {isSuccess &&
-                data.urls?.map((url, index) => (
-                  <div
-                    key={index}
-                    className="h-[80px] bg-slate-300 rounded-lg py-2 px-4 flex justify-between items-center"
-                  >
-                    <div className="w-[70%]">
-                      <div className="flex items-center gap-2">
-                        <Link
-                          className="text-blue-700 flex gap-2 items-center"
-                          to={`http://localhost:4080/${url.short}`}
-                        >
-                          <LuLink2 />
-                          sneek.co/{url.short}
-                        </Link>
-                        <div className="flex items-center ml-auto gap-4">
-                          <div className="">
-                            <LuForward size={22} />
-                          </div>
-                          <div className="">share</div>
-                          <div className="">
-                            <LuQrCode
-                              size={22}
-                              onClick={() => setOpen(url._id)}
-                              className="cursor-pointer"
-                            />
-
-                            {open === url._id && (
-                              <>
-                                <Sheet classnames="" triggerFn={setOpen} />
-                                <SheetContent classnames=" bg-red-600 top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg p-4">
-                                  <div className="">
-                                    <QRCodeSVG
-                                      id="qr-svg"
-                                      className="w-full"
-                                      size={300}
-                                      value={`${URLs}/${url.short}`}
-                                    />
-                                    <Button classnames="mt-4 relative z-50 isolate">
-                                      <a
-                                        className=""
-                                        onClick={(event) =>
-                                          downlaodSvg("qr-svg", event, "svg")
-                                        }
-                                      >
-                                        Download Svg
-                                      </a>
-                                    </Button>
-                                  </div>
-                                </SheetContent>
-                              </>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className=" text-left">
-                        <p className="truncate">{url.longUrl}</p>
-                      </div>
-                    </div>
-                    <div className="">
-                      <LuMoreVertical
-                        size={24}
-                        onClick={() => setActive(url._id)}
-                      />
-
-                      {active === url._id && (
-                        <>
-                          <Sheet triggerFn={setActive} />
-                          <SheetContent classnames="h-[500px] w-[40%] bg-red-600 top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg">
-                            {url.longUrl}
-                          </SheetContent>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                data.urls?.map((url, index) => <HomeLinkItem url={url} />)}
             </div>
           </div>
         </div>

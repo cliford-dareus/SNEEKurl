@@ -8,7 +8,7 @@ type Props = {
 
 const ProtectedRoutes = () => {
   const user = useAppSelector((state) => state.auth);
-  return user.user.username ? <Outlet /> : <Navigate to="/login" />;
+  return user.token ? <Outlet /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoutes;

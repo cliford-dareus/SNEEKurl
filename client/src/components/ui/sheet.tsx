@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useRef } from "react";
 
 type Props = {
   classnames?: string;
-  triggerFn?: React.Dispatch<React.SetStateAction<string>>;
+  triggerFn?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 type ContentProps = {
@@ -16,7 +16,7 @@ const Sheet = ({classnames, triggerFn}: Props) => {
 
   const handleClickOutside = (event: any) => {
     if (Ref.current && Ref.current.contains(event.target) && triggerFn) {
-      triggerFn("");
+      triggerFn(false);
     }
   };
 
@@ -39,6 +39,6 @@ const Sheet = ({classnames, triggerFn}: Props) => {
 };
 
 const SheetContent = ({ children, classnames }: ContentProps) => {
-  return <div className={classNames(classnames, "blur-0 z-50 ")}>{children}</div>;
+  return <div className={classNames(classnames, "blur-0 z-50")}>{children}</div>;
 };
 export { Sheet, SheetContent };
