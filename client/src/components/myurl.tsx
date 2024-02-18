@@ -13,6 +13,7 @@ import {
 } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
 import { getSiteUrl } from "../Utils/getSiteUrl";
+import VisitLinkPassword from "./ui/modals/visit-link-password";
 
 type Props = {
   url: Url;
@@ -20,6 +21,10 @@ type Props = {
 
 const UrlItem = ({ url }: Props) => {
   const [open, setOpen] = useState(false);
+  const [b, setb] = useState<{ status: boolean; url: Url | null }>({
+    status: false,
+    url: null,
+  });
 
   return (
     <div className="flex p-4 gap-8 shadow-md bg-slate-300 rounded-lg">
@@ -42,17 +47,25 @@ const UrlItem = ({ url }: Props) => {
           </p>
           <p className="truncate">{url.longUrl}</p>
         </div>
-
+        <VisitLinkPassword status={b.status} url={b.url!} setStatus={setb} />
         <div className="flex gap-4 items-center">
-          <a
-            className=""
-            href={`http://localhost:4080/short/${url.short}`}
-            target="_blank"
-            data-original-title="null"
-            // onClick={() => refetch()}
+          <div
+            className="cursor-pointer"
+            onClick={async () => {
+              await fetch(`http://localhost:4080/short/${url.short}`)
+                .then((res) => {
+                  if (res.status === 403) {
+                    setb({ status: true, url: url });
+                  }
+                  return res.json();
+                })
+                .then((redirected) => {
+                  window.open(redirected, "_blank");
+                });
+            }}
           >
             <LuForward size={22} />
-          </a>
+          </div>
           <div className="cursor-pointer">Visit</div>
           <div className="cursor-pointer">
             <LuQrCode size={22} />

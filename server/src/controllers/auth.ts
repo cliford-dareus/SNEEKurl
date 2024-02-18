@@ -80,12 +80,20 @@ const login = async (req: any, res: Response) => {
 
     req.session.isAuthenticated = true;
 
+    if (req.session.client_id !== user.clientId) {
+      await User.findOneAndDelete({ clientId: req.session.client_id });
+      const updatedUser = await user
+        .update({ clientId: req.session.client_id })
+        .exec();
+      req.session.client_id = updatedUser.clientId;
+    }
+
     res.status(StatusCodes.OK).json({
       message: "Login successful",
       user: {
         username: user.username,
         stripe_account_id: user.stripe_account_id,
-        isVerified: true
+        isVerified: true,
       },
       token: payload,
     });

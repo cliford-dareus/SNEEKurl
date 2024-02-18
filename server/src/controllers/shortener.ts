@@ -85,12 +85,13 @@ const create = async (req: any, res: Response) => {
 // GET URLS SEARCH
 const getUrls = async (req: any, res: Response) => {
   const client_id = req.session.client_id;
+  const userr = req.user;
   const { page, skip } = req.query;
   const limit = 5;
 
-  console.log(page);
-
   const user = await User.findOne({ clientId: client_id });
+
+  console.log(userr);
 
   if (!user) {
     return res
@@ -133,9 +134,9 @@ const editUrl = async (req: Request, res: Response) => {
         }
       );
 
-     return res
+      return res
         .status(StatusCodes.OK)
-        .send({ message: "Link has been updated"});
+        .send({ message: "Link has been updated" });
     }
 
     await Short.findOneAndUpdate(
@@ -160,4 +161,43 @@ const editUrl = async (req: Request, res: Response) => {
   }
 };
 
-export { create, getUrls, editUrl };
+const visitUrl = async (req: Request, res: Response) => {
+  const clicksUrl = req.params.short;
+  const { password } = req.query;
+
+  const url = await Short.findOne({ short: clicksUrl });
+
+  if (url == null)
+    return res
+      .sendStatus(StatusCodes.BAD_REQUEST)
+      .send({ message: "Link not found..." });
+
+  try {
+    if (url.password && !password) {
+      return res
+        .status(StatusCodes.FORBIDDEN)
+        .send(`link is protected by with password`);
+    } else if (url.password && password) {
+      const isCorrectPassword = password === url.password;
+      if (isCorrectPassword) {
+        await url
+          .updateOne({ $inc: { clicks: 1 }, $set: { lastClick: Date.now() } })
+          .exec();
+
+        return res.redirect(url.longUrl);
+      }
+    } else {
+      await url
+        .updateOne({ $inc: { clicks: 1 }, $set: { lastClick: Date.now() } })
+        .exec();
+
+      return res.status(StatusCodes.ACCEPTED).json(url.longUrl);
+    }
+  } catch (error) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: "Smothing went wrong!" });
+  }
+};
+
+export { create, getUrls, editUrl, visitUrl };
