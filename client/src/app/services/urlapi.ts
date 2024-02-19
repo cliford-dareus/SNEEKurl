@@ -10,6 +10,8 @@ export interface Url {
   isLogin: boolean;
   creatorId: string;
   password?: string;
+  clicks?: number;
+  lastClick?: Date;
   _id: string;
   __v: number;
 }
@@ -49,7 +51,7 @@ export const urlapi = createApi({
     }),
     getUrls: builder.query<UrlsResponse, any>({
       query: (query) => ({
-        url: `/urls?${query?query:''}`,
+        url: `/urls?${query ? query : ""}`,
       }),
       providesTags: ["SHORT"],
     }),

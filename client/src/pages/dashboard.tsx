@@ -1,106 +1,174 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppSelector } from "../app/hook";
-// import { useAddUrlMutation, useGetUrlsQuery } from "../features/urlslice";
-import type { RootState } from "../app/store";
-
-import { Link, Outlet } from "react-router-dom";
-import UrlManager from "../features/url/urlmanager";
-import { useGetUrlsQuery } from "../app/services/urlapi";
-import { LuForward, LuLink2, LuMoreVertical, LuQrCode } from "react-icons/lu";
-import EditQrModal from "../components/ui/modals/edit-qr-modal";
+import { RootState } from "../app/store";
+import { Url, useGetUrlsQuery } from "../app/services/urlapi";
+import { Link, useSearchParams } from "react-router-dom";
+import { LuLink2, LuMoreVertical } from "react-icons/lu";
+import { getSiteUrl } from "../Utils/getSiteUrl";
+import { Popover, PopoverContainer } from "../components/ui/popover";
 import EditLinkModal from "../components/ui/modals/edit-link-modal";
+import EditQrModal from "../components/ui/modals/edit-qr-modal";
+import ShareLinkModal from "../components/ui/modals/share-link-modal";
+import Portal from "../components/portal";
+import VisitLinkButton from "../components/visit-link-button";
+import { Select } from "../components/ui/select";
+import FilterLinkModal from "../components/ui/modals/filter-link-modal";
+import Button from "../components/ui/button";
 
-const URLs = "http://localhost:4080";
-
-const HomeLinkItem = ({ url }: { url: any }) => {
-  const [active, setActive] = useState(false);
+const LinkCard = ({ url }: { url: Url }) => {
   const [open, setOpen] = useState(false);
+  const [editActive, setEditActive] = useState(false);
+  const [qrActive, setQrActive] = useState(false);
+  const [shareActive, setShareActive] = useState(false);
 
   return (
-    <div className="h-[80px] bg-slate-300 rounded-lg py-2 px-4 flex justify-between items-center">
-      <div className="w-[70%]">
-        <div className="flex items-center gap-2">
-          <Link
-            className="text-blue-700 flex gap-2 items-center"
-            to={`http://localhost:4080/${url.short}`}
-          >
-            <LuLink2 />
-            sneek.co/{url.short}
-          </Link>
-          <div className="flex items-center ml-auto gap-4">
-            <div className="">
-              <LuForward size={22} />
-            </div>
-            <div className="">share</div>
-            <div className="">
-              <LuQrCode
-                size={22}
-                onClick={() => setOpen(true)}
-                className="cursor-pointer"
-              />
+    <>
+      <div className=" bg-slate-300 rounded-lg p-4 flex gap-4 items-center">
+        <img
+          className="w-[30px] h-[30px] rounded-full"
+          src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
+            url.longUrl
+          )}`}
+          loading="lazy"
+          alt="site favicon"
+        />
 
-              <EditQrModal
-                url={url}
-                editQrActive={open}
-                setQrActive={setOpen}
-              />
-            </div>
+        <div className="w-[60%]">
+          <div className="flex items-center gap-4">
+            <VisitLinkButton url={url}>
+              <div className="text-blue-700 flex gap-2 items-center">
+                <LuLink2 />
+                sneek.co/{url.short}
+              </div>
+            </VisitLinkButton>
           </div>
+
+          <p className="truncate mt-1">{url.longUrl}</p>
         </div>
 
-        <div className=" text-left">
-          <p className="truncate">{url.longUrl}</p>
+        <div className="py-1 px-4 bg-slate-200 rounded-lg ml-auto">
+          {url.clicks} clicks
         </div>
+
+        <PopoverContainer classnames="ml-4" triggerFn={setOpen}>
+          <div className="cursor-pointer" onClick={() => setOpen(!open)}>
+            <LuMoreVertical size={24} />
+          </div>
+
+          {open && (
+            <Popover classnames="right-0 top-6 flex flex-col gap-2 z-50">
+              <div
+                className="p-2 shadow-md"
+                onClick={() => {
+                  setQrActive(true);
+                  setOpen(false);
+                }}
+              >
+                Qr
+              </div>
+
+              <div
+                className="p-2 shadow-md"
+                onClick={() => {
+                  setEditActive(true);
+                  setOpen(false);
+                }}
+              >
+                Edit
+              </div>
+
+              <div
+                className="p-2 shadow-md"
+                onClick={() => {
+                  setShareActive(true);
+                  setOpen(false);
+                }}
+              >
+                Share
+              </div>
+              <div className="p-2 shadow-md">Delete</div>
+            </Popover>
+          )}
+        </PopoverContainer>
       </div>
-      <div className="">
-        <LuMoreVertical size={24} onClick={() => setActive(true)} />
 
+      <Portal>
         <EditLinkModal
           url={url}
-          setEditActive={setActive}
-          editActive={active}
+          editActive={editActive}
+          setEditActive={setEditActive}
         />
-      </div>
+
+        <EditQrModal
+          url={url}
+          setQrActive={setQrActive}
+          editQrActive={qrActive}
+        />
+
+        <ShareLinkModal
+          shareActive={shareActive}
+          setShareActive={setShareActive}
+          url={url}
+        />
+      </Portal>
+    </>
+  );
+};
+
+const LinkItems = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [queryParams, setQueryParams] = useState<string | null>("");
+
+  const sort = searchParams.get("sort");
+  const page = searchParams.get("page");
+  const clicks = searchParams.get("clicks");
+
+  const { data, isLoading } = useGetUrlsQuery(queryParams, {
+    refetchOnMountOrArgChange: true,
+  });
+
+  useEffect(() => {
+    const createQueryParams = (s: { [key: string]: string | null }) => {
+      let str = [];
+      for (const [key, value] of Object.entries(s)) {
+        if (value === null) {
+          continue;
+        } else {
+          str.push(`${key}=${value}`);
+        }
+      }
+      setQueryParams(str.join("&"));
+    };
+
+    createQueryParams({ page, sort, clicks });
+  }, [searchParams, page, sort, clicks]);
+
+  return (
+    <div className="flex flex-col gap-4">
+      {!isLoading &&
+        data?.urls.map((url) => <LinkCard key={url._id} url={url} />)}
     </div>
   );
 };
 
 const Dashboard = () => {
-  const { data, isLoading, isSuccess } = useGetUrlsQuery(null);
-  
+  const [openFilter, setOpenFilter] = useState(false);
+  const user = useAppSelector((state: RootState) => state.auth);
 
   return (
     <>
-      <section className="container mx-auto p-4 flex justify-center text-center flex-col">
-        <div className="mt-28">
-          <span className="px-4 py-1 bg-red-500 rounded-full">+1k github</span>
-          <h1 className="text-black dark:text-white text-7xl mt-5 max-w-[950px] mx-auto">
-            Link small, connect big! Your shortcut to instant connections.
-          </h1>
-        </div>
-
-        <div className="mt-8">
-          <div className="flex flex-col md:flex-row mx-auto gap-8  max-w-[1000px] ">
-            <div className="max-w-[468px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
-              <h2 className="text-start font-bold text-2xl">Shorten a URL</h2>
-              <UrlManager />
-            </div>
-
-            <div className="max-w-[468px] flex-1 flex flex-col gap-2">
-              {/* Only show 4 of the users urls, if empty show 4 skeletons  */}
-              {isSuccess &&
-                data.urls?.map((url, index) => <HomeLinkItem url={url} />)}
-            </div>
+      <section className="">
+        <div className="flex gap-4 mb-2">
+          <div className="ml-auto">
+            <Button onClick={() => setOpenFilter(true)}>Filter</Button>
           </div>
         </div>
 
-        <div className="">
-          <Outlet />
-        </div>
-      </section>
+        <LinkItems />
 
-      <section className="container mx-auto p-4 h-screen mt-16">
-        <h2>Features</h2>
+        <Portal>
+          <FilterLinkModal open={openFilter} setOpen={setOpenFilter} />
+        </Portal>
       </section>
     </>
   );

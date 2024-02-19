@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useEffect} from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Recent from "./pages/recent";
-import Favorite from "./pages/links";
 import Layout from "./components/layout";
 import Myurl from "./components/myurl";
 import Login from "./features/auth/login";
@@ -17,8 +16,10 @@ import { setCredentials } from "./features/auth/authslice";
 import useLocalStorage from "./Utils/hooks/use-local-storage";
 import { useAppDispatch } from "./app/hook";
 import AdminLayout from "./components/admin-layout";
+import Landing from "./pages/landing";
 
 function App() {
+  const Navigate = useNavigate()
   const dispatch = useAppDispatch();
   const [values, setValue] = useLocalStorage("token", "");
   const [identify] = useIdentifyUserMutation();
@@ -40,6 +41,8 @@ function App() {
             },
           })
         );
+
+        Navigate("/links");
       } catch (error) {
         console.log(error);
       }
@@ -50,29 +53,27 @@ function App() {
 
   return (
     <div className="bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#fafafa_100%)] dark:bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#010101_100%)]">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-          <Route element={<Layout />}>
-            <Route path="/test" element={<Report />} />
-            <Route path="/pricing" element={<Pricing />}>
-              <Route path="checkout" element={<Checkout />} />
-            </Route>
-            <Route path="/" element={<Dashboard />}>
-              <Route path="/yoururl" element={<Myurl />} />
-            </Route>
+        <Route element={<Layout />}>
+          <Route path="/test" element={<Report />} />
+          <Route path="/pricing" element={<Pricing />}>
+            <Route path="checkout" element={<Checkout />} />
           </Route>
-          
-          <Route element={<AdminLayout />}>
-            <Route element={<ProtectedRoutes />}>
-              <Route path="/links" element={<Favorite />} />
-              <Route path="/account" element={<Recent />} />
-            </Route>
+          <Route path="/" element={<Landing />}>
+            <Route path="/yoururl" element={<Myurl />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/links" element={<Dashboard />} />
+            <Route path="/account" element={<Recent />} />
+          </Route>
+        </Route>
+      </Routes>
     </div>
   );
 }

@@ -22,7 +22,7 @@ const Checkout = (props: Props) => {
   } = useLocation();
 
   if (!stripe || !elements) {
-    return "";
+    return null;
   }
 
   const handleCheckout = async (event: FormEvent<HTMLFormElement>) => {
