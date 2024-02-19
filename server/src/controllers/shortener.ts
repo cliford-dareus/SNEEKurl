@@ -84,14 +84,10 @@ const create = async (req: any, res: Response) => {
 
 // GET URLS SEARCH
 const getUrls = async (req: any, res: Response) => {
+  const { page, skip, sort, clicks, limit = 5 } = req.query;
   const client_id = req.session.client_id;
-  const userr = req.user;
-  const { page, skip } = req.query;
-  const limit = 5;
 
   const user = await User.findOne({ clientId: client_id });
-
-  console.log(userr);
 
   if (!user) {
     return res
@@ -99,8 +95,24 @@ const getUrls = async (req: any, res: Response) => {
       .json({ message: "Something went wrong ... " });
   }
 
+  const clickOptions = {
+    most_click: "desc",
+    less_click: "asc",
+  };
+  // @ts-ignore
+  const clickOption = clicks ? clickOptions[clicks] : "";
+
   try {
-    const urls = await Short.find({ user: user._id }).limit(limit);
+    console.log(clickOption);
+
+    const urls = await Short.find({ user: user._id })
+      .limit(limit)
+      .sort({
+        createdAt: sort,
+        clicks: clickOption,
+      })
+      .exec();
+
     res.status(StatusCodes.OK).json({ urls });
   } catch (error) {
     res
@@ -191,7 +203,7 @@ const visitUrl = async (req: Request, res: Response) => {
         .updateOne({ $inc: { clicks: 1 }, $set: { lastClick: Date.now() } })
         .exec();
 
-      return res.status(StatusCodes.ACCEPTED).json(url.longUrl);
+      return res.redirect(url.longUrl);
     }
   } catch (error) {
     res
