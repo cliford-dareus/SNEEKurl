@@ -1,7 +1,7 @@
 import { useEffect} from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
-import Recent from "./pages/recent";
+import Profile from "./components/profile";
 import Layout from "./components/layout";
 import Myurl from "./components/myurl";
 import Login from "./features/auth/login";
@@ -17,6 +17,7 @@ import useLocalStorage from "./Utils/hooks/use-local-storage";
 import { useAppDispatch } from "./app/hook";
 import AdminLayout from "./components/admin-layout";
 import Landing from "./pages/landing";
+import Setting from "./pages/setting";
 
 function App() {
   const Navigate = useNavigate()
@@ -42,7 +43,9 @@ function App() {
           })
         );
 
-        Navigate("/links");
+        if(data.user.username !== 'Guest'){
+          Navigate("/links");
+        }
       } catch (error) {
         console.log(error);
       }
@@ -70,7 +73,10 @@ function App() {
         <Route element={<AdminLayout />}>
           <Route element={<ProtectedRoutes />}>
             <Route path="/links" element={<Dashboard />} />
-            <Route path="/account" element={<Recent />} />
+            <Route path="/setting" element={<Setting />}>
+              <Route index element={<Profile />} />
+              {/*<Route path='subscription' element={<Subscription />} />*/}
+            </Route>
           </Route>
         </Route>
       </Routes>

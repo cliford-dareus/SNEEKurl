@@ -11,6 +11,9 @@ import passport from "passport";
 import jwt from "jsonwebtoken";
 dotenv.config();
 
+import { createRouteHandler } from "uploadthing/express";
+import { uploadRouter } from "./config/uploadThing";
+
 import authRouter from "./routes/auth";
 import shortRouter from "./routes/short";
 import stripeRouter from "./routes/stripe";
@@ -72,6 +75,14 @@ app.use("/auth", authRouter);
 app.use("/short", shortRouter);
 app.use("/stripe", stripeRouter);
 
+
+app.use(
+    "/api/uploadthing",
+    createRouteHandler({
+      router: uploadRouter,
+      // config: { ... },
+    }),
+);
 app.post("/sneekurl/fp", async (req: any, res) => {
   const { client_id } = req.query;
   const auth_sid = req.signedCookies["auth.sid"];

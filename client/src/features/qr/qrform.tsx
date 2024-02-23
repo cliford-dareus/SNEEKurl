@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { createQr } from "./qrslice";
 import { useAppSelector } from "../../app/hook";
 import { RootState } from "../../app/store";
-import Select from "../../components/ui/select";
+import { Select } from "../../components/ui/select";
 
 type Props = {};
 
