@@ -7,7 +7,7 @@ import check_limiter_status from "../middlewares/check-links-limiter";
 const router = express.Router();
 
 router.route("/create").post(isFreemiumDone, check_limiter_status, create);
-router.route("/urls").get(getUrls);
+router.route("/urls").get(authorize,getUrls);
 router.route("/edit").put(editUrl);
 router.route("/:short").get(visitUrl);
 

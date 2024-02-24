@@ -15,12 +15,14 @@ import { createRouteHandler } from "uploadthing/express";
 import { uploadRouter } from "./config/uploadThing";
 
 import authRouter from "./routes/auth";
+import userRouter from "./routes/user";
 import shortRouter from "./routes/short";
 import stripeRouter from "./routes/stripe";
 
+import User from "./models/user";
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
-import User from "./models/user";
+
 import { webhook } from "./config/webhook";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -72,6 +74,7 @@ app.use(passport.initialize());
 require("./config/strategy");
 
 app.use("/auth", authRouter);
+app.use('/user', userRouter);
 app.use("/short", shortRouter);
 app.use("/stripe", stripeRouter);
 
@@ -156,8 +159,8 @@ app.post("/sneekurl/fp", async (req: any, res) => {
 webhook(app, bodyParser);
 
 //custom middleware
-// app.use(notfoundMiddleware);
-// app.use(errorHandlerMiddleware);
+app.use(notfoundMiddleware);
+app.use(errorHandlerMiddleware);
 
 const PORT = process.env.PORT || 4000;
 

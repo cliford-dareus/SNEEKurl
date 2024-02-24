@@ -9,11 +9,11 @@ type Props = {
     setvalue: any;
 }
 
-const  ChangePasswordSection = ({register, setvalue}: Props) => {
-    const  [enable, setEnable] = useState(false);
+const ChangePasswordSection = ({register, setvalue}: Props) => {
+    const [enable, setEnable] = useState(false);
 
     useEffect(() => {
-        if(!enable){
+        if (!enable) {
             setvalue("oldpassword", null);
             setvalue('newpassword', null)
         }
@@ -21,45 +21,43 @@ const  ChangePasswordSection = ({register, setvalue}: Props) => {
 
     return (
         <>
-        <div className=''>
-            <div className="flex justify-between items-center">
-                <p>Password</p>
-                <Switch
-                    isChecked={enable}
-                    fn={setEnable}
-                />
+            <div className=''>
+                <div className="flex justify-between items-center mb-4">
+                    <p className='font-medium'>Password</p>
+                    <Switch
+                        isChecked={enable}
+                        fn={setEnable}
+                    />
+                </div>
+
+                {enable &&
+                    <div className='bg-slate-200 rounded-lg p-4'>
+                        <span className='font-medium'>Change password</span>
+                        <div className='flex flex-col gap-4 mt-4'>
+                            <div>
+                                <p className=''>Old Password</p>
+                                <Input
+                                    register={register}
+                                    label='oldpassword'
+                                    placeholder=''
+                                    hidden={false}
+                                />
+                            </div>
+
+                            <div>
+                                <p className=''>New Password</p>
+                                <Input
+                                    register={register}
+                                    label='newpassword'
+                                    placeholder=''
+                                    hidden={false}
+                                    type='password'
+                                />
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-
-
-            {enable &&
-                <>
-                    <span>Change password</span>
-                    <>
-                        <p>Old Password</p>
-                        <Input
-                            register={register}
-                            label='oldpassword'
-                            placeholder=''
-                            hidden={false}
-                        />
-                    </>
-
-                    <>
-                        <p>New Password</p>
-                        <Input
-                            register={register}
-                            label='newpassword'
-                            placeholder=''
-                            hidden={false}
-                            type='password'
-                        />
-                    </>
-
-
-                </>
-
-            }
-        </div>
         </>
     );
 };

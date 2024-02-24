@@ -5,11 +5,13 @@ import authReducer from "../features/auth/authslice";
 import { authApi } from "./services/auth";
 import { stripeApi } from "./services/stripe";
 import { urlapi } from "./services/urlapi";
+import {userapi} from "./services/user";
 
 export const store = configureStore({
   reducer: {
     [urlapi.reducerPath]: urlapi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [userapi.reducerPath]: userapi.reducer,
     [stripeApi.reducerPath]: stripeApi.reducer,
     qr: qrReducer,
     auth: authReducer,
@@ -18,6 +20,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       urlapi.middleware,
       authApi.middleware,
+      userapi.middleware,
       stripeApi.middleware
     ),
 });

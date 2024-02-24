@@ -66,5 +66,8 @@ export const urlapi = createApi({
   }),
 });
 
-export const { useShortenUrlMutation, useGetUrlsQuery, useEditUrlMutation } =
-  urlapi;
+export const {
+  useShortenUrlMutation,
+  useGetUrlsQuery,
+  useEditUrlMutation
+} = urlapi;
