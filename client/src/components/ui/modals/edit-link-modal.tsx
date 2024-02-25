@@ -57,8 +57,8 @@ const EditLinkModal = ({
         <>
           <Sheet triggerFn={setEditActive} />
           <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100 border border-slate-200">
-            <div className="w-[500px] h-full relative">
-              <div className="w-full p-4 fixed top-0 left-0 right-0 bg-slate-200 rounded-tr-lg rounded-tl-lg flex flex-col justify-center items-center">
+            <div className="relative h-full w-[500px]">
+              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
                 <img
                   src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
                     url.longUrl
@@ -70,11 +70,11 @@ const EditLinkModal = ({
               </div>
 
               <form
-                className="h-full pt-20 p-4"
+                className="h-full p-4 pt-20"
                 action=""
                 onSubmit={handleSubmit(handleLinkUpdate)}
               >
-                <div className="flex flex-col gap-4 mt-4">
+                <div className="mt-4 flex flex-col gap-4">
                   <div>
                     <Label>Destination Url</Label>
                     <Input
@@ -88,7 +88,7 @@ const EditLinkModal = ({
                   <div>
                     <Label>Short Url</Label>
                     <div className="flex items-center gap-2">
-                      <div className="py-1 px-2 rounded-full bg-white">
+                      <div className="rounded-full bg-white px-2 py-1">
                         sneek.co/
                       </div>
                       <Input
@@ -100,7 +100,7 @@ const EditLinkModal = ({
                     </div>
                   </div>
 
-                  <div className="border-t border-b py-4 my-4 border-slate-200 text-center">
+                  <div className="my-4 border-t border-b border-slate-200 py-4 text-center">
                     Optionals
                   </div>
 
@@ -110,7 +110,7 @@ const EditLinkModal = ({
                     setvalue={setValue}
                     plan={plan}
                   />
-                  <div className="flex justify-between items-center">
+                  <div className="flex items-center justify-between">
                     <p>isShareale</p>
                     <Switch
                       register={register}

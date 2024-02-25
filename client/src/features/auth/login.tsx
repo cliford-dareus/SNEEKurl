@@ -56,19 +56,19 @@ const Login = (props: Props) => {
   }, []);
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <div className="w-[400px] bg-red-500 rounded-xl">
-        <div className="text-center bg-red-600 rounded-t-xl p-4">
+    <div className="flex h-screen w-screen items-center justify-center">
+      <div className="rounded-xl bg-red-500 w-[400px]">
+        <div className="rounded-t-xl bg-red-600 p-4 text-center">
           <h1 className="text-4xl">Sneek</h1>
-          <p className="text-xl mt-2">
+          <p className="mt-2 text-xl">
             Lorem ipsum dolor sit amet consectetur adipisicing.
           </p>
         </div>
 
         <div className="mt-4 p-4">
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between">
             <h2 className="text-2xl">Login</h2>
-            <div className="flex gap-2 items-center">
+            <div className="flex items-center gap-2">
               <span>or</span>
               <Link className="underline" to="/register">
                 create a new account

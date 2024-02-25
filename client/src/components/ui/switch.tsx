@@ -16,7 +16,7 @@ const Switch = ({ isChecked, fn, register, disabled }: Props) => {
   };
 
   return (
-    <label className="relative inline-flex items-center cursor-pointer">
+    <label className="relative inline-flex cursor-pointer items-center">
       <input
         disabled={disabled}
         {...(register && register("isShareable"))}

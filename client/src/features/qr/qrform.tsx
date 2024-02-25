@@ -29,7 +29,7 @@ const Qrform = (props: Props) => {
 
   return (
     <form
-      className="w-full flex flex-col mt-4 gap-4"
+      className="mt-4 flex w-full flex-col gap-4"
       onSubmit={handleSubmit(onsubmit)}
     >
       <div className="flex flex-col items-start">

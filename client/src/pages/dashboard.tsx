@@ -23,9 +23,9 @@ const LinkCard = ({url}: { url: Url }) => {
 
     return (
         <>
-            <div className="bg-slate-100 rounded-MD p-4 flex gap-4 items-center">
+            <div className="flex items-center gap-4 rounded-MD bg-slate-100 p-4">
                 <img
-                    className="w-[30px] h-[30px] rounded-full"
+                    className="rounded-full w-[30px] h-[30px]"
                     src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
                         url.longUrl
                     )}`}
@@ -36,18 +36,18 @@ const LinkCard = ({url}: { url: Url }) => {
                 <div className="w-[60%]">
                     <div className="flex items-center gap-4">
                         <VisitLinkButton url={url}>
-                            <div className="text-blue-700 flex gap-2 items-center">
+                            <div className="flex items-center gap-2 text-blue-700">
                                 <LuLink2/>
                                 sneek.co/{url.short}
                             </div>
                         </VisitLinkButton>
                     </div>
 
-                    <p className="truncate mt-1">{url.longUrl}</p>
+                    <p className="mt-1 truncate">{url.longUrl}</p>
                 </div>
 
                 <div
-                    className="py-1 px-4 bg-slate-100 rounded-lg ml-auto hover:border hover:border-slate-300 cursor-pointer">
+                    className="ml-auto cursor-pointer rounded-lg bg-slate-100 px-4 py-1 hover:border hover:border-slate-300">
                     {url.clicks} clicks
                 </div>
 
@@ -57,9 +57,9 @@ const LinkCard = ({url}: { url: Url }) => {
                     </div>
 
                     {open && (
-                        <Popover classnames="right-0 top-6 flex flex-col gap-2 z-50">
+                        <Popover classnames="bg-slate-200 border border-slate-300 right-2 top-8 flex flex-col gap-2 z-50">
                             <div
-                                className="p-2 shadow-md"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
                                 onClick={() => {
                                     setQrActive(true);
                                     setOpen(false);
@@ -69,7 +69,7 @@ const LinkCard = ({url}: { url: Url }) => {
                             </div>
 
                             <div
-                                className="p-2 shadow-md"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
                                 onClick={() => {
                                     setEditActive(true);
                                     setOpen(false);
@@ -79,7 +79,7 @@ const LinkCard = ({url}: { url: Url }) => {
                             </div>
 
                             <div
-                                className="p-2 shadow-md"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
                                 onClick={() => {
                                     setShareActive(true);
                                     setOpen(false);
@@ -87,7 +87,7 @@ const LinkCard = ({url}: { url: Url }) => {
                             >
                                 Share
                             </div>
-                            <div className="p-2 shadow-md">Delete</div>
+                            <div className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300">Delete</div>
                         </Popover>
                     )}
                 </PopoverContainer>
@@ -163,17 +163,14 @@ const Dashboard = () => {
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     const user = useAppSelector((state: RootState) => state.auth);
 
-
-    console.log(activeFilter)
-
     return (
         <>
             <section className="">
-                <div className="flex gap-4 mb-2 py-1 px-4 border border-slate-200 rounded-md">
+                <div className="mb-2 flex gap-4 rounded-md border border-slate-200 px-4 py-1">
                     <div className="flex gap-4">
-                        {activeFilter.length && activeFilter?.map(filter => (
+                        {activeFilter.length !== 0 && activeFilter?.map(filter => (
                             <div
-                                className="flex items-center relative rounded-md py-0.5 border border-slate-200 text-sm px-4"
+                                className="relative flex items-center rounded-md border border-slate-200 px-4 text-sm py-0.5"
                             >
                                 {Object.keys(filter)[0]}
                                 <div>{Object.values(filter)[0] == 'asc' || Object.values(filter)[0] == 'most_click' ? <LuArrowDown />: <LuArrowUp />}</div>
@@ -182,7 +179,7 @@ const Dashboard = () => {
                     </div>
                     <div className="ml-auto">
                         <div
-                            className="px-4 py-0.5 bg-slate-200 flex items-center gap-2 rounded-full cursor-pointer"
+                            className="flex cursor-pointer items-center gap-2 rounded-full bg-slate-200 px-4 py-0.5"
                             onClick={() => setOpenFilter(true)}
                         >
                             Filter

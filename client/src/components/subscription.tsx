@@ -1,5 +1,6 @@
 
-const Subscription = (props) => {
+type Props = {}
+const Subscription = ({}: Props) => {
     return(
         <div>Subs</div>
     )

@@ -23,8 +23,8 @@ const ShareLinkModal = ({ shareActive, setShareActive, url }: Props) => {
         <>
           <Sheet triggerFn={setShareActive} />
           <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
-            <div className="p-4 w-[500px] relative">
-              <div className="w-full p-4 fixed top-0 left-0 right-0 bg-slate-200 rounded-tr-lg rounded-tl-lg flex flex-col justify-center items-center">
+            <div className="relative p-4 w-[500px]">
+              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
                 <img
                   src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
                     url.longUrl
@@ -42,17 +42,17 @@ const ShareLinkModal = ({ shareActive, setShareActive, url }: Props) => {
                 <form onSubmit={handleSubmit(handleShareLink)} className="mt-4">
                   <div className="">
                     <input
-                      className="w-full py-1 px-2 rounded-full"
+                      className="w-full rounded-full px-2 py-1"
                       {...register("email")}
                       placeholder="example@gmail.com"
                     />
                   </div>
                 </form>
 
-                <div className="border-t border-b py-4 my-4 border-slate-200 text-center">
+                <div className="my-4 border-t border-b border-slate-200 py-4 text-center">
                   Or
                 </div>
-                <div className="flex gap-2 justify-center flex-wrap">
+                <div className="flex flex-wrap justify-center gap-2">
                   <Button>Facebook</Button>
                   <Button>Twitter(X)</Button>
                   <Button>LinkedIn</Button>

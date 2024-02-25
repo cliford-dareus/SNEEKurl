@@ -20,7 +20,7 @@ const Input = ({label, register, placeholder, hidden, disabled, type}: Props) =>
     return (
         <input
             disabled={disabled}
-            className="w-full rounded-full text-black py-1 px-4 border border-slate-200"
+            className="w-full rounded-full border border-slate-200 px-4 py-1 text-black"
             placeholder={placeholder}
             {...register(label)}
             hidden={hidden}

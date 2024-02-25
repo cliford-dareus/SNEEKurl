@@ -31,7 +31,7 @@ const Urlform = ({ shortenFn }: Props) => {
   return (
     <>
       <form
-        className="w-full flex flex-col mt-4 gap-2"
+        className="mt-4 flex w-full flex-col gap-2"
         onSubmit={handleSubmit(onsubmit)}
       >
         <div className="flex flex-col items-start">
@@ -41,7 +41,7 @@ const Urlform = ({ shortenFn }: Props) => {
             control={control}
             render={({ field }) => (
               <input
-                className="w-full rounded-full text-black py-1 px-4"
+                className="w-full rounded-full px-4 py-1 text-black"
                 {...field}
               />
             )}
@@ -51,12 +51,12 @@ const Urlform = ({ shortenFn }: Props) => {
         <Button>Generate Short</Button>
       </form>
 
-      <div className="mt-4 bg-white rounded-full aspect-square w-8 mx-auto text-black flex justify-center items-center">
+      <div className="mx-auto mt-4 flex aspect-square w-8 items-center justify-center rounded-full bg-white text-black">
         <span>OR</span>
       </div>
 
       <form
-        className="w-full flex flex-col mt-4 gap-2"
+        className="mt-4 flex w-full flex-col gap-2"
         onSubmit={handleSubmit(onsubmit)}
       >
         <Controller

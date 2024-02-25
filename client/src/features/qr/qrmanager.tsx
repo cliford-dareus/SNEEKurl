@@ -24,14 +24,14 @@ const QrResult = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between mt-6 mb-4 gap-2">
+      <div className="mt-6 mb-4 flex justify-between gap-2">
         <div
           className={classNames(
             `w-[250px] h-[250px] scale-[.80] -translate-y-6 -translate-x-7`
           )}
         >
           <QRCodeCanvas
-            className="absolute "
+            className="absolute"
             id="qr-canvas"
             value={qr.url}
             size={qr.size}

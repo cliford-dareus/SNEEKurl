@@ -20,8 +20,8 @@ const UrlManager = (props: Props) => {
 
   if (data?.message) {
     return (
-      <div className="flex flex-col mt-4 ">
-        <p className="text-xl font-bold  text-red-500">{data.message}</p>
+      <div className="mt-4 flex flex-col">
+        <p className="text-xl font-bold text-red-500">{data.message}</p>
         <p className="my-2">
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa
           perspiciatis, totam molestiae labore saepe harum?

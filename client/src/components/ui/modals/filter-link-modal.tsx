@@ -29,15 +29,19 @@ const FilterLinkModal = ({open, setOpen, activeFilter, setActiveFilter}: Props) 
                 activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length !== 0 &&
                 activeFilter.filter(x => Object.values(x)[0] == Object.values(newParams)[0]).length == 0
             ) {
-                setActiveFilter([...activeFilter.filter(x => Object.values(x)[0] == Object.values(newParams)[0]), newParams]);
+                setActiveFilter([...activeFilter.filter(x => Object.keys(x)[0] !== Object.keys(newParams)[0]), newParams]);
             } else if (activeFilter.length !== 0 &&
-                activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length == 0 &&
-                activeFilter.filter(x => Object.values(x)[0] == Object.values(newParams)[0]).length == 0) {
-                setActiveFilter((prevState) => [...(prevState ?? []), newParams])
+                activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length == 0) {
+                setActiveFilter((prevState) => [...(prevState ?? []), newParams]);
+
             }
         },
         [searchParams]
     );
+
+    useEffect(() => {
+        if (!searchParams.size) setActiveFilter([])
+    }, [searchParams]);
 
     return (
         <>
@@ -45,8 +49,8 @@ const FilterLinkModal = ({open, setOpen, activeFilter, setActiveFilter}: Props) 
                 <>
                     <Sheet triggerFn={setOpen}/>
                     <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
-                        <div className="w-[400px] h-full relative">
-                            <div className="w-full p-4 fixed top-0 left-0 right-0 bg-slate-200 rounded-tr-lg rounded-tl-lg flex flex-col justify-center items-center">
+                        <div className="relative h-full w-[400px]">
+                            <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
                                 <img
                                     src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
                                         "https://www.notion.so/42ccaebd5905427b847a1c0b4db3882e?v=6b1a83d2d07743c4837422b34e513239"

@@ -59,13 +59,13 @@ const Profile = () => {
                 <>
                     <div>
                         {/*<h2 className='font-bold'>Profile</h2>*/}
-                        <div className='flex gap-4 border border-slate-200 px-4 py-8 rounded-md'>
+                        <div className='flex gap-4 rounded-md border border-slate-200 px-4 py-8'>
                             <p className='font-medium'>Profile Image</p>
-                            <div className='flex-1 flex items-center justify-between'>
-                                <div className='w-[50px] h-[50px] rounded-full bg-red-500'>
+                            <div className='flex flex-1 items-center justify-between'>
+                                <div className='rounded-full bg-red-500 w-[50px] h-[50px]'>
                                     <img src="/../assets/react.svg" alt=""/>
                                 </div>
-                                <div className='flex gap-4 items-center'>
+                                <div className='flex items-center gap-4'>
                                     <Button
                                         onClick={() => setEditProfileActive(true)}
                                         classnames=''
@@ -77,7 +77,7 @@ const Profile = () => {
 
                         <Separator/>
                         <form
-                            className="mt-4 flex flex-col gap-4 p-4 rounded-md border border-slate-200"
+                            className="mt-4 flex flex-col gap-4 rounded-md border border-slate-200 p-4"
                             onSubmit={handleSubmit(handleChangeprofiledetails)}
                         >
                             <div>

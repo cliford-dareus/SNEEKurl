@@ -22,7 +22,7 @@ const ChangePasswordSection = ({register, setvalue}: Props) => {
     return (
         <>
             <div className=''>
-                <div className="flex justify-between items-center mb-4">
+                <div className="mb-4 flex items-center justify-between">
                     <p className='font-medium'>Password</p>
                     <Switch
                         isChecked={enable}
@@ -31,9 +31,9 @@ const ChangePasswordSection = ({register, setvalue}: Props) => {
                 </div>
 
                 {enable &&
-                    <div className='bg-slate-200 rounded-lg p-4'>
+                    <div className='rounded-lg bg-slate-200 p-4'>
                         <span className='font-medium'>Change password</span>
-                        <div className='flex flex-col gap-4 mt-4'>
+                        <div className='mt-4 flex flex-col gap-4'>
                             <div>
                                 <p className=''>Old Password</p>
                                 <Input

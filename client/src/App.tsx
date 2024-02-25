@@ -43,7 +43,6 @@ function App() {
             },
           })
         );
-
         if(data.user.username !== 'Guest'){
           Navigate("/links");
         }

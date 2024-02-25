@@ -52,9 +52,9 @@ const Pricing = (props: Props) => {
 
   return (
     <>
-      <section className="text-black dark:text-white container mx-auto p-4 flex justify-center text-center flex-col relative">
+      <section className="container relative mx-auto flex flex-col justify-center p-4 text-center text-black dark:text-white">
         <div className="mt-16">
-          <h1 className="text-black dark:text-white text-7xl mt-5 max-w-[700px] mx-auto">
+          <h1 className="mx-auto mt-5 text-7xl text-black max-w-[700px] dark:text-white">
             Prices small, connect big!
           </h1>
           <p className="mt-4">
@@ -63,7 +63,7 @@ const Pricing = (props: Props) => {
           </p>
         </div>
 
-        <div className="flex max-w-[1000px] mx-auto gap-4 w-full mt-16 text-left">
+        <div className="mx-auto mt-16 flex w-full gap-4 text-left max-w-[1000px]">
           {SubcriptionOptions.map((opt) => (
             <div
               key={opt.id}
@@ -74,11 +74,11 @@ const Pricing = (props: Props) => {
             >
               <div className="border-b px-2 py-8">
                 <p className="text-2xl font-bold">{opt.name}</p>
-                <p className="text-6xl my-2">${opt.price}</p>
+                <p className="my-2 text-6xl">${opt.price}</p>
                 <p>Lorem ipsum dolor sit amet.</p>
               </div>
 
-              <div className="py-8 px-2 border-b">
+              <div className="border-b px-2 py-8">
                 {activeplan?.plan?.amount / 100 === opt.price ? (
                   <Button
                     classnames="w-full"
@@ -96,10 +96,10 @@ const Pricing = (props: Props) => {
                 )}
               </div>
 
-              <div className="py-4 px-2">
+              <div className="px-2 py-4">
                 <p className="font-bold">What's included :</p>
 
-                <ul className="flex flex-col gap-2 mt-4">
+                <ul className="mt-4 flex flex-col gap-2">
                   {opt.perks.map((perk, index) => (
                     <li key={index} className="py-1">
                       {perk}

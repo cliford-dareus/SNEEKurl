@@ -18,17 +18,17 @@ const HomeLinkItem = ({ url }: { url: any }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="h-[80px] bg-slate-300 rounded-lg py-2 px-4 flex justify-between items-center">
+    <div className="flex items-center justify-between rounded-lg bg-slate-300 px-4 py-2 h-[80px]">
       <div className="w-[70%]">
         <div className="flex items-center gap-2">
           <Link
-            className="text-blue-700 flex gap-2 items-center"
+            className="flex items-center gap-2 text-blue-700"
             to={`http://localhost:4080/${url.short}`}
           >
             <LuLink2 />
             sneek.co/{url.short}
           </Link>
-          <div className="flex items-center ml-auto gap-4">
+          <div className="ml-auto flex items-center gap-4">
             <div className="">
               <LuForward size={22} />
             </div>
@@ -49,7 +49,7 @@ const HomeLinkItem = ({ url }: { url: any }) => {
           </div>
         </div>
 
-        <div className=" text-left">
+        <div className="text-left">
           <p className="truncate">{url.longUrl}</p>
         </div>
       </div>
@@ -71,22 +71,22 @@ const Landing = () => {
 
   return (
     <>
-      <section className="container mx-auto p-4 flex justify-center text-center flex-col">
+      <section className="container mx-auto flex flex-col justify-center p-4 text-center">
         <div className="mt-28">
-          <span className="px-4 py-1 bg-red-500 rounded-full">+1k github</span>
-          <h1 className="text-black dark:text-white text-7xl mt-5 max-w-[950px] mx-auto">
+          <span className="rounded-full bg-red-500 px-4 py-1">+1k github</span>
+          <h1 className="mx-auto mt-5 text-7xl text-black max-w-[950px] dark:text-white">
             Link small, connect big! Your shortcut to instant connections.
           </h1>
         </div>
 
         <div className="mt-8">
-          <div className="flex flex-col md:flex-row mx-auto gap-8  max-w-[1000px] ">
-            <div className="max-w-[468px] flex-1 bg-red-300 py-4 px-8 rounded-lg">
-              <h2 className="text-start font-bold text-2xl">Shorten a URL</h2>
+          <div className="mx-auto flex flex-col gap-8 max-w-[1000px] md:flex-row">
+            <div className="flex-1 rounded-lg bg-red-300 px-8 py-4 max-w-[468px]">
+              <h2 className="text-start text-2xl font-bold">Shorten a URL</h2>
               <UrlManager />
             </div>
 
-            <div className="max-w-[468px] flex-1 flex flex-col gap-2">
+            <div className="flex flex-1 flex-col gap-2 max-w-[468px]">
               {/* Only show 4 of the users urls, if empty show 4 skeletons  */}
               {isSuccess &&
                 data.urls?.map((url, index) => (
@@ -97,7 +97,7 @@ const Landing = () => {
         </div>
       </section>
 
-      <section className="container mx-auto p-4 h-screen mt-16">
+      <section className="container mx-auto mt-16 h-screen p-4">
         <h2>Features</h2>
       </section>
 

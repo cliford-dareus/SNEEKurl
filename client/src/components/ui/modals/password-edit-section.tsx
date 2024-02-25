@@ -26,7 +26,7 @@ const PasswordEditSection = ({ register, url, setvalue, plan }: Props) => {
 
   return (
     <>
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <p>Password</p>
         <Switch
           isChecked={enable}

@@ -23,8 +23,8 @@ const EditQrModal = ({
         <>
           <Sheet triggerFn={setQrActive} />
           <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
-            <div className=" h-full relative">
-              <div className="w-full p-4 fixed top-0 left-0 right-0 bg-slate-200 rounded-tr-lg rounded-tl-lg flex flex-col justify-center items-center">
+            <div className="relative h-full">
+              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
                 <img
                   src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
                     url.longUrl
@@ -34,7 +34,7 @@ const EditQrModal = ({
                 />
                 <p>Qr sneek.co/{url.short}</p>
               </div>
-              <div className="pt-20 px-4 pb-4">
+              <div className="px-4 pt-20 pb-4">
                 <QRCodeSVG
                   id="qr-svg"
                   className="w-full"

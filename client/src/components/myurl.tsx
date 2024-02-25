@@ -23,10 +23,10 @@ const UrlItem = ({ url }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex p-4 gap-8 shadow-md bg-slate-300 rounded-lg">
+    <div className="flex gap-8 rounded-lg bg-slate-300 p-4 shadow-md">
       <div>
         <img
-          className="w-[30px] h-[30px] rounded-full"
+          className="rounded-full w-[30px] h-[30px]"
           src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
             url.longUrl
           )}`}
@@ -37,14 +37,14 @@ const UrlItem = ({ url }: Props) => {
 
       <div className="flex flex-col gap-4 w-[60%]">
         <div className="text-left">
-          <p className="text-blue-700 flex gap-2 items-center">
+          <p className="flex items-center gap-2 text-blue-700">
             <LuLink2 />
             sneek.co/{url.short}
           </p>
           <p className="truncate">{url.longUrl}</p>
         </div>
 
-        <div className="flex gap-4 items-center">
+        <div className="flex items-center gap-4">
           <VisitLinkButton url={url}>
             <LuForward size={22} />
           </VisitLinkButton>
@@ -95,7 +95,7 @@ const Myurl = () => {
               </div>
 
               <div className="mt-4">
-                <div className="flex gap-4 items-center justify-center">
+                <div className="flex items-center justify-center gap-4">
                   <Button classnames="px-8">
                     <LuChevronLeft size={24} />
                   </Button>

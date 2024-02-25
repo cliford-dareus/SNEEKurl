@@ -61,9 +61,9 @@ const Checkout = (props: Props) => {
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis.</p>
 
         <form className="mt-8" onSubmit={handleCheckout}>
-          <div className="relative h-[200px] p-4 w-[70%] rounded-xl bg-blue-800">
+          <div className="relative rounded-xl bg-blue-800 p-4 h-[200px] w-[70%]">
             <div className="absolute top-4 left-4 font-bold">Visa</div>
-            <div className="absolute bottom-4 left-4 right-4">
+            <div className="absolute right-4 bottom-4 left-4">
               <CardElement
                 options={{
                   style: {

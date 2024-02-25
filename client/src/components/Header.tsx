@@ -61,30 +61,30 @@ const Header = ({ isActive }: Props) => {
         scrolled ? "border-b border-gray-200 bg-white/75 backdrop-blur-lg" : ""
       )}
     >
-      <div className="container w-full mx-auto flex items-center px-4 h-14">
-        <Link className="font-bold text-xl mr-16" to="/">
+      <div className="container mx-auto flex h-14 w-full items-center px-4">
+        <Link className="mr-16 text-xl font-bold" to="/">
           SNEEK
         </Link>
 
         {!isActive ? (
           <nav className="mr-auto">
-            <ul className="flex gap-2 h-full items-center">
-              <li className="hover:border-b flex justify-center items-center">
+            <ul className="flex h-full items-center gap-2">
+              <li className="flex items-center justify-center hover:border-b">
                 <Link className="px-4" to="/yoururl">
                   Your Urls
                 </Link>
               </li>
-              <li className="hover:border-b flex justify-center items-center">
+              <li className="flex items-center justify-center hover:border-b">
                 <Link className="px-4" to="">
                   Products
                 </Link>
               </li>
-              <li className="hover:border-b flex justify-center items-center">
+              <li className="flex items-center justify-center hover:border-b">
                 <Link className="px-4" to="/pricing">
                   Pricing
                 </Link>
               </li>
-              <li className="hover:border-b flex justify-center items-center">
+              <li className="flex items-center justify-center hover:border-b">
                 <Link className="px-4" to="">
                   Docs
                 </Link>
@@ -93,8 +93,8 @@ const Header = ({ isActive }: Props) => {
           </nav>
         ) : (
           <nav className="mr-auto">
-            <ul className="flex gap-4 h-full items-center">
-              <li className="hover:border-b flex justify-center items-center w-28">
+            <ul className="flex h-full items-center gap-4">
+              <li className="flex w-28 items-center justify-center hover:border-b">
                 <Link className="px-4" to="">
                   Products
                 </Link>
