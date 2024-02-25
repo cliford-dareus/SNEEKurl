@@ -43,7 +43,7 @@ const VisitLinkPassword = ({ status, url, setStatus }: Props) => {
                 className="flex h-full pt-20 p-4 gap-4 mt-4"
                 onSubmit={handleSubmit(onsubmit)}
               >
-                <input {...register("password")} />
+                <input {...register("password")} className='w-full rounded-full text-black py-1 px-4 border border-slate-200'/>
                 <Button type="submit">Submit</Button>
               </form>
             </div>

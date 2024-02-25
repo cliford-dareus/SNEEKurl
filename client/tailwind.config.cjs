@@ -2,7 +2,9 @@
 module.exports = {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      active: "bg-red-500"
+    },
     container: {
       center: true, // Centers the container by default
       screens: {

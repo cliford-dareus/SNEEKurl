@@ -84,7 +84,7 @@ const create = async (req: any, res: Response) => {
 
 // GET URLS SEARCH
 const getUrls = async (req: any, res: Response) => {
-  const { page, skip, sort, clicks, limit = 5 } = req.query;
+  const { page, skip, sort, clicks, limit = 5, search } = req.query;
   const client_id = req.session.client_id;
 
   const user = await User.findOne({ clientId: client_id });
@@ -103,7 +103,16 @@ const getUrls = async (req: any, res: Response) => {
   const clickOption = clicks ? clickOptions[clicks] : "";
 
   try {
-    console.log(clickOption);
+    if(search){
+      const regex_search = {$regex: search, $options: 'i'}
+      const urls = await Short.find(
+          {
+            user: user._id,
+            longUrl: regex_search
+          }
+      )
+      return res.status(StatusCodes.OK).json({ urls });
+    }
 
     const urls = await Short.find({ user: user._id })
       .limit(limit)

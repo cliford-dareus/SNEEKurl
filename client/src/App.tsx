@@ -18,6 +18,7 @@ import { useAppDispatch } from "./app/hook";
 import AdminLayout from "./components/admin-layout";
 import Landing from "./pages/landing";
 import Setting from "./pages/setting";
+import Subscription from "./components/subscription";
 
 function App() {
   const Navigate = useNavigate()
@@ -75,7 +76,7 @@ function App() {
             <Route path="/links" element={<Dashboard />} />
             <Route path="/setting" element={<Setting />}>
               <Route index element={<Profile />} />
-              {/*<Route path='subscription' element={<Subscription />} />*/}
+              <Route path='subscription' element={<Subscription />} />
             </Route>
           </Route>
         </Route>

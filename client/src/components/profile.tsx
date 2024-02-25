@@ -56,14 +56,14 @@ const Profile = () => {
     return (
         <>
             <section>
-                <div className="px-1">
+                <>
                     <div>
                         {/*<h2 className='font-bold'>Profile</h2>*/}
-                        <div className='flex gap-16'>
+                        <div className='flex gap-4 border border-slate-200 px-4 py-8 rounded-md'>
                             <p className='font-medium'>Profile Image</p>
                             <div className='flex-1 flex items-center justify-between'>
                                 <div className='w-[50px] h-[50px] rounded-full bg-red-500'>
-                                    <img src="/../assets/react.svg" alt="Profile image"/>
+                                    <img src="/../assets/react.svg" alt=""/>
                                 </div>
                                 <div className='flex gap-4 items-center'>
                                     <Button
@@ -74,9 +74,10 @@ const Profile = () => {
                                 </div>
                             </div>
                         </div>
+
                         <Separator/>
                         <form
-                            className="mt-4 flex flex-col gap-4"
+                            className="mt-4 flex flex-col gap-4 p-4 rounded-md border border-slate-200"
                             onSubmit={handleSubmit(handleChangeprofiledetails)}
                         >
                             <div>
@@ -108,7 +109,7 @@ const Profile = () => {
                     <div className=''>
 
                     </div>
-                </div>
+                </>
 
                 <Portal>
                     <ChangeProfileImageModal

@@ -22,7 +22,7 @@ const EditQrModal = ({
       {editQrActive && (
         <>
           <Sheet triggerFn={setQrActive} />
-          <SheetContent classnames="bg-red-600 top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
+          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
             <div className=" h-full relative">
               <div className="w-full p-4 fixed top-0 left-0 right-0 bg-slate-200 rounded-tr-lg rounded-tl-lg flex flex-col justify-center items-center">
                 <img
