@@ -19,7 +19,6 @@ const DashboardTopInterface = ({}: Props) => {
                 </div>
 
                 <div className="flex-1 rounded-md border border-slate-200 p-3.5">
-
                     <div
                         className="ml-auto flex w-full justify-between gap-4 rounded-full border border-slate-200 px-4 py-1"
                         onClick={() => setSearchLinkActive(true)}

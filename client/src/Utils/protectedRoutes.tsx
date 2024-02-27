@@ -1,10 +1,5 @@
 import { Outlet, Navigate } from "react-router-dom";
-import { useAppSelector, useAppDispatch } from "../app/hook";
-import { ReactNode } from "react";
-
-type Props = {
-  children: ReactNode
-}
+import { useAppSelector} from "../app/hook";
 
 const ProtectedRoutes = () => {
   const user = useAppSelector((state) => state.auth);

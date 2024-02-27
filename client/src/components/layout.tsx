@@ -1,17 +1,28 @@
 import Header from './Header'
-import { Outlet } from 'react-router-dom'
+import {Outlet, useOutletContext} from 'react-router-dom'
+import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
 
 type Props = {}
 
-const Layout = (props: Props) => {
-  return (
-    <div className=''>
-        <Header isActive={false}/>
-        <main className='pt-16'>
-            {<Outlet/>}
-        </main>
-    </div>
-  )
+type  ContextType = {
+    plan: string | null
 }
 
+const Layout = (props: Props) => {
+    const {data} = useRetrieveSubscriptionQuery();
+    const plan = data?.subscription?.data[0].plan.metadata.name;
+
+    return (
+        <div className=''>
+            <Header isActive={false}/>
+            <main className='pt-16'>
+                <Outlet context={{plan} as ContextType}/>
+            </main>
+        </div>
+    )
+}
+
+export function useUserPlan() {
+    return useOutletContext<ContextType>();
+}
 export default Layout

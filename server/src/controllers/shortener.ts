@@ -25,8 +25,8 @@ const create = async (req: any, res: Response) => {
   const isUrlExist = await Short.findOne({ longUrl, user: user._id });
   if (isUrlExist) return res.status(StatusCodes.OK).json({ short: isUrlExist });
 
-  if (backhalf) {
-    if (isAuthenticated) {
+  if ( isAuthenticated) {
+    if (backhalf) {
       try {
         const short = await Short.create({
           longUrl,
@@ -46,9 +46,7 @@ const create = async (req: any, res: Response) => {
           .status(StatusCodes.BAD_REQUEST)
           .send({ message: "Smothing went wrong while creating short..." });
       }
-    }
-  } else {
-    if (isAuthenticated) {
+    }else {
       try {
         const short = await Short.create({
           longUrl,
@@ -64,10 +62,11 @@ const create = async (req: any, res: Response) => {
         });
       } catch (error) {
         res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({ message: "Something went wrong while creating short..." });
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: "Something went wrong while creating short..." });
       }
-    } else {
+    }
+  } else {
       const short = await Short.create({
         longUrl,
         user: user?._id,
@@ -78,15 +77,15 @@ const create = async (req: any, res: Response) => {
       res.status(200).json({
         short,
       });
-    }
+
   }
 };
 
 // GET URLS SEARCH
 const getUrls = async (req: any, res: Response) => {
-  const { page, skip, sort, clicks, limit = 5, search } = req.query;
+  const { page, skip, sort, clicks, limit, search } = req.query;
   const client_id = req.session.client_id;
-
+console.log(limit)
   const user = await User.findOne({ clientId: client_id });
 
   if (!user) {

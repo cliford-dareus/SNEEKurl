@@ -8,13 +8,13 @@ import { selectCurrentUser } from "../../../features/auth/authslice";
 
 type Props = {
   register: UseFormRegister<Url | any>;
-  url: Url;
+  password: string;
   setvalue: any;
   plan: string;
 };
 
-const PasswordEditSection = ({ register, url, setvalue, plan }: Props) => {
-  const [enable, setEnable] = useState(!!url?.password);
+const PasswordEditSection = ({ register, password, setvalue, plan }: Props) => {
+  const [enable, setEnable] = useState(!!password);
   const user = useAppSelector(selectCurrentUser);
 
   useEffect(() => {

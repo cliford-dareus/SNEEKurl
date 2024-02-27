@@ -1,12 +1,13 @@
 import Header from "./Header";
-import {Link, NavLink, Outlet, useLocation} from "react-router-dom";
-import Button from "./ui/button";
+import {NavLink, Outlet, useLocation, useOutletContext} from "react-router-dom";
 import {useState} from "react";
-import classNames from "classnames";
-import * as path from "path";
 import DashboardTopInterface from "./dashboard-top-interface";
+import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
 
-type Props = {};
+
+type  ContextType = {
+    plan: string | null
+}
 
 const SIDEBAR_LINKS = [
     {
@@ -16,8 +17,8 @@ const SIDEBAR_LINKS = [
     },
     {
         id: 2,
-        name: 'Favorite',
-        slug: '/favorite'
+        name: 'Link In Bio',
+        slug: '/link-in-bio'
     },
     {
         id: 3,
@@ -36,17 +37,19 @@ const SIDEBAR_LINKS = [
     }
 ]
 
-const AdminLayout = (props: Props) => {
+const AdminLayout = () => {
     const {pathname} = useLocation()
-    const [open, setOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(0);
     const [sub_active, setSub_Active] = useState(0);
+    const { data } = useRetrieveSubscriptionQuery();
+    const plan = data?.subscription?.data[0].plan.metadata.name;
+
 
     return (
         <div className="relative">
-            <Header isActive={true}/>
+            <Header isActive={true} plan={plan}/>
             <main className="container mx-auto overflow-hidden px-4 pt-16">
-                <DashboardTopInterface/>
+                <DashboardTopInterface />
                 <div className="flex gap-4 pt-4 h-[80vh]">
                     <div className="max-h-screen w-full max-w-[256px]">
                         <nav className='w-full'>
@@ -91,11 +94,19 @@ const AdminLayout = (props: Props) => {
                             </ul>
                         </nav>
                     </div>
-                    <div className="flex-1 overflow-y-scroll no-scrollbar">{<Outlet/>}</div>
+                    <div
+                        className="flex-1 overflow-y-scroll no-scrollbar"
+                    >
+                        <Outlet context={{plan} as ContextType}/>
+                    </div>
                 </div>
             </main>
         </div>
     );
 };
+
+export function useUserPlan() {
+    return useOutletContext<ContextType>();
+}
 
 export default AdminLayout;

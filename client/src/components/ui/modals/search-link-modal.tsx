@@ -58,13 +58,14 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
                         <div className="relative h-full w-[500px]">
                             <div
                                 className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
-                                <img
-                                    src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-                                        "https://www.notion.so/42ccaebd5905427b847a1c0b4db3882e?v=6b1a83d2d07743c4837422b34e513239"
-                                    )}`}
-                                    className="w-[30px]"
-                                    alt=""
-                                />
+                                <svg width="40"
+                                     height="40"
+                                     viewBox="0 0 200 250"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                          fill="black"/>
+                                </svg>
                                 <p className="mb-2 font-medium">Searching for Links</p>
                                 <LuSearch size={24}/>
                             </div>

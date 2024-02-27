@@ -19,6 +19,7 @@ import AdminLayout from "./components/admin-layout";
 import Landing from "./pages/landing";
 import Setting from "./pages/setting";
 import Subscription from "./components/subscription";
+import LinkInBio from "./pages/link-in-bio";
 
 function App() {
   const Navigate = useNavigate()
@@ -50,7 +51,6 @@ function App() {
         console.log(error);
       }
     };
-
     getUser();
   }, []);
 
@@ -70,9 +70,10 @@ function App() {
           </Route>
         </Route>
 
-        <Route element={<AdminLayout />}>
-          <Route element={<ProtectedRoutes />}>
+        <Route element={<ProtectedRoutes />}>
+          <Route element={<AdminLayout />}>
             <Route path="/links" element={<Dashboard />} />
+            <Route path="/link-in-bio" element={<LinkInBio />} />
             <Route path="/setting" element={<Setting />}>
               <Route index element={<Profile />} />
               <Route path='subscription' element={<Subscription />} />

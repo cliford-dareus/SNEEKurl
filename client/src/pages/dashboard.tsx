@@ -1,8 +1,8 @@
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {useAppSelector} from "../app/hook";
 import {RootState} from "../app/store";
 import {Url, useGetUrlsQuery} from "../app/services/urlapi";
-import {Link, useSearchParams} from "react-router-dom";
+import {Link, useOutletContext, useSearchParams} from "react-router-dom";
 import {LuArrowDown, LuArrowUp, LuFilter, LuLink2, LuMoreVertical} from "react-icons/lu";
 import {getSiteUrl} from "../Utils/getSiteUrl";
 import {Popover, PopoverContainer} from "../components/ui/popover";
@@ -14,8 +14,11 @@ import VisitLinkButton from "../components/visit-link-button";
 import {Select} from "../components/ui/select";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
 import Button from "../components/ui/button";
+import {useUserPlan} from "../components/admin-layout";
+import useScroll from "../Utils/hooks/use-scroll";
 
 const LinkCard = ({url}: { url: Url }) => {
+    const plan = useUserPlan()
     const [open, setOpen] = useState(false);
     const [editActive, setEditActive] = useState(false);
     const [qrActive, setQrActive] = useState(false);
@@ -57,7 +60,7 @@ const LinkCard = ({url}: { url: Url }) => {
                     </div>
 
                     {open && (
-                        <Popover classnames="bg-slate-200 border border-slate-300 right-2 top-8 flex flex-col gap-2 z-50">
+                        <Popover classnames="bg-slate-200 border border-slate-300 flex flex-col gap-2 z-50">
                             <div
                                 className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
                                 onClick={() => {
@@ -98,6 +101,7 @@ const LinkCard = ({url}: { url: Url }) => {
                     url={url}
                     editActive={editActive}
                     setEditActive={setEditActive}
+                    plan={plan.plan!}
                 />
 
                 <EditQrModal
@@ -151,7 +155,7 @@ const LinkItems = () => {
     }, [searchParams, page, sort, clicks]);
 
     return (
-        <div className="flex flex-col gap-4 no-scrollbar">
+        <div className="flex flex-col gap-4 no-scrollbar" >
             {!isLoading &&
                 data?.urls.map((url) => <LinkCard key={url._id} url={url}/>)}
         </div>
@@ -161,19 +165,24 @@ const LinkItems = () => {
 const Dashboard = () => {
     const [openFilter, setOpenFilter] = useState(false);
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
-    const user = useAppSelector((state: RootState) => state.auth);
+    // const user = useAppSelector((state: RootState) => state.auth);
+    // const plan = useUserPlan();
 
     return (
         <>
-            <section className="">
-                <div className="mb-2 flex gap-4 rounded-md border border-slate-200 px-4 py-1">
+            <section className="relative">
+                <div className="mb-2 flex gap-4 rounded-md border border-slate-200 px-4 py-1 sticky top-0 bg-slate-100 z-20">
                     <div className="flex gap-4">
                         {activeFilter.length !== 0 && activeFilter?.map(filter => (
                             <div
-                                className="relative flex items-center rounded-md border border-slate-200 px-4 text-sm py-0.5"
+                                className="relative flex cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm group py-0.5"
                             >
+                                <div className="absolute top-0 right-0 h-3 w-3 rounded-full bg-white group-hover:bg-red-500"></div>
                                 {Object.keys(filter)[0]}
-                                <div>{Object.values(filter)[0] == 'asc' || Object.values(filter)[0] == 'most_click' ? <LuArrowDown />: <LuArrowUp />}</div>
+                                <div >
+                                    {Object.values(filter)[0] == 'asc' || Object.values(filter)[0] == 'most_click' ?
+                                        <LuArrowDown/> : <LuArrowUp/>}
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -188,7 +197,7 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <LinkItems/>
+                <LinkItems />
 
                 <Portal>
                     <FilterLinkModal

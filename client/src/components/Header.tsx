@@ -17,9 +17,10 @@ import classNames from "classnames";
 
 type Props = {
   isActive: boolean;
+  plan?: string;
 };
 
-const Header = ({ isActive }: Props) => {
+const Header = ({ isActive, plan }: Props) => {
   const scrolled = useScroll(80);
   const [value, setValue] = useLocalStorage("darkmode", "light");
   const Navigate = useNavigate();
@@ -58,17 +59,28 @@ const Header = ({ isActive }: Props) => {
     <header
       className={classNames(
         "fixed z-40 w-full text-black dark:text-white flex justify-between items-center transition-all ",
-        scrolled ? "border-b border-gray-200 bg-white/75 backdrop-blur-lg" : ""
+        scrolled || isActive ? "border-b border-gray-200 bg-white/75 backdrop-blur-lg" : ""
       )}
     >
       <div className="container mx-auto flex h-14 w-full items-center px-4">
-        <Link className="mr-16 text-xl font-bold" to="/">
-          SNEEK
-        </Link>
+        <div className="flex items-center gap-2">
+          <svg width="40"
+               height="40"
+               viewBox="0 0 200 250"
+               fill="none"
+               xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                  fill="black"/>
+          </svg>
+          <Link className="mr-16 text-xl font-bold"
+                to="/">SNEEK
+          </Link>
+        </div>
+
 
         {!isActive ? (
-          <nav className="mr-auto">
-            <ul className="flex h-full items-center gap-2">
+            <nav className="mr-auto">
+              <ul className="flex h-full items-center gap-2">
               <li className="flex items-center justify-center hover:border-b">
                 <Link className="px-4" to="/yoururl">
                   Your Urls
