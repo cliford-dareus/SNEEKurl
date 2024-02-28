@@ -61,7 +61,7 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
                                 className="h-full p-4 pt-20"
                                 onSubmit={handleSubmit(handleCreateLink)}
                             >
-                                <div className="flex flex-col gap-4 pt-4">
+                                <div className="flex flex-col gap-4 pt-8">
                                     <div>
                                         <Label>Destination Url</Label>
                                         <Input

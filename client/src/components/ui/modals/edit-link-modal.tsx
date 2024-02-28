@@ -114,6 +114,7 @@ const EditLinkModal = ({
                                     <div className="flex items-center justify-between">
                                         <p>isShareale</p>
                                         <Switch
+                                            label="isShareable"
                                             register={register}
                                             isChecked={shareable}
                                             fn={setIsShareable}

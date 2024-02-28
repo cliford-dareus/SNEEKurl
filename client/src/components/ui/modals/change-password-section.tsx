@@ -25,6 +25,7 @@ const ChangePasswordSection = ({register, setvalue}: Props) => {
                 <div className="mb-4 flex items-center justify-between">
                     <p className='font-medium'>Password</p>
                     <Switch
+                        label="password"
                         isChecked={enable}
                         fn={setEnable}
                     />

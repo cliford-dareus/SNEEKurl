@@ -26,7 +26,7 @@ const LinkCard = ({url}: { url: Url }) => {
 
     return (
         <>
-            <div className="flex items-center gap-4 rounded-MD bg-slate-100 p-4">
+            <div className="flex items-center gap-4 rounded-md bg-slate-100 p-4">
                 <img
                     className="rounded-full w-[30px] h-[30px]"
                     src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(

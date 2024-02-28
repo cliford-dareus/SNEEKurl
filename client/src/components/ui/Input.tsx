@@ -4,12 +4,27 @@ import {IQrFormValues} from "../../features/qr/qrform";
 import {IUserFormValues} from "../../features/auth/login";
 import {Url} from "../../app/services/urlapi";
 import {Profile} from "../profile";
+import {CreateLinkInBioProp} from "./modals/create-link-in-bio-modal";
 
 type Props = {
     register: UseFormRegister<
-        IFormValues | IQrFormValues | IUserFormValues | Url | Profile | { search: string } | any
+        IFormValues
+        | IQrFormValues
+        | IUserFormValues
+        | Url
+        | Profile
+        | CreateLinkInBioProp
+        | { search: string } | any
     >;
-    label: Path<IFormValues | IQrFormValues | IUserFormValues | Url | Profile | { search: string }>;
+    label: Path<
+        IFormValues
+        | IQrFormValues
+        | IUserFormValues
+        | Url
+        | Profile
+        | CreateLinkInBioProp
+        | { search: string }
+    >;
     placeholder: string;
     hidden: boolean;
     disabled?: boolean;

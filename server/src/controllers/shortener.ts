@@ -85,7 +85,7 @@ const create = async (req: any, res: Response) => {
 const getUrls = async (req: any, res: Response) => {
   const { page, skip, sort, clicks, limit, search } = req.query;
   const client_id = req.session.client_id;
-console.log(limit)
+
   const user = await User.findOne({ clientId: client_id });
 
   if (!user) {

@@ -1,15 +1,17 @@
 import React, { Dispatch, SetStateAction, forwardRef } from "react";
-import { UseFormRegister } from "react-hook-form";
+import { Path, UseFormRegister } from "react-hook-form";
 import { Url } from "../../app/services/urlapi";
+import {CreateLinkInBioProp} from "./modals/create-link-in-bio-modal";
 
 type Props = {
   isChecked: boolean;
   fn?: Dispatch<SetStateAction<boolean>>;
-  register?: UseFormRegister<Url>;
+  register?: UseFormRegister<Url | CreateLinkInBioProp | any>;
   disabled?: boolean;
+  label: Path<Url | CreateLinkInBioProp>;
 };
 
-const Switch = ({ isChecked, fn, register, disabled }: Props) => {
+const Switch = ({ isChecked, fn, register, disabled, label }: Props) => {
   const handleToggle = () => {
     if (!fn) return;
     fn(!isChecked);
@@ -19,7 +21,7 @@ const Switch = ({ isChecked, fn, register, disabled }: Props) => {
     <label className="relative inline-flex cursor-pointer items-center">
       <input
         disabled={disabled}
-        {...(register && register("isShareable"))}
+        {...(register && register(label))}
         type="checkbox"
         className="sr-only peer"
         checked={isChecked}

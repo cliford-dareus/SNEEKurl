@@ -1,5 +1,5 @@
 import { useEffect} from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import {Route, Routes, useLocation, useNavigate, useParams} from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
 import Layout from "./components/layout";
@@ -20,8 +20,10 @@ import Landing from "./pages/landing";
 import Setting from "./pages/setting";
 import Subscription from "./components/subscription";
 import LinkInBio from "./pages/link-in-bio";
+import LinksInBio from "./pages/links-in-bio";
 
 function App() {
+  const {pathname} = useLocation()
   const Navigate = useNavigate()
   const dispatch = useAppDispatch();
   const [values, setValue] = useLocalStorage("token", "");
@@ -44,7 +46,13 @@ function App() {
             },
           })
         );
-        if(data.user.username !== 'Guest'){
+
+        if(data.user.username !== 'Guest' &&
+            (pathname === '/'
+                || pathname === '/pricing'
+                || pathname === '/checkout'
+                || pathname === '/yoururl' ))
+        {
           Navigate("/links");
         }
       } catch (error) {
@@ -59,6 +67,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/:slug" element={<LinksInBio />} />
 
         <Route element={<Layout />}>
           <Route path="/test" element={<Report />} />
@@ -71,7 +80,7 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoutes />}>
-          <Route element={<AdminLayout />}>
+          <Route  element={<AdminLayout />}>
             <Route path="/links" element={<Dashboard />} />
             <Route path="/link-in-bio" element={<LinkInBio />} />
             <Route path="/setting" element={<Setting />}>

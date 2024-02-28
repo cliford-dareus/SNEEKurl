@@ -1,28 +1,31 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { setupListeners } from "@reduxjs/toolkit/dist/query";
+import {configureStore} from "@reduxjs/toolkit";
+import {setupListeners} from "@reduxjs/toolkit/dist/query";
 import qrReducer from "../features/qr/qrslice";
 import authReducer from "../features/auth/authslice";
-import { authApi } from "./services/auth";
-import { stripeApi } from "./services/stripe";
-import { urlapi } from "./services/urlapi";
+import {authApi} from "./services/auth";
+import {stripeApi} from "./services/stripe";
+import {urlapi} from "./services/urlapi";
 import {userapi} from "./services/user";
+import {pageapi} from "./services/page";
 
 export const store = configureStore({
-  reducer: {
-    [urlapi.reducerPath]: urlapi.reducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [userapi.reducerPath]: userapi.reducer,
-    [stripeApi.reducerPath]: stripeApi.reducer,
-    qr: qrReducer,
-    auth: authReducer,
-  },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      urlapi.middleware,
-      authApi.middleware,
-      userapi.middleware,
-      stripeApi.middleware
-    ),
+    reducer: {
+        [urlapi.reducerPath]: urlapi.reducer,
+        [authApi.reducerPath]: authApi.reducer,
+        [userapi.reducerPath]: userapi.reducer,
+        [stripeApi.reducerPath]: stripeApi.reducer,
+        [pageapi.reducerPath]: pageapi.reducer,
+        qr: qrReducer,
+        auth: authReducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware().concat(
+            urlapi.middleware,
+            authApi.middleware,
+            userapi.middleware,
+            stripeApi.middleware,
+            pageapi.middleware
+        ),
 });
 
 setupListeners(store.dispatch);

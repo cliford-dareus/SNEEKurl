@@ -10,19 +10,16 @@ import bodyParser from "body-parser";
 import passport from "passport";
 import jwt from "jsonwebtoken";
 dotenv.config();
-
 import { createRouteHandler } from "uploadthing/express";
 import { uploadRouter } from "./config/uploadThing";
-
 import authRouter from "./routes/auth";
 import userRouter from "./routes/user";
 import shortRouter from "./routes/short";
+import pageRouter from "./routes/page";
 import stripeRouter from "./routes/stripe";
-
 import User from "./models/user";
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
-
 import { webhook } from "./config/webhook";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
@@ -76,6 +73,7 @@ require("./config/strategy");
 app.use("/auth", authRouter);
 app.use('/user', userRouter);
 app.use("/short", shortRouter);
+app.use("/page", pageRouter);
 app.use("/stripe", stripeRouter);
 
 

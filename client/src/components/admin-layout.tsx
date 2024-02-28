@@ -27,7 +27,7 @@ const SIDEBAR_LINKS = [
         children: [
             {
                 name: 'Profile',
-                slug: '/setting',
+                slug: 'setting',
             },
             {
                 name: 'Subscription',
@@ -49,7 +49,7 @@ const AdminLayout = () => {
         <div className="relative">
             <Header isActive={true} plan={plan}/>
             <main className="container mx-auto overflow-hidden px-4 pt-16">
-                <DashboardTopInterface />
+                <DashboardTopInterface pathname={pathname}/>
                 <div className="flex gap-4 pt-4 h-[80vh]">
                     <div className="max-h-screen w-full max-w-[256px]">
                         <nav className='w-full'>

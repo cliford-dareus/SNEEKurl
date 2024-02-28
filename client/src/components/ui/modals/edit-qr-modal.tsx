@@ -26,7 +26,7 @@ const EditQrModal = ({
             <div className="relative h-full">
               <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
                 <img
-                  src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
+                  src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
                     url.longUrl
                   )}`}
                   className="w-[30px]"
