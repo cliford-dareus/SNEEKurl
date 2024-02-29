@@ -1,6 +1,6 @@
 import Header from "./Header";
 import {NavLink, Outlet, useLocation, useOutletContext} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import DashboardTopInterface from "./dashboard-top-interface";
 import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
 
@@ -44,6 +44,13 @@ const AdminLayout = () => {
     const { data } = useRetrieveSubscriptionQuery();
     const plan = data?.subscription?.data[0].plan.metadata.name;
 
+    useEffect(() => {
+        SIDEBAR_LINKS.map((link, index) => {
+            if (link.slug === pathname) {
+                setActiveIndex(index)
+            }
+        })
+    }, [])
 
     return (
         <div className="relative">

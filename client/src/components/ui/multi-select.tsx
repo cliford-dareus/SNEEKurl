@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {LuChevronDown} from "react-icons/lu";
 import {UseFormSetValue} from "react-hook-form";
 import {CreateLinkInBioProp} from "./modals/create-link-in-bio-modal";
+import {useGetUrlsQuery} from "../../app/services/urlapi";
 
 
 type  Props = {
@@ -9,6 +10,7 @@ type  Props = {
 }
 
 const MultiSelect = ({setvalues}: Props) => {
+    const {data, isLoading} = useGetUrlsQuery({})
     const [selectedItems, setSelectedItems] = useState<string[]>([]);
     const [open, setOpen] = useState(false);
 
@@ -29,7 +31,7 @@ const MultiSelect = ({setvalues}: Props) => {
                 onClick={() => setOpen(!open)}
                 className="flex justify-between items-center px-4 w-full h-8 rounded-md bg-white hover:ring-2 hover:ring-indigo-500"
             >
-                {selectedItems.length > 0 ? <div className="flex gap-2 items-center">
+                {selectedItems.length > 0 ? <div className="w-[90%] overflow-hidden flex gap-2 items-center">
                     {selectedItems.map((item, index) => (
                         <div
                             key={index}
@@ -44,13 +46,13 @@ const MultiSelect = ({setvalues}: Props) => {
 
             <div className="relative">
                 {open && <div className="absolute top-2 bg-slate-100 w-full z-20">
-                    {["mongo", "perplexity"].map((item) => (
+                    {!isLoading && data?.urls.map((item) => (
                         <div
                             className="flex hover: cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm py-0.5 hover:ring-2 hover:ring-indigo-500"
-                            key={item}
-                            onClick={() => handleSelectChange(item)}
+                            key={item._id}
+                            onClick={() => handleSelectChange(item._id)}
                         >
-                            {item}
+                            {item.longUrl}
                         </div>
                     ))}
                 </div>}

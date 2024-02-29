@@ -23,8 +23,8 @@ import LinkInBio from "./pages/link-in-bio";
 import LinksInBio from "./pages/links-in-bio";
 
 function App() {
-  const {pathname} = useLocation()
-  const Navigate = useNavigate()
+  const {pathname} = useLocation();
+  const Navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [values, setValue] = useLocalStorage("token", "");
   const [identify] = useIdentifyUserMutation();

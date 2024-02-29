@@ -97,4 +97,20 @@ const updatePage = async (req: any, res: Response) => {
     }
 };
 
-export {getMyPages, createPage, updatePage}
+
+const getPage = async (req: Request, res:Response) => {
+    const {slug} = req.params;
+console.log(slug)
+    const page = await  Page.findOne({slug: slug})
+        .populate("user", 'username')
+        .populate("links")
+
+    if(!page || !page.isPublic)
+        return res
+         .status(StatusCodes.BAD_REQUEST)
+         .json({message: "Couldn't find this Page..."});
+
+    res.status(StatusCodes.OK).json(page);
+};
+
+export {getMyPages, createPage, updatePage, getPage}

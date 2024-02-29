@@ -13,7 +13,7 @@ interface PageInterface extends mongoose.Document {
 const PageSchema = new mongoose.Schema<PageInterface>({
     title: {type: String, required: true},
     description: {type: String, required: true},
-    slug: {type: String, required: true},
+    slug: {type: String, required: true, unique: true   },
     isPublic: {type: Boolean, default: false},
     user: {
         type: mongoose.Schema.Types.ObjectId,
