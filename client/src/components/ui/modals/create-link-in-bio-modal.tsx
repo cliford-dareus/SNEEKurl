@@ -81,7 +81,7 @@ const CreateLinkInBioModal = ({createLinkInBioActive, setCreateLinkInBioActive}:
                                         />
                                     </div>
 
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p>Public</p>
                                         <Switch isChecked={isChecked} fn={setChecked} label={'public'} register={register}/>
                                     </div>

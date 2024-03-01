@@ -18,7 +18,7 @@ import {useUserPlan} from "../components/admin-layout";
 import useScroll from "../Utils/hooks/use-scroll";
 
 const LinkCard = ({url}: { url: Url }) => {
-    const plan = useUserPlan()
+    const plan = useUserPlan();
     const [open, setOpen] = useState(false);
     const [editActive, setEditActive] = useState(false);
     const [qrActive, setQrActive] = useState(false);
@@ -171,7 +171,7 @@ const Dashboard = () => {
     return (
         <>
             <section className="relative">
-                <div className="mb-2 flex gap-4 rounded-md border border-slate-200 px-4 py-1 sticky top-0 bg-slate-100 z-20">
+                <div className="sticky top-0 z-20 mb-2 flex gap-4 rounded-md border border-slate-200 bg-slate-100 px-4 py-1">
                     <div className="flex gap-4">
                         {activeFilter.length !== 0 && activeFilter?.map(filter => (
                             <div

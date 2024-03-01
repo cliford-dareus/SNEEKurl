@@ -2,6 +2,8 @@ import {Request, Response} from 'express';
 import Page from "../models/page";
 import User from "../models/user";
 import {StatusCodes} from "http-status-codes";
+import Short from "../models/short";
+import {ObjectId} from "mongoose";
 
 const getMyPages = async (req: any, res: Response) => {
     const client_id = req.session.client_id;
@@ -77,7 +79,7 @@ const updatePage = async (req: any, res: Response) => {
             .json({message: "Something went wrong..."});
     }
 
-    const page = await Page.findOne({_id: id});
+    const page = await Page.findOne({_id: id}).populate('links');
 
     if (!page) {
         return res
@@ -86,7 +88,11 @@ const updatePage = async (req: any, res: Response) => {
     }
 
     try {
-        const uniqueLinks = new Set([...page.links,...links]);
+        // @ts-ignore
+        const newLinks = page.links.filter((link) => !links.includes(link._id));
+        // @ts-ignore
+        const oldLinks = links.filter((link) => !page.links.includes(link));
+        const uniqueLinks = [...newLinks, ...oldLinks]
 
         await page.updateOne({title, description, slug, isPublic, links: uniqueLinks}).exec();
         res.status(StatusCodes.OK).json(page);

@@ -35,7 +35,7 @@ const Input = ({label, register, placeholder, hidden, disabled, type}: Props) =>
     return (
         <input
             disabled={disabled}
-            className="w-full rounded-full border border-slate-200 px-4 py-1 text-black focus:ring-2 focus:ring-indigo-500 outline-none"
+            className="w-full rounded-full border border-slate-200 px-4 py-1 text-black outline-none focus:ring-2 focus:ring-indigo-500"
             placeholder={placeholder}
             {...register(label)}
             hidden={hidden}

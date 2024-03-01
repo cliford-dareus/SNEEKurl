@@ -29,7 +29,6 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
         console.log(dataform)
         try {
             await attemptShort(dataform);
-
         }catch (e) {
 
         }

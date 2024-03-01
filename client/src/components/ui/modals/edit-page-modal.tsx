@@ -21,7 +21,7 @@ interface UpdateLinkInBioProps extends CreateLinkInBioProp{
 }
 const EditPageModal = ({editPageActive, setEditPageActive, page}: Props) => {
     const [updatePage] = useUpdatePageMutation();
-    const [isChecked, setChecked] = useState(false);
+    const [isChecked, setChecked] = useState(page.isPublic);
     const {register,
         handleSubmit,
         setValue
@@ -112,7 +112,7 @@ const EditPageModal = ({editPageActive, setEditPageActive, page}: Props) => {
 
                                     <MultiSelect  setvalues={setValue} />
 
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex items-center justify-between">
                                         <p>Public</p>
                                         <Switch
                                             isChecked={isChecked}

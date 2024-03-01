@@ -29,13 +29,13 @@ const MultiSelect = ({setvalues}: Props) => {
         <div className="relative">
             <div
                 onClick={() => setOpen(!open)}
-                className="flex justify-between items-center px-4 w-full h-8 rounded-md bg-white hover:ring-2 hover:ring-indigo-500"
+                className="flex h-8 w-full items-center justify-between rounded-md bg-white px-4 hover:ring-2 hover:ring-indigo-500"
             >
-                {selectedItems.length > 0 ? <div className="w-[90%] overflow-hidden flex gap-2 items-center">
+                {selectedItems.length > 0 ? <div className="flex items-center gap-2 overflow-hidden w-[90%]">
                     {selectedItems.map((item, index) => (
                         <div
                             key={index}
-                            className="py-0.5 px-2 cursor-pointer bg-slate-200 rounded-md text-sm"
+                            className="cursor-pointer rounded-md bg-slate-200 px-2 text-sm py-0.5"
                         >
                             {item}
                         </div>
@@ -45,10 +45,10 @@ const MultiSelect = ({setvalues}: Props) => {
             </div>
 
             <div className="relative">
-                {open && <div className="absolute top-2 bg-slate-100 w-full z-20">
+                {open && <div className="absolute top-2 z-20 w-full bg-slate-100">
                     {!isLoading && data?.urls.map((item) => (
                         <div
-                            className="flex hover: cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm py-0.5 hover:ring-2 hover:ring-indigo-500"
+                            className="flex cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm py-0.5 hover: hover:ring-2 hover:ring-indigo-500"
                             key={item._id}
                             onClick={() => handleSelectChange(item._id)}
                         >

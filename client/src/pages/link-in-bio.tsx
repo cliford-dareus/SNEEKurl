@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import {Link} from "react-router-dom";
 import {LuDot, LuSettings} from "react-icons/lu";
 import Button from "../components/ui/button";
 import EditPageModal from "../components/ui/modals/edit-page-modal";
@@ -27,7 +26,7 @@ const LinkInBio = () => {
                             <>
                                 <div
                                     key={page._id}
-                                    className="flex gap-4 justify-between items-center bg-slate-100 hover:bg-slate-200 p-4 rounded-md"
+                                    className="flex items-center justify-between gap-4 rounded-md bg-slate-100 p-4 hover:bg-slate-200"
                                 >
                                     <div>
                                         <p className="font-medium text-[18px]">{page.title}</p>

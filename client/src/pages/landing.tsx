@@ -118,6 +118,10 @@ const Landing = () => {
                 <img className="mx-auto w-[80%]" src={BrowserShot} alt="shot" />
             </section>
 
+            <section>
+
+            </section>
+
             <Portal>
                 <Outlet/>
             </Portal>
