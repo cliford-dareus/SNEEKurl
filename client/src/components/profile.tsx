@@ -40,7 +40,6 @@ const Profile = () => {
     });
 
     const handleChangeprofiledetails: SubmitHandler<Profile> = async (dataform: Profile) => {
-        console.log(dataform)
         try {
             const updatedUser = await updateUserDetails({
                 username: dataform.username,

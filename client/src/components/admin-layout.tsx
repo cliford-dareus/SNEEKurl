@@ -3,39 +3,11 @@ import {NavLink, Outlet, useLocation, useOutletContext} from "react-router-dom";
 import {useEffect, useState} from "react";
 import DashboardTopInterface from "./dashboard-top-interface";
 import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
-
+import {SIDEBAR_LINKS} from "../Utils/common";
 
 type  ContextType = {
     plan: string | null
 }
-
-const SIDEBAR_LINKS = [
-    {
-        id: 1,
-        name: 'Overview',
-        slug: '/links'
-    },
-    {
-        id: 2,
-        name: 'Link In Bio',
-        slug: '/link-in-bio'
-    },
-    {
-        id: 3,
-        name: 'Setting',
-        slug: '/setting',
-        children: [
-            {
-                name: 'Profile',
-                slug: 'setting',
-            },
-            {
-                name: 'Subscription',
-                slug: 'setting/subscription',
-            }
-        ]
-    }
-]
 
 const AdminLayout = () => {
     const {pathname} = useLocation()
@@ -73,7 +45,7 @@ const AdminLayout = () => {
                                             </NavLink>
 
                                             {activeIndex === index &&
-                                                <div className='absolute left-0 h-full bg-red-500 w-[2px]'/>}
+                                                <div className='absolute left-0 h-full bg-indigo-500 w-[2px]'/>}
 
                                             {activeIndex === index && pathname.includes('setting') && (
                                                 <div
@@ -90,7 +62,7 @@ const AdminLayout = () => {
 
                                                             {sub_active === i &&
                                                                 <div
-                                                                    className='absolute left-0 h-full bg-red-500 w-[2px]'/>}
+                                                                    className='absolute left-0 h-full bg-indigo-500 w-[2px]'/>}
                                                         </li>
                                                     ))}
                                                 </div>

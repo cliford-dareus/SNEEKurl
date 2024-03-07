@@ -48,26 +48,6 @@ const updateProfileDetails = async (req: Request, res: Response) => {
 
     try {
         if (oldpassword && newpassword) {
-            // const salt = await bcrypt.genSalt(10);
-            // const isOldPasswordCorrect = await jwt_compare(oldpassword, isUserInDb.password);
-            //
-            // if (!isOldPasswordCorrect)
-            //     return res
-            //         .status(StatusCodes.UNAUTHORIZED)
-            //         .send({message: "Bad credentials..."});
-            //
-            // const re_hash_password = await bcrypt.hash(newpassword, salt);
-            //
-            // await User.findOneAndUpdate(
-            //     {_id: isUserInDb._id},
-            //     {
-            //         $set: {
-            //             username,
-            //             email,
-            //             password: re_hash_password,
-            //         },
-            //     })
-
             const tenMinutes = 1000 * 60 * 10;
             const salt = await bcrypt.genSalt(10);
             const passwordToken = crypto.randomUUID();

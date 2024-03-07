@@ -16,7 +16,7 @@ export const userapi = createApi({
         updateUserProfileImage: builder.mutation({
             query: (file) => ({
                 method: 'PUT',
-                url: '',
+                url: '/update-image',
                 body: file
             })
         }),

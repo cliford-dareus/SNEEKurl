@@ -2,7 +2,6 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
 const URL = "http://localhost:4080/page";
 
-
 const baseQuery = fetchBaseQuery({
     baseUrl: URL,
     credentials: "include", // Set credentials to "include"
@@ -35,11 +34,19 @@ export const pageapi = createApi({
             }),
             invalidatesTags: ["PAGE"],
         }),
+        deletePage: builder.mutation({
+            query: (payload) => ({
+                url: "/delete",
+                method: "DELETE",
+            }),
+            invalidatesTags: ["PAGE"],
+        })
     }),
 })
 
 export const {
     useCreatePageMutation,
     useUpdatePageMutation,
-    useGetPagesQuery
+    useGetPagesQuery,
+    useDeletePageMutation
 } = pageapi;

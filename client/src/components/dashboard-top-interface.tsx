@@ -23,7 +23,7 @@ const DashboardTopInterface = ({pathname}: Props) => {
                         className='rounded-md border border-slate-200 p-4 min-w-[256px]'
                         onClick={() => setAddLinkActive(true)}
                     >
-                        <Button>Add New Link</Button>
+                        <Button classnames="">Add New Link</Button>
                     </div>
                     :
                     <div

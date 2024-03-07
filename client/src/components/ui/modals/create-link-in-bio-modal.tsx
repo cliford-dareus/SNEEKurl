@@ -5,6 +5,7 @@ import Input from "../Input";
 import Button from "../button";
 import Switch from "../switch";
 import {SubmitHandler, useForm} from "react-hook-form";
+import {useCreatePageMutation} from "../../../app/services/page";
 
 type  Props = {
     createLinkInBioActive: boolean
@@ -18,11 +19,16 @@ export type CreateLinkInBioProp = {
     public: boolean;
 }
 const CreateLinkInBioModal = ({createLinkInBioActive, setCreateLinkInBioActive}: Props) => {
+    const [createLinkInBio] = useCreatePageMutation();
     const [isChecked, setChecked] = useState(false);
     const {register, handleSubmit} = useForm<CreateLinkInBioProp>();
 
     const handleCreateLinkInBio: SubmitHandler<CreateLinkInBioProp> = async (dataform) => {
-        console.log(dataform)
+        try {
+            await createLinkInBio(dataform);
+        }catch (e) {
+            console.log(e)
+        }
     };
 
     return (

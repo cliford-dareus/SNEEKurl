@@ -41,3 +41,31 @@ export const SubcriptionOptions = [
         cta: "Start with premium",
     },
 ];
+
+export  const SIDEBAR_LINKS = [
+    {
+        id: 1,
+        name: 'Overview',
+        slug: '/links'
+    },
+    {
+        id: 2,
+        name: 'Link In Bio',
+        slug: '/link-in-bio'
+    },
+    {
+        id: 3,
+        name: 'Setting',
+        slug: '/setting',
+        children: [
+            {
+                name: 'Profile',
+                slug: 'setting',
+            },
+            {
+                name: 'Subscription',
+                slug: 'setting/subscription',
+            }
+        ]
+    }
+]
