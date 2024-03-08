@@ -41,6 +41,7 @@ function App() {
           setCredentials({
             user: {
               username: data.user.username,
+              email: data.user.email,
               stripe_account_id: data.user.stripe_account_id,
               isVerified: data.user.isVerified,
             },

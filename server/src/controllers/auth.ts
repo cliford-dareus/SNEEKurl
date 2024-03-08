@@ -83,7 +83,7 @@ const login = async (req: any, res: Response) => {
     if (req.session.client_id !== user.clientId) {
       await User.findOneAndDelete({ clientId: req.session.client_id });
       const updatedUser = await user
-        .update({ clientId: req.session.client_id })
+        .updateOne({ clientId: req.session.client_id })
         .exec();
       req.session.client_id = updatedUser.clientId;
     }
@@ -92,6 +92,7 @@ const login = async (req: any, res: Response) => {
       message: "Login successful",
       user: {
         username: user.username,
+        email: user.email,
         stripe_account_id: user.stripe_account_id,
         isVerified: true,
       },

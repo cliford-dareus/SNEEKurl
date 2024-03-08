@@ -38,8 +38,11 @@ const DashboardTopInterface = ({pathname}: Props) => {
                         className="ml-auto flex w-full justify-between gap-4 rounded-full border border-slate-200 px-4 py-1"
                         onClick={() => setSearchLinkActive(true)}
                     >
-                        <input className="w-[80%]"
-                               onFocus={() => setSearchLinkActive(true)}/>
+                        <input
+                            className="w-[80%]"
+                            onFocus={() => setSearchLinkActive(true)}
+                            placeholder="Search links..."
+                        />
                         <Button>
                             <LuSearch/>
                         </Button>

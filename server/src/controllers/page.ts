@@ -103,7 +103,6 @@ const updatePage = async (req: any, res: Response) => {
     }
 };
 
-
 const getPage = async (req: Request, res:Response) => {
     const {slug} = req.params;
 console.log(slug)

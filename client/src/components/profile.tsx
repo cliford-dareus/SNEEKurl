@@ -7,7 +7,6 @@ import Input from "./ui/Input";
 import Button from "./ui/button";
 import ChangePasswordSection from "./ui/modals/change-password-section";
 import Separator from "./ui/separator";
-import {Outlet} from "react-router-dom";
 import Portal from "./portal";
 import ChangeProfileImageModal from "./ui/modals/change-profile-image-modal";
 import {useUpdateUserDetailsMutation} from "../app/services/user";
@@ -33,7 +32,7 @@ const Profile = () => {
     } = useForm<Profile>({
         defaultValues: {
             username: user.user.username,
-            email: '',
+            email: user.user.email,
             oldpassword: '',
             newpassword: ''
         }
@@ -61,15 +60,15 @@ const Profile = () => {
                         <div className='flex gap-4 rounded-md border border-slate-200 px-4 py-8'>
                             <p className='font-medium'>Profile Image</p>
                             <div className='flex flex-1 items-center justify-between'>
-                                <div className='rounded-full bg-red-500 w-[50px] h-[50px]'>
-                                    <img src="/../assets/react.svg" alt=""/>
+                                <div className='rounded-full bg-red-500 w-[50px] h-[50px] ring-1 ring-indigo-500 overflow-hidden'>
+                                    <img src={`https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg`} alt=""/>
                                 </div>
                                 <div className='flex items-center gap-4'>
                                     <Button
                                         onClick={() => setEditProfileActive(true)}
                                         classnames=''
                                     >Upload new</Button>
-                                    <Button classnames='bg-white'>Delete</Button>
+                                    <Button classnames='bg-white text-black'>Delete</Button>
                                 </div>
                             </div>
                         </div>
@@ -104,9 +103,9 @@ const Profile = () => {
                             <Button classnames='self-start px-5'>Save</Button>
                         </form>
                     </div>
-                    <Separator/>
-                    <div className=''>
-
+                    {/*<Separator/>*/}
+                    <div className='flex gap-4 rounded-md border border-slate-200 px-4 py-8 mt-4'>
+                        <p>Delete account(WIP)</p>
                     </div>
                 </>
 

@@ -31,6 +31,8 @@ const updateProfileImage = async (req: Request, res: Response) => {
     }
 };
 
+const deleteProfileImage = async (req: Request, res: Response) => {};
+
 const updateProfileDetails = async (req: Request, res: Response) => {
     const {username, email, oldpassword, newpassword} = req.body;
     const user = req.user;
@@ -141,4 +143,4 @@ const resetPassword = async (req: Request, res: Response) => {
     }
 }
 
-export {updateProfileImage, updateProfileDetails, resetPassword}
+export {updateProfileImage,deleteProfileImage, updateProfileDetails, resetPassword}

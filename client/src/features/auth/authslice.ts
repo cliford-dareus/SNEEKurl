@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../app/store";
 
 type User = {
+  email: string;
   username: string;
   stripe_account_id: string;
   isVerified: boolean;
@@ -26,14 +27,16 @@ const authslice = createSlice({
       state,
       { payload: { user } }: PayloadAction<{ user: User }>
     ) => {
-      (state.token = localStorage.getItem("token") as string),
-        (state.user.username = user.username),
-        (state.user.stripe_account_id = user.stripe_account_id);
+            (state.token = localStorage.getItem("token") as string);
+            (state.user.username = user.username);
+            (state.user.email = user.email);
+            (state.user.stripe_account_id = user.stripe_account_id);
+            (state.user.isVerified = user.isVerified);
     },
     removeCredentials: (state) => {
       localStorage.removeItem("token");
-      (state.token = ""),
-        (state.user.username = ""),
+        (state.token = "");
+        (state.user.username = "");
         (state.user.stripe_account_id = "");
     },
   },

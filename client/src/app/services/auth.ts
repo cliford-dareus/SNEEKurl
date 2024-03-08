@@ -3,6 +3,7 @@ import { RootState } from "../store";
 
 export interface User {
   username: string;
+  email: string;
   stripe_account_id: string;
   isVerified: boolean;
 }
