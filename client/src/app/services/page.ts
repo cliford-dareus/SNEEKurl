@@ -18,6 +18,11 @@ export const pageapi = createApi({
             }),
             providesTags: ["PAGE"],
         }),
+        getPage: builder.query<any, {id: string | undefined}>({
+           query: (id) => ({
+                url: `/${id.id}`,
+           })
+        }),
         createPage: builder.mutation({
             query: (payload) => ({
                 url: "/create",
@@ -48,5 +53,6 @@ export const {
     useCreatePageMutation,
     useUpdatePageMutation,
     useGetPagesQuery,
-    useDeletePageMutation
+    useDeletePageMutation,
+    useGetPageQuery
 } = pageapi;

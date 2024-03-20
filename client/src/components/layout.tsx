@@ -10,8 +10,8 @@ type  ContextType = {
 
 const Layout = (props: Props) => {
     const {data} = useRetrieveSubscriptionQuery();
-    const plan = data?.subscription?.data[0].plan.metadata.name;
-
+    // const plan = data?.subscription?.data[0].plan.metadata.name;
+    const plan = 'pro'
     return (
         <div className=''>
             <Header isActive={false}/>

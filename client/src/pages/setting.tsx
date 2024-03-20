@@ -6,7 +6,6 @@ const Setting = () => {
         <div>
             <Outlet />
         </div>
-
     )
 };
 

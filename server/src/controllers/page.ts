@@ -105,12 +105,12 @@ const updatePage = async (req: any, res: Response) => {
 
 const getPage = async (req: Request, res:Response) => {
     const {slug} = req.params;
-console.log(slug)
-    const page = await  Page.findOne({slug: slug})
+    console.log(slug)
+    const page = await  Page.findOne({_id: slug})
         .populate("user", 'username')
         .populate("links")
 
-    if(!page || !page.isPublic)
+    if(!page)
         return res
          .status(StatusCodes.BAD_REQUEST)
          .json({message: "Couldn't find this Page..."});

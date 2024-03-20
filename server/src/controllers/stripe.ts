@@ -26,6 +26,7 @@ const create_subscription = async (req: Request, res: Response) => {
   const { plan_price, username } = req.body;
   let plan;
 
+  // Select user choosing Plan
   try {
     const prices = await stripe.prices.list({
       lookup_keys: ["sneek_premium", "sneek_pro", "sneek_free"],
@@ -45,9 +46,12 @@ const create_subscription = async (req: Request, res: Response) => {
   }
 
   const customer = await User.findOne({ username });
-  console.log(customer)
+  if (!customer) return res.status(StatusCodes.BAD_REQUEST).send();
 
-  if (!customer?.stripe_account_id) {
+  // Check if customer stripe account id is valid
+  const isCustomerIdValid = await stripe.customers.retrieve(customer?.stripe_account_id as string);
+
+  if (!customer?.stripe_account_id || isCustomerIdValid.deleted == true) {
     // create a new customer in stripe
     const newCustomer = await stripe.customers.create({
       email: customer?.email,
@@ -99,7 +103,7 @@ const create_subscription = async (req: Request, res: Response) => {
   // create subscription
   try {
     const subscription = await stripe.subscriptions.create({
-      customer: customer?.stripe_account_id as string,
+      customer: isCustomerIdValid.id,
       items: [
         {
           price: plan?.id,

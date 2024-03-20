@@ -21,6 +21,7 @@ import Setting from "./pages/setting";
 import Subscription from "./components/subscription";
 import LinkInBio from "./pages/link-in-bio";
 import LinksInBio from "./pages/links-in-bio";
+import ManageLinkInBio from "./pages/manage-link-in-bio";
 
 function App() {
   const {pathname} = useLocation();
@@ -84,6 +85,7 @@ function App() {
           <Route  element={<AdminLayout />}>
             <Route path="/links" element={<Dashboard />} />
             <Route path="/link-in-bio" element={<LinkInBio />} />
+            <Route path="/link-in-bio/:id" element={<ManageLinkInBio />} />
             <Route path="/setting" element={<Setting />}>
               <Route index element={<Profile />} />
               <Route path='subscription' element={<Subscription />} />

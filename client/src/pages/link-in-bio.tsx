@@ -4,6 +4,7 @@ import Button from "../components/ui/button";
 import EditPageModal from "../components/ui/modals/edit-page-modal";
 import Portal from "../components/portal";
 import {useGetPagesQuery} from "../app/services/page";
+import {Link} from "react-router-dom";
 
 const LinkInBio = () => {
     const {data: pages, isLoading} = useGetPagesQuery();
@@ -41,7 +42,9 @@ const LinkInBio = () => {
                                         <p>Links : {page.links.length}</p>
                                     </div>
                                     <p>{page.isPublic ? "Public" : "Not Public"}</p>
-
+                                    <Button>
+                                        <Link to={`${page._id}`}>Manage</Link>
+                                    </Button>
                                     <Button
                                         onClick={() => handleOpenLinkInBio(page.slug)
                                         }
@@ -67,7 +70,6 @@ const LinkInBio = () => {
                     </div>
             }
         </section>
-
     )
 };
 
