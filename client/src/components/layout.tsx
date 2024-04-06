@@ -1,6 +1,7 @@
 import Header from './Header'
 import {Outlet, useOutletContext} from 'react-router-dom'
 import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
+import Background from './ui/background';
 
 type Props = {}
 
@@ -18,6 +19,7 @@ const Layout = (props: Props) => {
             <main className='pt-16'>
                 <Outlet context={{plan} as ContextType}/>
             </main>
+            <Background />
         </div>
     )
 }

@@ -7,7 +7,7 @@ import {
   useCreateSubscriptionMutation,
   useRetrieveSubscriptionQuery,
 } from "../app/services/stripe";
-import {SubcriptionOptions} from "../Utils/common";
+import { SubcriptionOptions } from "../Utils/common";
 
 type Props = {};
 
@@ -69,7 +69,7 @@ const Pricing = (props: Props) => {
               key={opt.id}
               className={classNames(
                 "flex-1 p-4 rounded-lg shadow-lg",
-                opt.popular ? "bg-red-400" : "bg-slate-300 mt-8"
+                opt.popular ? "bg-indigo-400" : "bg-slate-200 mt-8"
               )}
             >
               <div className="border-b px-2 py-8">
@@ -110,7 +110,7 @@ const Pricing = (props: Props) => {
             </div>
           ))}
         </div>
-        
+
         <div className="">
           <Outlet />
         </div>

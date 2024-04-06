@@ -68,7 +68,6 @@ const updateProfileDetails = async (req: Request, res: Response) => {
                 o
             })
 
-
             const passwordTokenExpirationDate = new Date(Date.now() + tenMinutes);
 
             isUserInDb.passwordToken = hashPasswordToken;
@@ -141,6 +140,22 @@ const resetPassword = async (req: Request, res: Response) => {
             .status(StatusCodes.BAD_REQUEST)
             .send({message: ''})
     }
-}
+};
 
-export {updateProfileImage,deleteProfileImage, updateProfileDetails, resetPassword}
+const requestAccountDeletion = async (req: Request, res: Response) => {
+    const user = req.user;
+    
+    try{
+
+    }catch (error){
+        console.log(error)
+    }
+};
+
+const deleteAccount = async (req: Request, res: Response) => {
+    const user = req.user;
+
+
+};
+
+export {updateProfileImage,deleteProfileImage, updateProfileDetails, deleteAccount, resetPassword}
