@@ -22,6 +22,7 @@ export const pageapi = createApi({
       query: (id) => ({
         url: `/${id.id}`,
       }),
+      providesTags: ["PAGE"],
     }),
     createPage: builder.mutation({
       query: (payload) => ({
@@ -46,6 +47,14 @@ export const pageapi = createApi({
       }),
       invalidatesTags: ["PAGE"],
     }),
+    reorderPageLinks : builder.mutation({
+      query: (payload) => ({
+        url: `/manage/${payload.id}`,
+        method: "PUT",
+        body: payload.links,
+      }),
+      invalidatesTags: ["PAGE"],
+    })
   }),
 });
 
@@ -55,4 +64,5 @@ export const {
   useGetPagesQuery,
   useDeletePageMutation,
   useGetPageQuery,
+  useReorderPageLinksMutation
 } = pageapi;

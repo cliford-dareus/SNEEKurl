@@ -1,7 +1,10 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useGetPageQuery } from "../app/services/page";
+import {
+  useGetPageQuery,
+  useReorderPageLinksMutation,
+} from "../app/services/page";
 import { LuArrowLeft, LuSettings, LuTrash } from "react-icons/lu";
-import { DragEvent, useState } from "react";
+import { DragEvent, useRef, useState } from "react";
 import { Popover, PopoverContainer } from "../components/ui/popover";
 import Button from "../components/ui/button";
 import Portal from "../components/portal";
@@ -18,28 +21,28 @@ const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
     e.dataTransfer.setData("text/html", JSON.stringify(items[index]));
   };
 
-  const handleDragOver = (index: number, e: DragEvent<HTMLLIElement>) => {
+  const handleDragOver = (i: number, e: DragEvent<HTMLLIElement>) => {
     e.preventDefault();
-    setDragOverIndex(index);
+    setDragOverIndex(i);
   };
 
-  const handleDrop = (index: number, e: DragEvent<HTMLLIElement>) => {
+  const handleDrop = (dropIndex: number, e: DragEvent<HTMLLIElement>) => {
     e.preventDefault();
     const draggedItemId = JSON.parse(e.dataTransfer.getData("text/html"))._id
       ._id;
-
-    const newItems = items.filter((item: any, i: number) => {
-      const isNotDragged = item._id._id !== draggedItemId;
-      const isNotPlaced = i !== index;
-      return isNotDragged && isNotPlaced;
-    });
+    const newItems = [...items];
 
     const draggedItem = items.find(
       (item: any) => item._id._id === draggedItemId
     );
-    manageLinksOrder(
-      [...newItems, draggedItem, ...items.slice(index)].slice(0, items.length)
+
+    newItems.splice(
+      items.findIndex((item: any) => item._id._id === draggedItemId),
+      1
     );
+    newItems.splice(dropIndex, 0, draggedItem);
+
+    manageLinksOrder(newItems);
     setDragOverIndex(null);
   };
 
@@ -83,18 +86,19 @@ const ManageLinkInBio = ({}: Props) => {
   const Navigate = useNavigate();
   const { id } = useParams();
   const { data, isLoading } = useGetPageQuery({ id });
-  const [state, setState] = useState(data?.links || []);
   const [open, setOpen] = useState(false);
+  const [blockSelected, setBlockSelected] = useState("");
   const [createLinkBlockActive, setCreateLinkBlockActive] = useState(false);
+  const [reorderLinks] = useReorderPageLinksMutation();
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const manageLinksOrder = async (newOrder: any) => {
-    await fetch(`http://localhost:4080/page/manage/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newOrder),
-    });
+    try {
+      await reorderLinks({ id, links: newOrder }).unwrap();
+      iframeRef.current?.contentWindow?.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -117,6 +121,7 @@ const ManageLinkInBio = ({}: Props) => {
               <Popover>
                 <div
                   onClick={() => {
+                    setBlockSelected("social");
                     setCreateLinkBlockActive(true);
                     setOpen(false);
                   }}
@@ -134,7 +139,7 @@ const ManageLinkInBio = ({}: Props) => {
               {!isLoading &&
                 data?.links.map((link: any, index: number) => (
                   <LinkItem
-                    key={link}
+                    key={link._id._id}
                     link={link}
                     index={index}
                     items={data?.links}
@@ -144,14 +149,26 @@ const ManageLinkInBio = ({}: Props) => {
             </ul>
           )}
         </div>
-        <div className="w-[300px]">
-          <iframe width="300" src={`http://localhost:5173/${id}`}></iframe>
+        <div className="w-[300px] h-[700px] border">
+          {!isLoading ? (
+            <iframe
+              ref={iframeRef}
+              width="300"
+              height="100%"
+              src={`http://localhost:5173/${id}`}
+            ></iframe>
+          ) : (
+            <h1>Loading...</h1>
+          )}
         </div>
       </div>
       <Portal>
         <CreateLinkBlockModal
+          blockSelected={blockSelected}
+          setBlockSelected={setBlockSelected}
           createLinkBlockActive={createLinkBlockActive}
           setCreateLinkBlockActive={setCreateLinkBlockActive}
+          pageId={data?._id}
         />
       </Portal>
     </section>

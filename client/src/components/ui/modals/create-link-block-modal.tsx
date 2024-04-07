@@ -1,25 +1,48 @@
 import React from "react";
 import { Sheet, SheetContent } from "../sheet";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import MultiSelect from "../multi-select";
 import { CreateLinkInBioProp } from "./create-link-in-bio-modal";
+import { useGetUrlsQuery } from "../../../app/services/urlapi";
+import { useUpdatePageMutation } from "../../../app/services/page";
+import Label from "../label";
+import Button from "../button";
 
 type Props = {
+  pageId: string;
+  blockSelected: string;
+  setBlockSelected: React.Dispatch<React.SetStateAction<string>>;
   createLinkBlockActive: boolean;
   setCreateLinkBlockActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-interface CreateLinkBlockProp extends CreateLinkInBioProp  {
-    links: string[];
+interface CreateLinkBlockProp extends CreateLinkInBioProp {
+  links: string[];
 }
 
 const CreateLinkBlockModal = ({
+  pageId,
   createLinkBlockActive,
   setCreateLinkBlockActive,
+  blockSelected,
+  setBlockSelected,
 }: Props) => {
-
-  const { register, handleSubmit, setValue } = useForm<CreateLinkBlockProp>();
-  const handleCreateLinkBlock = async () => {};
+  const [updateLinks] = useUpdatePageMutation();
+  
+  const { handleSubmit, setValue } = useForm<CreateLinkBlockProp>();
+  const handleCreateLinkBlock: SubmitHandler<CreateLinkBlockProp> = async (
+    data
+  ) => {
+    try {
+      await updateLinks({
+        id: pageId,
+        links: data.links,
+        category: blockSelected,
+      }).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -41,7 +64,7 @@ const CreateLinkBlockModal = ({
                     fill="black"
                   />
                 </svg>
-                <p>Creating Page</p>
+                <p>Select Urls to as {blockSelected} block</p>
               </div>
 
               <form
@@ -49,7 +72,11 @@ const CreateLinkBlockModal = ({
                 className="h-full p-4 pt-20"
                 onSubmit={handleSubmit(handleCreateLinkBlock)}
               >
-                <MultiSelect setvalues={setValue} />
+                <div className="flex flex-col gap-4 pt-8">
+                  <Label>Select Urls</Label>
+                  <MultiSelect setvalues={setValue} />
+                  <Button>Add Blocks</Button>
+                </div>
               </form>
             </div>
           </SheetContent>

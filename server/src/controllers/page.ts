@@ -48,7 +48,7 @@ const createPage = async (req: any, res: Response) => {
 };
 
 const updatePage = async (req: any, res: Response) => {
-  const { id, title, description, slug, isPublic, links } = req.body;
+  const { id, title, description, slug, isPublic, links, category } = req.body;
   const client_id = req.session.client_id;
 
   if (!title && !description && !slug && !isPublic && !links) {
@@ -71,18 +71,18 @@ const updatePage = async (req: any, res: Response) => {
       .json({ message: "Page not found" });
   }
 
-  const all = [...page.links, ...links];
+  const allLinks = [...page.links, ...links];
 
-  const s = all.reduce((acc, link) => {
+  const formatedLinks = allLinks.reduce((acc, link) => {
     if (typeof link === "object") {
       acc = [...acc, { _id: link._id, category: link.category }];
     } else {
-      acc = [...acc, { _id: link, category: "website" }];
+      acc = [...acc, { _id: link, category: category ? category : "website" }];
     }
     return acc;
   }, [] as unknown as { _id: string; catetory: string }[]);
 
-  const uniqueAges = s
+  const uniqueAges = formatedLinks
     .map((item: any) => item)
     .filter((value: any, index: number, self: any) => {
       if (self.indexOf(value) === index) {
