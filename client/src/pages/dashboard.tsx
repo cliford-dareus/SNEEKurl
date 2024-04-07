@@ -1,8 +1,6 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {useAppSelector} from "../app/hook";
-import {RootState} from "../app/store";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {Url, useGetUrlsQuery} from "../app/services/urlapi";
-import {Link, useOutletContext, useSearchParams} from "react-router-dom";
+import { useSearchParams} from "react-router-dom";
 import {LuArrowDown, LuArrowUp, LuFilter, LuLink2, LuMoreVertical} from "react-icons/lu";
 import {getSiteUrl} from "../Utils/getSiteUrl";
 import {Popover, PopoverContainer} from "../components/ui/popover";
@@ -11,11 +9,8 @@ import EditQrModal from "../components/ui/modals/edit-qr-modal";
 import ShareLinkModal from "../components/ui/modals/share-link-modal";
 import Portal from "../components/portal";
 import VisitLinkButton from "../components/visit-link-button";
-import {Select} from "../components/ui/select";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
-import Button from "../components/ui/button";
 import {useUserPlan} from "../components/admin-layout";
-import useScroll from "../Utils/hooks/use-scroll";
 
 const LinkCard = ({url}: { url: Url }) => {
     const plan = useUserPlan();

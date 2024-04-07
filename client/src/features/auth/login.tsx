@@ -19,7 +19,7 @@ export type IUserFormValues = {
 const Login = (props: Props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [Value, setValue] = useLocalStorage("token", '');
+  const [Value, setValue] = useLocalStorage("token", "");
   const user = useAppSelector(selectCurrentUser) as AuthState;
 
   const [useLogin, { isLoading, isError }] = useLoginMutation();
@@ -57,11 +57,28 @@ const Login = (props: Props) => {
   }, []);
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
-      <div className="rounded-xl bg-red-500 w-[400px]">
-        <div className="rounded-t-xl bg-red-600 p-4 text-center">
+    <div className="flex h-screen w-screen container p-4 items-center justify-center">
+      <div className="fixed top-4 left-4">
+        <Link to="/">
+          <svg
+            width="40"
+            height="40"
+            viewBox="0 0 200 250"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+              fill="black"
+            />
+          </svg>
+        </Link>
+      </div>
+
+      <div className="rounded-xl bg-indigo-500 w-[400px] text-white">
+        <div className="rounded-t-xl bg-indigo-600 p-4 text-center ">
           <h1 className="text-4xl">Sneek</h1>
-          <p className="mt-2 text-xl">
+          <p className="mt-2 text-xl ">
             Lorem ipsum dolor sit amet consectetur adipisicing.
           </p>
         </div>

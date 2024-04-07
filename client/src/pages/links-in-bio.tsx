@@ -9,8 +9,9 @@ const LinksInBio = () => {
 
     useEffect(() => {
         const getPage = async () => {
-            const page = await fetch(`${URL}/page/${slug}`).then(res => res.json());
-            setUrl(page);
+            const page = await fetch(`${URL}/page/${slug}`)
+            const data = await page.json();
+            setUrl(data);
         }
         getPage();
     }, []);
