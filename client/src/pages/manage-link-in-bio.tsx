@@ -13,6 +13,25 @@ import classNames from "classnames";
 
 type Props = {};
 
+const blocks = [
+  {
+    id: 1,
+    name: "Social Media Block",
+    tag: "social",
+  },
+  {
+    id: 2,
+    name: "Website Block",
+    tag: "website",
+  },
+
+  {
+    id: 3,
+    name: "Afilliate Marketing Block",
+    tag: "marketing",
+  },
+];
+
 const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
 
@@ -118,18 +137,25 @@ const ManageLinkInBio = ({}: Props) => {
           <PopoverContainer triggerFn={setOpen} classnames="">
             <Button onClick={() => setOpen(!open)}>Add Block</Button>
             {open && (
-              <Popover>
-                <div
-                  onClick={() => {
-                    setBlockSelected("social");
-                    setCreateLinkBlockActive(true);
-                    setOpen(false);
-                  }}
-                  className=""
-                >
-                  Social Block
+              <Popover classnames="!bg-slate-100 border border-slate-200">
+                <div className="flex flex-col gap-2 items-center">
+                  <p className="text-center font-bold">Select a Block</p>
                 </div>
-                <div className="">Marketing Block</div>
+                <div className="flex flex-col gap-2 items-center mt-4">
+                  {blocks.map((block: any) => (
+                    <div
+                      key={block.id}
+                      onClick={() => {
+                        setBlockSelected(block.tag);
+                        setCreateLinkBlockActive(true);
+                        setOpen(false);
+                      }}
+                      className="w-full px-4 py-2 hover:bg-slate-200 rounded-md cursor-pointer"
+                    >
+                      {block.name}
+                    </div>
+                  ))}
+                </div>
               </Popover>
             )}
           </PopoverContainer>
@@ -170,6 +196,8 @@ const ManageLinkInBio = ({}: Props) => {
           setCreateLinkBlockActive={setCreateLinkBlockActive}
           pageId={data?._id}
         />
+
+        {/* <EditLinkBlockModal /> */}
       </Portal>
     </section>
   );

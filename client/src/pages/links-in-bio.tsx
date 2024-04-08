@@ -9,8 +9,6 @@ const LinksInBio = () => {
   const { slug } = useParams();
   const { data, isLoading } = useGetPageQuery({ id: slug });
 
-  //   console.log(data);
-
   return (
     <main className="">
       <div className="container mx-auto p-4">
