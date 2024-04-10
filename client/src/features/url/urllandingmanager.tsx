@@ -1,9 +1,37 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { IFormValues } from "./urlform";
 import { useShortenUrlMutation } from "../../app/services/urlapi";
 import { useForm } from "react-hook-form";
+import { AnimatePresence, useAnimate, usePresence } from "framer-motion";
+
+const Box = ({ children }: { children: React.ReactNode }) => {
+  const [ref, animate] = useAnimate();
+  const [isPresent, safeToRemove] = usePresence();
+
+  useEffect(() => {
+    if (!isPresent) {
+      animate(ref.current, {
+        opacity: 0,
+        display: "none",
+        transition: { duration: 0.2 },
+      });
+    } else {
+      animate(ref.current, {
+        opacity: 1,
+        display: "flex",
+        transition: { duration: 0.2 },
+      });
+    }
+  }, [isPresent, safeToRemove]);
+
+  return (
+    <div ref={ref} className="">
+      {children}
+    </div>
+  );
+};
 
 const HomeCreateLinkManager = React.memo(
   ({ isAuthenticated, isFreePlan }: any) => {
@@ -38,7 +66,13 @@ const HomeCreateLinkManager = React.memo(
             placeholder="https://example.com"
             type="url"
           />
-          {open && <Button>Create</Button>}
+          <AnimatePresence>
+            {open && (
+              <Box>
+                <Button>Create</Button>
+              </Box>
+            )}
+          </AnimatePresence>
         </form>
       </div>
     );

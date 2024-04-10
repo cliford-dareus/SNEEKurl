@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAppSelector } from "../app/hook";
 
-import BrowserShot from "../assets/706shots_so.png";
+import BrowserShot from "../assets/706shots_so.webp";
 import { Outlet } from "react-router-dom";
 import { Url, useGetUrlsQuery } from "../app/services/urlapi";
 import { LuLink2, LuMoreVertical, LuQrCode } from "react-icons/lu";
@@ -116,7 +116,7 @@ const Landing = () => {
           </div>
         </div>
 
-        <div className="flex justify-center items-center mt-4">
+        <div className="flex justify-center items-center mt-8">
           <img className="" src={BrowserShot} alt="shot" />
           {/* <img className="" src={BrowserShot} alt="shot" /> */}
         </div>

@@ -107,7 +107,7 @@ const getPage = async (req: Request, res: Response) => {
   const { slug } = req.params;
 
   const page = await Page.findOne({ slug })
-    .populate({ path: "user", model: "User", select: ["username", "_id"] })
+    .populate({ path: "user", model: "User", select: ["username", "profile"] })
     .populate({ path: "links._id", model: "Short" })
     .exec();
 

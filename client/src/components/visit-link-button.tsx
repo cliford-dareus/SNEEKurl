@@ -32,7 +32,7 @@ const VisitLinkButton = ({ url, children }: Props) => {
               }
             );
           } catch (error) {
-            window.open(`http://localhost:4080/short/${url.short}`)
+            window.open(`http://localhost:4080/short/${url.short}`);
           }
         }}
       >

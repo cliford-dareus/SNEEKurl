@@ -10,6 +10,7 @@ import Button from "../components/ui/button";
 import Portal from "../components/portal";
 import CreateLinkBlockModal from "../components/ui/modals/create-link-block-modal";
 import classNames from "classnames";
+import { getSiteUrl } from "../Utils/getSiteUrl";
 
 type Props = {};
 
@@ -85,11 +86,17 @@ const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
     >
       <div
         className={classNames(
-          link.category === "website" ? "bg-indigo-300" : "bg-slate-200",
+          link.category === "website"
+            ? "bg-indigo-300"
+            : link.category === "social"
+            ? "bg-red-500"
+            : link.category === "marketing"
+            ? "bg-green-300"
+            : "bg-slate-300",
           "h-5 w-5 rounded-full"
         )}
       ></div>
-      {link._id.short}
+      {getSiteUrl(link._id.longUrl)}
 
       <button className="ml-auto">
         <LuSettings />
