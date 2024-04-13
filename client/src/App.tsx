@@ -1,5 +1,11 @@
-import { useEffect} from "react";
-import {Route, Routes, useLocation, useNavigate, useParams} from "react-router-dom";
+import { useEffect } from "react";
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
 import Layout from "./components/layout";
@@ -22,9 +28,10 @@ import Subscription from "./components/subscription";
 import LinkInBio from "./pages/link-in-bio";
 import LinksInBio from "./pages/links-in-bio";
 import ManageLinkInBio from "./pages/manage-link-in-bio";
+import LinkAnalytics from "./pages/link-analytics";
 
 function App() {
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   const Navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [values, setValue] = useLocalStorage("token", "");
@@ -32,9 +39,11 @@ function App() {
   const fpPromise = FingerprintJS.load();
 
   useEffect(() => {
+    // TODO: Get rid of this finterprint code and give user a time limit to get access to their create link
     const getUser = async () => {
       const fp = await fpPromise;
       const result = await fp.get();
+      
       try {
         const data = await identify(result).unwrap();
         data.token && setValue(JSON.stringify(data.token));
@@ -49,12 +58,13 @@ function App() {
           })
         );
 
-        if(data.user.username !== 'Guest' &&
-            (pathname === '/'
-                || pathname === '/pricing'
-                || pathname === '/checkout'
-                || pathname === '/yoururl' ))
-        {
+        if (
+          data.user.username !== "Guest" &&
+          (pathname === "/" ||
+            pathname === "/pricing" ||
+            pathname === "/checkout" ||
+            pathname === "/yoururl")
+        ) {
           Navigate("/links");
         }
       } catch (error) {
@@ -82,13 +92,14 @@ function App() {
         </Route>
 
         <Route element={<ProtectedRoutes />}>
-          <Route  element={<AdminLayout />}>
+          <Route element={<AdminLayout />}>
             <Route path="/links" element={<Dashboard />} />
             <Route path="/link-in-bio" element={<LinkInBio />} />
             <Route path="/link-in-bio/:id" element={<ManageLinkInBio />} />
+            <Route path="/analytics/:id" element={<LinkAnalytics />}/>
             <Route path="/setting" element={<Setting />}>
               <Route index element={<Profile />} />
-              <Route path='subscription' element={<Subscription />} />
+              <Route path="subscription" element={<Subscription />} />
             </Route>
           </Route>
         </Route>

@@ -55,6 +55,12 @@ export const urlapi = createApi({
       }),
       providesTags: ["SHORT"],
     }),
+    getUrl: builder.query<UrlResponse, any>({
+      query: (query) => ({
+        url: `/url/${query}`,
+      }),
+      providesTags: ["SHORT"],
+    }),
     editUrl: builder.mutation<UrlResponse, any>({
       query: (payload) => ({
         url: "/edit",
@@ -69,5 +75,6 @@ export const urlapi = createApi({
 export const {
   useShortenUrlMutation,
   useGetUrlsQuery,
+  useGetUrlQuery,
   useEditUrlMutation
 } = urlapi;

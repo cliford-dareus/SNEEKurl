@@ -7,8 +7,8 @@ const router = express.Router();
 router.route('/').get(authorization, getMyPages);
 router.route("/create").post(authorization, createPage);
 router.route("/update").put(authorization, updatePage);
+router.route('/manage/:slug').put(authorization, managePage);
 
 router.route('/:slug').get(getPage);
-router.route('/manage/:slug').put( managePage);
 
 export default router;

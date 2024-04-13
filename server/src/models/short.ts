@@ -10,6 +10,14 @@ interface IShort extends Document {
   password?: string;
   clicks: number;
   lastClick: Date;
+  metadata: {
+    time: Date;
+    ipAddress: string | undefined;
+    userAgent: string | undefined;
+    referer: string | undefined;
+    country: string;
+    isMobile: boolean;
+  }[];
 }
 
 const ShortSchema = new mongoose.Schema<IShort>(
@@ -26,6 +34,16 @@ const ShortSchema = new mongoose.Schema<IShort>(
     password: { type: String },
     clicks: { type: Number },
     lastClick: { type: Date },
+    metadata: [
+      {
+        time: { type: Date },
+        ipAddress: { type: String },
+        userAgent: { type: String },
+        referer: { type: String },
+        country: { type: String },
+        isMobile: { type: Boolean, default: false },
+      },
+    ],
   },
   {
     timestamps: true,
