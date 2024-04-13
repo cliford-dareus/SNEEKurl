@@ -2,6 +2,16 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 
 const URL = "http://localhost:4080/short";
+
+export interface Metadata {
+  time: Date;
+  ipAddress: string | undefined;
+  userAgent: string | undefined;
+  referer: string | undefined;
+  country: string;
+  isMobile: boolean;
+}
+
 export interface Url {
   longUrl: string;
   short: string;
@@ -12,6 +22,7 @@ export interface Url {
   password?: string;
   clicks?: number;
   lastClick?: Date;
+  metadata: Metadata[];
   _id: string;
   __v: number;
 }
@@ -76,5 +87,5 @@ export const {
   useShortenUrlMutation,
   useGetUrlsQuery,
   useGetUrlQuery,
-  useEditUrlMutation
+  useEditUrlMutation,
 } = urlapi;

@@ -90,7 +90,7 @@ const getUrl = async (req: any, res: Response) => {
     .send({ message: "Link does not exist" });
   }
 
-  res.status(StatusCodes.OK).json(url);
+  res.status(StatusCodes.OK).json({short: url, message: "Link found"});
 };
 
 // GET URLS SEARCH
