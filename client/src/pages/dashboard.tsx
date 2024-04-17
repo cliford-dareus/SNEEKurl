@@ -55,9 +55,9 @@ const LinkCard = ({ url }: { url: Url }) => {
           {url.clicks} clicks
         </div>
         <div className="rounded-lg bg-slate-100 border px-4 py-1  hover:border hover:border-slate-300">
-            <Link to={`/analytics/${url.short}`}>
-                <LuBarChart size={20} />
-            </Link>
+          <Link to={`/analytics/${url.short}`}>
+            <LuBarChart size={20} />
+          </Link>
         </div>
 
         <PopoverContainer classnames="ml-4" triggerFn={setOpen}>

@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
 import cors from "cors";
-import morgan from "morgan";
+import morgan, { token } from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import connectDB from "./lib/db/connect";
@@ -21,6 +21,8 @@ import User from "./models/user";
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 import { webhook } from "./config/webhook";
+import Short from "./models/short";
+import cron_job from "./config/cron";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -55,7 +57,6 @@ app.use(
     secret: process.env.JWT_SECRET!,
     resave: false,
     saveUninitialized: true,
-    // rolling: true,
     cookie: {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
@@ -71,86 +72,87 @@ app.use(passport.initialize());
 require("./config/strategy");
 
 app.use("/auth", authRouter);
-app.use('/user', userRouter);
+app.use("/user", userRouter);
 app.use("/short", shortRouter);
 app.use("/page", pageRouter);
 app.use("/stripe", stripeRouter);
 
-
 app.use(
-    "/api/uploadthing",
-    createRouteHandler({
-      router: uploadRouter,
-      // config: { ... },
-    }),
+  "/api/uploadthing",
+  createRouteHandler({
+    router: uploadRouter,
+    // config: { ... },
+  })
 );
+
 app.post("/sneekurl/fp", async (req: any, res) => {
   const { client_id } = req.query;
   const auth_sid = req.signedCookies["auth.sid"];
+
   req.session.client_id = client_id;
   req.session.isAuthenticated = false;
 
   try {
-    const not_found_user = await User.findOne({
-      clientId: req.session.client_id,
+    if (!auth_sid) {
+      const guest_sid = jwt.sign(
+        { user_name: "Guest", client_id: client_id },
+        process.env.JWT_SECRET!,
+        { expiresIn: "1d" }
+      );
+
+      res.cookie("guest.sid", guest_sid, {
+        httpOnly: true,
+        signed: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
+      return res.status(200).json({
+        message: "login as Guest",
+        token: client_id,
+      });
+    }
+
+    // Check if auth_sid is valid and user is verified
+    const decoded_payload = jwt.verify(
+      auth_sid,
+      process.env.JWT_SECRET!
+    ) as jwt.JwtPayload;
+
+    const user = await User.findOne({
+      _id: decoded_payload["user_id"],
     });
 
-    if (not_found_user && auth_sid) {
-      const decoded_payload = jwt.verify(
-        auth_sid,
-        process.env.JWT_SECRET!
-      ) as jwt.JwtPayload;
-
-      const isVerified =
-        decoded_payload["user_id"] === not_found_user._id.toString() &&
-        decoded_payload["user_name"] === not_found_user.username.toString();
-
-      if (isVerified) {
-        req.session.isAuthenticated = true;
-
-        const payload = jwt.sign(
-          { user_id: not_found_user._id, user_name: not_found_user.username },
-          process.env.JWT_SECRET!,
-          { expiresIn: "1d" }
-        );
-
-        res.cookie("auth.sid", payload, {
-          httpOnly: true,
-          signed: true,
-          maxAge: 24 * 60 * 60 * 1000,
-        });
-
-        return res.status(200).send({
-          message: "Login successful",
-          user: {
-            username: not_found_user.username,
-            stripe_account_id: not_found_user.stripe_account_id,
-            isVerified: true,
-          },
-          token: payload,
-        });
-      }
-    } else if (not_found_user) {
-      res.status(200).send({
-        message: "login as Guest",
-        user: {
-          username: "Guest",
-          isVerified: false,
-        },
-      });
-    } else {
-      const user = {
-        username: "guest",
-        email: "user@example.com",
-        password: req.session.client_id,
-        clientId: req.session.client_id,
-      };
-
-      await User.create(user);
-      res.status(200).send({ message: "Guest created" });
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
     }
+
+    // Check if user is verified
+
+    req.session.isAuthenticated = true;
+
+    const payload = jwt.sign(
+      { user_id: user._id, user_name: user.username },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1d" }
+    );
+
+    res.cookie("auth.sid", payload, {
+      httpOnly: true,
+      signed: true,
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).send({
+      message: "Login successful",
+      user: {
+        username: user.username,
+        stripe_account_id: user.stripe_account_id,
+        isVerified: true,
+      },
+      token: payload,
+    });
   } catch (error) {
-    res.status(401).send();
+    res.status(401).send({ message: "Guest login failed" });
   }
 });
 
@@ -164,6 +166,7 @@ const PORT = process.env.PORT || 4000;
 
 const start = async () => {
   try {
+    await cron_job();
     connectDB(process.env.MONGO_URI!);
     app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
   } catch (error) {
