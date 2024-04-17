@@ -35,18 +35,34 @@ function App() {
   const Navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [values, setValue] = useLocalStorage("token", "");
+  const [values2, setValue2] = useLocalStorage("guest_token", "");
   const [identify] = useIdentifyUserMutation();
   const fpPromise = FingerprintJS.load();
 
   useEffect(() => {
-    // TODO: Get rid of this finterprint code and give user a time limit to get access to their create link
     const getUser = async () => {
       const fp = await fpPromise;
       const result = await fp.get();
-      
       try {
+        if (!values) {
+          const data = await identify(result).unwrap();
+          data.token && setValue(JSON.stringify(data.token));
+          dispatch(
+            setCredentials({
+              user: {
+                username: "Guest",
+                email: "",
+                stripe_account_id: "",
+                isVerified: false,
+              },
+            })
+          )
+          return;
+        }
+
         const data = await identify(result).unwrap();
         data.token && setValue(JSON.stringify(data.token));
+
         dispatch(
           setCredentials({
             user: {
@@ -71,6 +87,7 @@ function App() {
         console.log(error);
       }
     };
+
     getUser();
   }, []);
 
@@ -96,7 +113,7 @@ function App() {
             <Route path="/links" element={<Dashboard />} />
             <Route path="/link-in-bio" element={<LinkInBio />} />
             <Route path="/link-in-bio/:id" element={<ManageLinkInBio />} />
-            <Route path="/analytics/:id" element={<LinkAnalytics />}/>
+            <Route path="/analytics/:id" element={<LinkAnalytics />} />
             <Route path="/setting" element={<Setting />}>
               <Route index element={<Profile />} />
               <Route path="subscription" element={<Subscription />} />

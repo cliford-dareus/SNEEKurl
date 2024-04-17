@@ -2,6 +2,7 @@ import express from "express";
 import {
   create,
   editUrl,
+  getGuestUrl,
   getUrl,
   getUrls,
   visitUrl,
@@ -12,10 +13,11 @@ import check_limiter_status from "../middlewares/check-links-limiter";
 
 const router = express.Router();
 
-router.route("/create").post(isFreemiumDone, check_limiter_status, create);
+router.route("/").get(getGuestUrl);
+router.route("/create").post(create);
 router.route("/urls").get(authorize, getUrls);
-router.route("/url/:short").get( getUrl);
-router.route("/edit").put(editUrl);
+router.route("/edit").put(authorize, editUrl);
+router.route("/url/:short").get(getUrl);
 router.route("/:short").get(visitUrl);
 
 export default router;

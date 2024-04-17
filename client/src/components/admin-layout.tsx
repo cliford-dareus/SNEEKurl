@@ -1,5 +1,6 @@
 import Header from "./Header";
 import {
+  Link,
   NavLink,
   Outlet,
   useLocation,
@@ -40,7 +41,10 @@ const AdminLayout = () => {
             <nav className="w-full">
               <ul className="flex w-full flex-col gap-1">
                 {SIDEBAR_LINKS.map((link, index) => (
-                  <li className="relative flex w-full items-center justify-center">
+                  <li
+                    key={link.id}
+                    className="relative flex w-full items-center justify-center"
+                  >
                     <NavLink
                       onClick={() => setActiveIndex(index)}
                       className="w-full rounded-md bg-slate-100 px-4 py-2 hover:bg-slate-200"

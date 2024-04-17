@@ -20,6 +20,7 @@ export interface Url {
   isLogin: boolean;
   creatorId: string;
   password?: string;
+  expired_in?: Date;
   clicks?: number;
   lastClick?: Date;
   metadata: Metadata[];
@@ -50,7 +51,7 @@ const baseQuery = fetchBaseQuery({
 export const urlapi = createApi({
   reducerPath: "urlapi",
   baseQuery,
-  tagTypes: ["SHORT"],
+  tagTypes: ["SHORT", "GUEST_SHORT"],
   endpoints: (builder) => ({
     shortenUrl: builder.mutation<UrlResponse, UrlRequest>({
       query: (credentials) => ({
@@ -58,7 +59,13 @@ export const urlapi = createApi({
         method: "POST",
         body: credentials,
       }),
-      invalidatesTags: ["SHORT"],
+      invalidatesTags: ["SHORT", "GUEST_SHORT"],
+    }),
+    getGuestUrl: builder.query<UrlsResponse, any>({
+      query: (query) => ({
+        url: `/`,
+      }),
+      providesTags: ["GUEST_SHORT"],
     }),
     getUrls: builder.query<UrlsResponse, any>({
       query: (query) => ({
@@ -88,4 +95,5 @@ export const {
   useGetUrlsQuery,
   useGetUrlQuery,
   useEditUrlMutation,
+  useGetGuestUrlQuery
 } = urlapi;

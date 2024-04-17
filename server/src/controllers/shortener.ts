@@ -1,96 +1,67 @@
 import { Request, Response } from "express";
 import geoip from "geoip-lite";
 import { StatusCodes } from "http-status-codes";
-import { BadRequest } from "../lib/errors/index";
+
 import Short from "../models/short";
 import User from "../models/user";
+import jwt from "jsonwebtoken";
 
 // CREATE SHORTEN URL
 const create = async (req: any, res: Response) => {
   const { longUrl, backhalf } = req.body;
-  const isAuthenticated = req.session.isAuthenticated as boolean;
-  const clientId = req.session.client_id;
+  const guest_sid = req.signedCookies["guest.sid"];
+  const auth_sid = req.signedCookies["auth.sid"];
+  const isAuthenticated = req.session?.isAuthenticated;
 
-  const user = await User.findOne({ clientId });
+  const guest =
+    guest_sid &&
+    (jwt.verify(guest_sid, process.env.JWT_SECRET!) as jwt.JwtPayload);
+  const auth =
+    auth_sid &&
+    (jwt.verify(auth_sid, process.env.JWT_SECRET!) as jwt.JwtPayload);
 
-  if (!user)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "Enter a long URL" });
-
-  if (!longUrl)
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "Enter a long URL" });
-
-  const isUrlExist = await Short.findOne({ longUrl, user: user._id });
-  if (isUrlExist) return res.status(StatusCodes.OK).json({ short: isUrlExist });
-
-  if (isAuthenticated) {
-    if (backhalf) {
-      try {
-        const short = await Short.create({
-          longUrl,
-          short: backhalf,
-          user: user?._id,
-        });
-
-        await User.findByIdAndUpdate(user?._id, {
-          max_link: user.max_link! - 1,
-        });
-
-        res.status(StatusCodes.OK).json({
-          short,
-        });
-      } catch (error) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({ message: "Smothing went wrong while creating short..." });
-      }
-    } else {
-      try {
-        const short = await Short.create({
-          longUrl,
-          user: user?._id,
-        });
-
-        await User.findByIdAndUpdate(user?._id, {
-          max_link: user.max_link! - 1,
-        });
-
-        res.status(StatusCodes.OK).json({
-          short,
-        });
-      } catch (error) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .send({ message: "Something went wrong while creating short..." });
-      }
-    }
-  } else {
+  if (guest_sid) {
+    console.log(guest);
     const short = await Short.create({
       longUrl,
-      user: user?._id,
+      expired_in: new Date(Date.now() + 30 * 60 * 1000),
+      guest: guest.client_id,
     });
 
-    await User.findByIdAndUpdate(user?._id, { freemium: user.freemium! - 1 });
+    return res.status(StatusCodes.OK).json({ short });
+  } else if (auth_sid && isAuthenticated && auth) {
+    const user = await User.findById(auth["user_id"]);
 
-    res.status(200).json({
-      short,
-    });
+    if (!user || !longUrl) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send({ message: "Enter a long URL" });
+    }
+
+    const isUrlExist = await Short.findOne({ longUrl, user: user._id });
+    if (isUrlExist) {
+      return res.status(StatusCodes.OK).json({ short: isUrlExist });
+    }
+
+    const short = backhalf
+      ? await Short.create({ longUrl, short: backhalf, user: user._id })
+      : await Short.create({ longUrl, user: user._id });
+
+    res.status(StatusCodes.OK).json({ short });
   }
 };
 
 const getUrl = async (req: any, res: Response) => {
   const short = req.params.short;
   const url = await Short.findOne({ short });
-  
+
   if (!url) {
-    return res.status(StatusCodes.BAD_REQUEST)
-    .send({ message: "Link does not exist" });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: "Link does not exist" });
   }
 
-  res.status(StatusCodes.OK).json({short: url, message: "Link found"});
+  res.status(StatusCodes.OK).json({ short: url, message: "Link found" });
 };
 
 // GET URLS SEARCH
@@ -139,6 +110,27 @@ const getUrls = async (req: any, res: Response) => {
   }
 };
 
+const getGuestUrl = async (req: Request, res: Response) => {
+  const guest_sid = req.signedCookies["guest.sid"];
+
+  const guest = jwt.verify(
+    guest_sid,
+    process.env.JWT_SECRET!
+  ) as jwt.JwtPayload;
+
+  try {
+    const shorts = await Short.find({
+      guest: guest.client_id,
+    });
+
+    res.status(StatusCodes.OK).json({ urls: shorts });
+  } catch (error) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: "Something went wrong" });
+  }
+};
+
 const editUrl = async (req: Request, res: Response) => {
   const { id, longUrl, shortUrl, isShareable } = req.body;
   const password = req.body.password ?? undefined;
@@ -178,6 +170,14 @@ const visitUrl = async (req: Request, res: Response) => {
     return res.sendStatus(StatusCodes.BAD_REQUEST);
   }
 
+  // Check if user is on Mobile or not
+  const userAgent = req.headers["user-agent"];
+  const isMobile = userAgent
+    ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        userAgent
+      )
+    : false;
+
   // const ipAddress = req.headers["x-forwarded-for"]
   const ipAddress = req.socket.remoteAddress;
   const geo = geoip.lookup(ipAddress as string);
@@ -187,9 +187,8 @@ const visitUrl = async (req: Request, res: Response) => {
     userAgent: req.headers["user-agent"],
     referer: req.headers.referer,
     country: geo?.country || "Unknown",
+    isMobile,
   };
-
-  console.log(metadata);
 
   try {
     if (url.password && !providedPassword) {
@@ -227,4 +226,4 @@ const visitUrl = async (req: Request, res: Response) => {
   }
 };
 
-export { create, getUrls, editUrl, visitUrl, getUrl };
+export { create, getUrls, editUrl, visitUrl, getUrl, getGuestUrl };

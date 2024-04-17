@@ -5,7 +5,6 @@ import User from "../models/user";
 import { jwt_compare } from "../lib/utils/jwt";
 
 const register = async (req: any, res: Response) => {
-  // const session_sid = req.signedCookies["session.sid"];
   const { username, email, password } = req.body;
 
   if (!username || !password || !email)
@@ -15,9 +14,6 @@ const register = async (req: any, res: Response) => {
 
   try {
     const exist = await User.findOne({ email });
-    // const guest_account = await User.findOne({
-    //   clientId: req.session.client_id,
-    // });
     if (exist) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
@@ -78,8 +74,10 @@ const login = async (req: any, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
+    res.clearCookie("guest.sid");
     req.session.isAuthenticated = true;
 
+    // ++++++++++++++++++++++++++++++++++++++++++++
     if (req.session.client_id !== user.clientId) {
       await User.findOneAndDelete({ clientId: req.session.client_id });
       const updatedUser = await user
@@ -98,7 +96,9 @@ const login = async (req: any, res: Response) => {
       },
       token: payload,
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ error: error });
+  }
 };
 
 const logout = async (req: any, res: Response) => {
