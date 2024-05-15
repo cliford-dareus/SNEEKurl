@@ -60,7 +60,7 @@ const AdminLayout = () => {
                     {activeIndex === index && pathname.includes("setting") && (
                       <div className="absolute top-12 right-0 left-8 flex flex-col gap-1 rounded-lg bg-slate-100 p-2">
                         {link.children?.map((sub_link, i) => (
-                          <li className="relative flex w-full items-center">
+                          <li key={i} className="relative flex w-full items-center">
                             <NavLink
                               className="w-full rounded-md bg-slate-100 px-4 py-2 hover:bg-slate-200"
                               onClick={() => setSub_Active(i)}

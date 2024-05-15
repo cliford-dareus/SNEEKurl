@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 import { jwt_compare } from "../lib/utils/jwt";
+import Short from "../models/short";
 
 const register = async (req: any, res: Response) => {
   const { username, email, password } = req.body;
@@ -74,9 +75,8 @@ const login = async (req: any, res: Response) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    res.clearCookie("guest.sid");
+    // res.clearCookie("guest.sid");
     req.session.isAuthenticated = true;
-
     // ++++++++++++++++++++++++++++++++++++++++++++
     if (req.session.client_id !== user.clientId) {
       await User.findOneAndDelete({ clientId: req.session.client_id });
@@ -96,6 +96,29 @@ const login = async (req: any, res: Response) => {
       },
       token: payload,
     });
+
+    const guest_sid = req.signedCookies["guest.sid"];
+    const guest_id = jwt.verify(
+      guest_sid,
+      process.env.JWT_SECRET!
+    ) as jwt.JwtPayload;
+
+    try {
+      const shorts = await Short.find({
+        guest: guest_id.client_id,
+      });
+
+      if (shorts) {
+        shorts.forEach(async (short) => {
+          await Short.findOneAndUpdate(
+            { _id: short._id },
+            { user: user._id, $unset: { guest: "" , expired_in: ""}, }
+          );
+        });
+
+        res.status(StatusCodes.OK).json({ message: 'Successful Save Short...' });
+      }
+    } catch (error) {}
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ error: error });
   }

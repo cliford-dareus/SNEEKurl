@@ -112,7 +112,7 @@ const getUrls = async (req: any, res: Response) => {
 
 const getGuestUrl = async (req: Request, res: Response) => {
   const guest_sid = req.signedCookies["guest.sid"];
-
+  console.log(guest_sid);
   const guest = jwt.verify(
     guest_sid,
     process.env.JWT_SECRET!

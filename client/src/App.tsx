@@ -44,9 +44,10 @@ function App() {
       const fp = await fpPromise;
       const result = await fp.get();
       try {
-        if (!values) {
-          const data = await identify(result).unwrap();
-          data.token && setValue(JSON.stringify(data.token));
+        const data = await identify(result).unwrap();
+        data.token && setValue(JSON.stringify(data.token));
+        
+        if (!data.user) {
           dispatch(
             setCredentials({
               user: {
@@ -59,9 +60,6 @@ function App() {
           )
           return;
         }
-
-        const data = await identify(result).unwrap();
-        data.token && setValue(JSON.stringify(data.token));
 
         dispatch(
           setCredentials({

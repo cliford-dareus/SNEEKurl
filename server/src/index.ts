@@ -91,7 +91,7 @@ app.post("/sneekurl/fp", async (req: any, res) => {
 
   req.session.client_id = client_id;
   req.session.isAuthenticated = false;
-
+  
   try {
     if (!auth_sid) {
       const guest_sid = jwt.sign(
@@ -127,7 +127,6 @@ app.post("/sneekurl/fp", async (req: any, res) => {
     }
 
     // Check if user is verified
-
     req.session.isAuthenticated = true;
 
     const payload = jwt.sign(
