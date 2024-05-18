@@ -8,11 +8,13 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { BrowserRouter } from "react-router-dom";
 
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const stripePromise = loadStripe(
-  "pk_test_51MiOgZKUFU6FXAtFupYpHGTemphVsscjKMmIHn38u9OVBdvdgLwSZufnm3KUXocUwchbwlUrHYJOay2phaMoKOxS00aM4Em5dC");
+  "pk_test_51MiOgZKUFU6FXAtFupYpHGTemphVsscjKMmIHn38u9OVBdvdgLwSZufnm3KUXocUwchbwlUrHYJOay2phaMoKOxS00aM4Em5dC",
+  { apiVersion: "2023-10-16" }
+);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -20,7 +22,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <Provider store={store}>
         <BrowserRouter>
           <App />
-          <ToastContainer  position="top-right" theme="dark"/>
+          <ToastContainer position="top-right" theme="dark" />
         </BrowserRouter>
       </Provider>
     </Elements>

@@ -27,7 +27,7 @@ const Checkout = (props: Props) => {
 
   const handleCheckout = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    
     const cardElement = elements.getElement(CardElement) as StripeCardElement;
 
     let { error, paymentIntent } = await stripe.confirmCardPayment(
