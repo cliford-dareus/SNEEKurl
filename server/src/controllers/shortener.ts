@@ -20,8 +20,7 @@ const create = async (req: any, res: Response) => {
     auth_sid &&
     (jwt.verify(auth_sid, process.env.JWT_SECRET!) as jwt.JwtPayload);
 
-  if (guest_sid) {
-    console.log(guest);
+  if (guest_sid && !isAuthenticated) {
     const short = await Short.create({
       longUrl,
       expired_in: new Date(Date.now() + 30 * 60 * 1000),
@@ -40,7 +39,7 @@ const create = async (req: any, res: Response) => {
 
     const isUrlExist = await Short.findOne({ longUrl, user: user._id });
     if (isUrlExist) {
-      return res.status(StatusCodes.OK).json({ short: isUrlExist });
+      return res.status(StatusCodes.BAD_REQUEST).json({ short: isUrlExist });
     }
 
     const short = backhalf

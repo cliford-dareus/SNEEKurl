@@ -8,6 +8,7 @@ import { CreateLinkInBioProp } from "./create-link-in-bio-modal";
 import Switch from "../switch";
 import Button from "../button";
 import { useUpdatePageMutation } from "../../../app/services/page";
+import { toast } from "react-toastify";
 
 type Props = {
   editPageActive: boolean;
@@ -44,8 +45,10 @@ const EditPageModal = ({ editPageActive, setEditPageActive, page }: Props) => {
         isPublic: dataform.public,
         links: dataform.links,
       }).unwrap();
+      toast.success("Page updated successfully");
       setEditPageActive({ state: false, id: "" });
     } catch (e) {
+      toast.error("Page update failed");
       console.log(e);
     }
   };

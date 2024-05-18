@@ -6,6 +6,7 @@ import Button from "../button";
 import Switch from "../switch";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreatePageMutation } from "../../../app/services/page";
+import { toast } from "react-toastify";
 
 type Props = {
   createLinkInBioActive: boolean;
@@ -24,14 +25,18 @@ const CreateLinkInBioModal = ({
 }: Props) => {
   const [createLinkInBio] = useCreatePageMutation();
   const [isChecked, setChecked] = useState(false);
-  const { register, handleSubmit } = useForm<CreateLinkInBioProp>();
+  const { register, handleSubmit, reset } = useForm<CreateLinkInBioProp>();
 
   const handleCreateLinkInBio: SubmitHandler<CreateLinkInBioProp> = async (
     dataform
   ) => {
     try {
-      await createLinkInBio(dataform);
+      await createLinkInBio(dataform).unwrap();
+      toast.success("Page created successfully");
+      setCreateLinkInBioActive(false);
+      reset();
     } catch (e) {
+      toast.error("Page creation failed");
       console.log(e);
     }
   };

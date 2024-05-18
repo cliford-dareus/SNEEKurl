@@ -5,6 +5,7 @@ import Input from "../Input";
 import { SubmitHandler, useForm } from "react-hook-form";
 import Button from "../button";
 import { useShortenUrlMutation } from "../../../app/services/urlapi";
+import { toast } from "react-toastify";
 
 type Props = {
   setAddLinkActive: Dispatch<SetStateAction<boolean>>;
@@ -18,13 +19,17 @@ type CreateLinkProp = {
 };
 const CreateLinkModal = ({ addLinkActive, setAddLinkActive }: Props) => {
   const [attemptShort] = useShortenUrlMutation();
-  const { register, handleSubmit, setValue } = useForm<CreateLinkProp>();
+  const { register, handleSubmit, setValue, reset } = useForm<CreateLinkProp>();
 
   const handleCreateLink: SubmitHandler<CreateLinkProp> = async (dataform) => {
-    console.log(dataform);
     try {
-      await attemptShort(dataform);
-    } catch (e) {}
+      await attemptShort(dataform).unwrap();
+      toast.success("Link created successfully");
+      setAddLinkActive(false);
+      reset();
+    } catch (e) {
+      toast.error("Link creation failed");
+    }
   };
 
   return (

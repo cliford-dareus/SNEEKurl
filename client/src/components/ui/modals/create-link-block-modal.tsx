@@ -7,6 +7,7 @@ import { useGetUrlsQuery } from "../../../app/services/urlapi";
 import { useUpdatePageMutation } from "../../../app/services/page";
 import Label from "../label";
 import Button from "../button";
+import { toast } from "react-toastify";
 
 type Props = {
   pageId: string;
@@ -29,7 +30,7 @@ const CreateLinkBlockModal = ({
 }: Props) => {
   const [updateLinks] = useUpdatePageMutation();
   
-  const { handleSubmit, setValue } = useForm<CreateLinkBlockProp>();
+  const { handleSubmit, setValue, reset } = useForm<CreateLinkBlockProp>();
   const handleCreateLinkBlock: SubmitHandler<CreateLinkBlockProp> = async (
     data
   ) => {
@@ -39,7 +40,11 @@ const CreateLinkBlockModal = ({
         links: data.links,
         category: blockSelected,
       }).unwrap();
+      toast.success("Blocks added successfully");
+      setCreateLinkBlockActive(false);
+      reset();
     } catch (error) {
+      toast.error("Block creation failed");
       console.log(error);
     }
   };
