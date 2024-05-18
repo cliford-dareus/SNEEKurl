@@ -89,7 +89,7 @@ const HomeLinkItem = ({
                 />
               </div>
 
-              <TooltipProvider>
+              {!isAuthenticated && <TooltipProvider>
                 <TooltipTrigger>
                   <div className="flex items-center gap-1">
                     <LuClock size={20} />
@@ -100,7 +100,7 @@ const HomeLinkItem = ({
                 <div className="relative">
                   <Tooltip content="Tooltip content" direction="bottom" />
                 </div>
-              </TooltipProvider>
+              </TooltipProvider>}
             </div>
           </div>
 
