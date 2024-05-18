@@ -33,9 +33,11 @@ const Pricing = (props: Props) => {
     }
   };
 
-  if (subscriptionData) {
-    Navigate("checkout", { state: subscriptionData });
-  }
+  useEffect(() => {
+    if (subscriptionData) {
+      Navigate("checkout", { state: subscriptionData });
+    }
+  }, [subscriptionData]);
 
   useEffect(() => {
     if (!data) return;

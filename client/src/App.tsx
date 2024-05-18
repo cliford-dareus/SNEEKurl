@@ -4,7 +4,6 @@ import {
   Routes,
   useLocation,
   useNavigate,
-  useParams,
 } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
@@ -35,7 +34,6 @@ function App() {
   const Navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [values, setValue] = useLocalStorage("token", "");
-  const [values2, setValue2] = useLocalStorage("guest_token", "");
   const [identify] = useIdentifyUserMutation();
   const fpPromise = FingerprintJS.load();
 
