@@ -5,7 +5,8 @@ const URL = "http://localhost:4080/stripe";
 
 type Payload = {
   plan_price: number;
-  username: string;
+  username?: string;
+  subscriptionId?: string;
 };
 
 const baseQuery = fetchBaseQuery({
@@ -30,8 +31,19 @@ export const stripeApi = createApi({
       }),
       invalidatesTags: ["STRIPE"],
     }),
+    updateSubscription: builder.mutation<any, Payload>({
+      query: (payload) => ({
+        url: "/update-subscription",
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["STRIPE"],
+    }),
   }),
 });
 
-export const { useRetrieveSubscriptionQuery, useCreateSubscriptionMutation } =
-  stripeApi;
+export const {
+  useRetrieveSubscriptionQuery,
+  useCreateSubscriptionMutation,
+  useUpdateSubscriptionMutation,
+} = stripeApi;

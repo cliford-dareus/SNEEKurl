@@ -6,8 +6,10 @@ import { Outlet, useNavigate } from "react-router-dom";
 import {
   useCreateSubscriptionMutation,
   useRetrieveSubscriptionQuery,
+  useUpdateSubscriptionMutation,
 } from "../app/services/stripe";
 import { SubcriptionOptions } from "../Utils/common";
+import { toast } from "react-toastify";
 
 type Props = {};
 
@@ -15,6 +17,8 @@ const Pricing = (props: Props) => {
   const { data, refetch } = useRetrieveSubscriptionQuery();
   const Navigate = useNavigate();
   const [create_subscription, { isLoading }] = useCreateSubscriptionMutation();
+  const [update_subscription, { isLoading: updateLoading }] =
+    useUpdateSubscriptionMutation();
   const [activeplan, setActivePlan] = useState<any | null>(null);
   const { user } = useAppSelector((state) => state.auth);
   const [subscriptionData, setSubscriptionData] = useState<{
@@ -30,6 +34,18 @@ const Pricing = (props: Props) => {
       setSubscriptionData({ subscriptionId, client_secret });
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleupdateSubscription = async (price: any) => {
+    try {
+      const update = await update_subscription({
+        plan_price: price,
+        subscriptionId: user.stripe_account_id,
+      }).unwrap();
+      toast.success("Subscription updated successfully");
+    } catch (error) {
+      toast.error("Subscription update failed");
     }
   };
 
@@ -91,9 +107,28 @@ const Pricing = (props: Props) => {
                 ) : (
                   <Button
                     classnames="w-full"
-                    onClick={() => handleSubscription(opt.price)}
+                    onClick={() => {
+                      if (
+                        user.username !== "Guest" &&
+                        activeplan?.plan?.amount / 100 !== opt.price
+                      ) {
+                        // Upgrade plan
+                        handleupdateSubscription(opt.price);
+                        console.log("Upgrade plan");
+                      } else if (user.username !== "Guest" && !activeplan) {
+                        handleSubscription(opt.price);
+                      } else {
+                        // Navigate to login
+                      }
+                    }}
                   >
-                    {!isLoading ? opt.cta : "isLoading..."}
+                    {/* {!isLoading ? opt.cta : "isLoading..."} */}
+                    {user.username !== "Guest" &&
+                    activeplan?.plan?.amount / 100 !== opt.price
+                      ? "Upgrade plan"
+                      : user.username !== "Guest" && !activeplan
+                      ? opt.cta
+                      : opt.cta}
                   </Button>
                 )}
               </div>

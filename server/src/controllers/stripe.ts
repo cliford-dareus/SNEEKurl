@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import stripe from "../config/stripe";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/user";
+import { platform } from "os";
 
 const retrieveSubscription = async (req: any, res: Response) => {
   const clientId = req.session.client_id;
@@ -24,32 +25,16 @@ const retrieveSubscription = async (req: any, res: Response) => {
 
 const create_subscription = async (req: Request, res: Response) => {
   const { plan_price, username } = req.body;
-  let plan;
 
-  // Select user choosing Plan
-  try {
-    const prices = await stripe.prices.list({
-      lookup_keys: ["sneek_premium", "sneek_pro", "sneek_free"],
-      expand: ["data.product"],
-    });
-
-    if (!prices) {
-      return res.status(StatusCodes.BAD_REQUEST).send({ message: "" });
-    }
-    const choosing_plan = prices.data.filter(
-      (price) => price.unit_amount! / 100 === plan_price
-    );
-
-    plan = choosing_plan[0];
-  } catch (error) {
-    res.status(StatusCodes.BAD_REQUEST).send();
-  }
+  const plan = await get_subscription_plan(plan_price);
 
   const customer = await User.findOne({ username });
-  if (!customer) return res.status(StatusCodes.BAD_REQUEST).send();
+  if (!customer || !plan) return res.status(StatusCodes.BAD_REQUEST).send();
 
   // Check if customer stripe account id is valid
-  const isCustomerIdValid = await stripe.customers.retrieve(customer?.stripe_account_id as string);
+  const isCustomerIdValid = await stripe.customers.retrieve(
+    customer?.stripe_account_id as string
+  );
 
   if (!customer?.stripe_account_id || isCustomerIdValid.deleted == true) {
     // create a new customer in stripe
@@ -135,4 +120,72 @@ const create_subscription = async (req: Request, res: Response) => {
   }
 };
 
-export { create_subscription, retrieveSubscription };
+const updateSubscription = async (req: any, res: Response) => {
+  const { subscriptionId, plan_price } = req.body;
+  const user = req.user;
+
+  const plan = await get_subscription_plan(plan_price);
+  if (!plan)
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Plan not found" });
+
+  try {
+    const customer = await User.findOne({ _id: user?._id }).select(
+      "stripe_account_id"
+    );
+    if (!customer)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "User not found" });
+
+    const isCustomerIdValid = await stripe.customers.retrieve(
+      customer.stripe_account_id as string
+    );
+    if (!customer.stripe_account_id || isCustomerIdValid.deleted === true)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Customer not found" });
+
+    const subscription = await stripe.subscriptions.list({
+      customer: customer.stripe_account_id,
+      limit: 1,
+      status: "active",
+    });
+
+    const usubscription = await stripe.subscriptions.update(
+      subscription.data[0].id,
+      {
+        items: [
+          {
+            id: subscription.data[0].items.data[0].id,
+            price: plan.id,
+          },
+        ],
+      }
+    );
+
+    res.status(StatusCodes.OK).json({ usubscription });
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).send({ error: { message: error } });
+  }
+};
+
+const get_subscription_plan = async (plan_price: number) => {
+  const prices = await stripe.prices.list({
+    lookup_keys: ["sneek_premium", "sneek_pro", "sneek_free"],
+    expand: ["data.product"],
+  });
+
+  if (!prices) {
+    return;
+  }
+
+  const plan = prices.data.find(
+    (price) => price.unit_amount! / 100 === plan_price
+  );
+
+  return plan;
+};
+
+export { create_subscription, retrieveSubscription, updateSubscription };
