@@ -20,7 +20,7 @@ const AdminLayout = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [sub_active, setSub_Active] = useState(0);
   const { data } = useRetrieveSubscriptionQuery();
-  // const plan = data?.subscription?.data[0].plan.metadata.name;
+  const plan_name = data?.subscription?.data[0].plan.metadata.name;
   const plan = "pro";
 
   useEffect(() => {

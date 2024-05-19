@@ -9,9 +9,9 @@ import isFreemiumDone from "../middlewares/checkFreemium";
 const router = express.Router();
 
 router
-    .route("/retrieve-subscription")
-    .get(isFreemiumDone, retrieveSubscription);
+  .route("/retrieve-subscription")
+  .get(isFreemiumDone, retrieveSubscription);
 router.route("/create-subscription").post(create_subscription);
-router.route('/update-subscription').put(isFreemiumDone,updateSubscription);
+router.route("/update-subscription").put(isFreemiumDone, updateSubscription);
 
 export default router;

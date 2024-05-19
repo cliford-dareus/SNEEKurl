@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   useGetPageQuery,
   useReorderPageLinksMutation,
@@ -11,27 +11,9 @@ import Portal from "../components/portal";
 import CreateLinkBlockModal from "../components/ui/modals/create-link-block-modal";
 import classNames from "classnames";
 import { getSiteUrl } from "../Utils/getSiteUrl";
+import { BLOCKS } from "../Utils/common";
 
 type Props = {};
-
-const blocks = [
-  {
-    id: 1,
-    name: "Social Media Block",
-    tag: "social",
-  },
-  {
-    id: 2,
-    name: "Website Block",
-    tag: "website",
-  },
-
-  {
-    id: 3,
-    name: "Afilliate Marketing Block",
-    tag: "marketing",
-  },
-];
 
 const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -149,7 +131,7 @@ const ManageLinkInBio = ({}: Props) => {
                   <p className="text-center font-bold">Select a Block</p>
                 </div>
                 <div className="flex flex-col gap-2 items-center mt-4">
-                  {blocks.map((block: any) => (
+                  {BLOCKS.map((block: any) => (
                     <div
                       key={block.id}
                       onClick={() => {

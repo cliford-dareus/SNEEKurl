@@ -27,31 +27,23 @@ const create_subscription = async (req: Request, res: Response) => {
   const { plan_price, username } = req.body;
 
   const plan = await get_subscription_plan(plan_price);
+  if (!plan) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Plan not found" });
 
-  const customer = await User.findOne({ username });
-  if (!customer || !plan) return res.status(StatusCodes.BAD_REQUEST).send();
+  let customer = await User.findOne({ username }).select("stripe_account_id email");
+  if (!customer) return res.status(StatusCodes.BAD_REQUEST).json({ message: "User not found" });
 
-  // Check if customer stripe account id is valid
-  const isCustomerIdValid = await stripe.customers.retrieve(
-    customer?.stripe_account_id as string
-  );
+  const isCustomerIdValid = await stripe.customers.retrieve(customer.stripe_account_id as string);
 
-  if (!customer?.stripe_account_id || isCustomerIdValid.deleted == true) {
-    // create a new customer in stripe
-    const newCustomer = await stripe.customers.create({
-      email: customer?.email,
-    });
-
+  if (!customer.stripe_account_id || isCustomerIdValid.deleted) {
+    const newCustomer = await stripe.customers.create({ email: customer.email });
     const new_customer = await User.findByIdAndUpdate(
-      { _id: customer?._id },
-      {
-        $set: {
-          stripe_account_id: newCustomer.id,
-        },
-      }
+      { _id: customer._id },
+      { $set: { stripe_account_id: newCustomer.id } },
+      { new: true }
     );
+    if (!new_customer) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Could not create new customer" });
 
-    if (!new_customer) return res.status(StatusCodes.BAD_REQUEST).send();
+    customer = new_customer;
 
     try {
       const subscription = await stripe.subscriptions.create({
@@ -85,38 +77,31 @@ const create_subscription = async (req: Request, res: Response) => {
     }
   }
 
-  // create subscription
   try {
     const subscription = await stripe.subscriptions.create({
-      customer: isCustomerIdValid.id,
-      items: [
-        {
-          price: plan?.id,
-        },
-      ],
+      customer: customer.stripe_account_id as string,
+      items: [{ price: plan.id }],
       payment_behavior: "default_incomplete",
       expand: ["latest_invoice.payment_intent"],
     });
 
     await User.findByIdAndUpdate(
-      { _id: customer?._id },
+      { _id: customer._id },
       {
         $set: {
           subscription_end: subscription.current_period_end,
-          max_link: plan?.metadata.max_link,
+          max_link: plan.metadata.max_link,
         },
       }
     );
 
-    res.status(StatusCodes.OK).send({
+    res.status(StatusCodes.OK).json({
       subscriptionId: subscription.id,
       // @ts-ignore
       client_secret: subscription.latest_invoice.payment_intent.client_secret,
     });
   } catch (error: any) {
-    return res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ error: { message: error.message } });
+    return res.status(StatusCodes.BAD_REQUEST).json({ error: { message: error.message } });
   }
 };
 

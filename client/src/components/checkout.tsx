@@ -5,6 +5,7 @@ import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Button from "./ui/button";
 import { PaymentIntent, StripeCardElement } from "@stripe/stripe-js";
 import { useAppSelector } from "../app/hook";
+import { toast } from "react-toastify";
 
 type Props = {};
 
@@ -43,6 +44,7 @@ const Checkout = (props: Props) => {
 
     if (error) {
       setMessage(error.message!);
+      toast.error(error.message!);
       return;
     }
     setPaymentIntent(paymentIntent!);

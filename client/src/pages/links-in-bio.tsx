@@ -4,7 +4,6 @@ import { useGetPageQuery } from "../app/services/page";
 import { getSiteUrl } from "../Utils/getSiteUrl";
 import classNames from "classnames";
 
-const URL = "http://localhost:4080";
 
 const LinksInBio = () => {
   const { slug } = useParams();

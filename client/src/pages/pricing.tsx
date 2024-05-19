@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Button from "../components/ui/button";
 import classNames from "classnames";
 import { useAppSelector } from "../app/hook";
@@ -13,59 +13,60 @@ import { toast } from "react-toastify";
 
 type Props = {};
 
-const Pricing = (props: Props) => {
+const Pricing = () => {
   const { data, refetch } = useRetrieveSubscriptionQuery();
   const Navigate = useNavigate();
   const [create_subscription, { isLoading }] = useCreateSubscriptionMutation();
   const [update_subscription, { isLoading: updateLoading }] =
     useUpdateSubscriptionMutation();
-  const [activeplan, setActivePlan] = useState<any | null>(null);
+  const [activeplan, setActivePlan] = useState<number | null>(null);
   const { user } = useAppSelector((state) => state.auth);
   const [subscriptionData, setSubscriptionData] = useState<{
     subscriptionId: string;
     client_secret: string;
   } | null>(null);
 
-  const handleSubscription = async (price: any) => {
-    const payload = { plan_price: price, username: user.username };
-    try {
-      const subscription = await create_subscription(payload).unwrap();
-      const { subscriptionId, client_secret } = subscription;
-      setSubscriptionData({ subscriptionId, client_secret });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleSubscription = useCallback(
+    async (price: number) => {
+      const payload = { plan_price: price, username: user.username };
+      try {
+        const subscription = await create_subscription(payload).unwrap();
+        const { subscriptionId, client_secret } = subscription;
+        setSubscriptionData({ subscriptionId, client_secret });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [create_subscription, user.username]
+  );
 
-  const handleupdateSubscription = async (price: any) => {
-    try {
-      const update = await update_subscription({
-        plan_price: price,
-        subscriptionId: user.stripe_account_id,
-      }).unwrap();
-      toast.success("Subscription updated successfully");
-    } catch (error) {
-      toast.error("Subscription update failed");
-    }
-  };
+  const handleUpdateSubscription = useCallback(
+    async (price: number) => {
+      try {
+        await update_subscription({
+          plan_price: price,
+          subscriptionId: user.stripe_account_id,
+        }).unwrap();
+        toast.success("Subscription updated successfully");
+      } catch (error) {
+        toast.error("Subscription update failed");
+      }
+    },
+    [update_subscription, user.stripe_account_id]
+  );
 
   useEffect(() => {
     if (subscriptionData) {
       Navigate("checkout", { state: subscriptionData });
     }
-  }, [subscriptionData]);
+  }, [subscriptionData, Navigate]);
 
   useEffect(() => {
-    if (!data) return;
-
-    const active_plan = data?.subscription?.data.filter(
+    if (!data?.subscription?.data?.length) return;
+    const activePlan = data.subscription.data.find(
       (x: any) => x.status === "active"
-    )[0];
-
-    if (!active_plan) {
-      refetch();
-    }
-    setActivePlan(active_plan);
+    );
+    setActivePlan(activePlan?.items.data[0]?.plan?.amount / 100 || null);
   }, [data]);
 
   return (
@@ -97,7 +98,7 @@ const Pricing = (props: Props) => {
               </div>
 
               <div className="border-b px-2 py-8">
-                {activeplan?.plan?.amount / 100 === opt.price ? (
+                {activeplan === opt.price ? (
                   <Button
                     classnames="w-full"
                     //Manage the active plan
@@ -110,10 +111,10 @@ const Pricing = (props: Props) => {
                     onClick={() => {
                       if (
                         user.username !== "Guest" &&
-                        activeplan?.plan?.amount / 100 !== opt.price
+                        activeplan !== opt.price
                       ) {
                         // Upgrade plan
-                        handleupdateSubscription(opt.price);
+                        handleUpdateSubscription(opt.price);
                         console.log("Upgrade plan");
                       } else if (user.username !== "Guest" && !activeplan) {
                         handleSubscription(opt.price);
@@ -123,8 +124,7 @@ const Pricing = (props: Props) => {
                     }}
                   >
                     {/* {!isLoading ? opt.cta : "isLoading..."} */}
-                    {user.username !== "Guest" &&
-                    activeplan?.plan?.amount / 100 !== opt.price
+                    {user.username !== "Guest" && activeplan !== opt.price
                       ? "Upgrade plan"
                       : user.username !== "Guest" && !activeplan
                       ? opt.cta

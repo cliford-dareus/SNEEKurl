@@ -3,23 +3,9 @@ import { useParams } from "react-router-dom";
 import { useGetUrlQuery, useGetUrlsQuery } from "../app/services/urlapi";
 import { ResponsiveBar } from "@nivo/bar";
 import { ResponsiveRadialBar } from "@nivo/radial-bar";
+import { MONTHS } from "../Utils/common";
 
 type Props = {};
-
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
 const LinkAnalytics = (props: Props) => {
   const { id } = useParams();

@@ -69,3 +69,37 @@ export  const SIDEBAR_LINKS = [
         ]
     }
 ]
+
+export const BLOCKS = [
+    {
+      id: 1,
+      name: "Social Media Block",
+      tag: "social",
+    },
+    {
+      id: 2,
+      name: "Website Block",
+      tag: "website",
+    },
+  
+    {
+      id: 3,
+      name: "Afilliate Marketing Block",
+      tag: "marketing",
+    },
+  ];
+
+export const MONTHS = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
