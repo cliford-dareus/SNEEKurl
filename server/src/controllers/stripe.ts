@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import stripe from "../config/stripe";
 import { StatusCodes } from "http-status-codes";
 import User from "../models/user";
-import { platform } from "os";
 
 const retrieveSubscription = async (req: any, res: Response) => {
   const clientId = req.session.client_id;

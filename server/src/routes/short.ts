@@ -8,7 +8,7 @@ import {
   visitUrl,
 } from "../controllers/shortener";
 import authorize from "../middlewares/authorization";
-import isFreemiumDone from "../middlewares/checkFreemium";
+import isFreemiumDone from "../middlewares/check-page-limiter";
 import check_limiter_status from "../middlewares/check-links-limiter";
 
 const router = express.Router();

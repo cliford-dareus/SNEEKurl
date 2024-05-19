@@ -21,8 +21,8 @@ import User from "./models/user";
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 import { webhook } from "./config/webhook";
-import Short from "./models/short";
 import cron_job from "./config/cron";
+import rateLimiter from "./middlewares/rate-limiter";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -76,6 +76,7 @@ app.use("/user", userRouter);
 app.use("/short", shortRouter);
 app.use("/page", pageRouter);
 app.use("/stripe", stripeRouter);
+app.use(rateLimiter);
 
 app.use(
   "/api/uploadthing",

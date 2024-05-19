@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useGetPageQuery } from "../app/services/page";
 import { getSiteUrl } from "../Utils/getSiteUrl";
 import classNames from "classnames";
+import VisitLinkButton from "../components/visit-link-button";
 
 
 const LinksInBio = () => {
@@ -69,8 +70,9 @@ const LinksInBio = () => {
                           )}`}
                         />
                       </div>
-
-                      <p>{getSiteUrl(link.longUrl)}</p>
+                      <VisitLinkButton url={link}>
+                        <p>{getSiteUrl(link.longUrl)}</p>
+                      </VisitLinkButton>
                     </div>
                   );
                 }

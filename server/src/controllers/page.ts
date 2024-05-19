@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import Page from "../models/page";
 import User from "../models/user";
 import { StatusCodes } from "http-status-codes";
-import Short from "../models/short";
-import { ObjectId } from "mongoose";
 
 const getMyPages = async (req: any, res: Response) => {
   const client_id = req.session.client_id;

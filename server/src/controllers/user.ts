@@ -1,8 +1,6 @@
 import {Response, Request} from "express";
 import {StatusCodes} from "http-status-codes";
 import User from "../models/user";
-import passport from "passport";
-import {jwt_compare} from "../lib/utils/jwt";
 import bcrypt from "bcrypt";
 import {SendVerifyPasswordEmail} from "../lib/utils/send-verify-password-email";
 import jwt from "jsonwebtoken";

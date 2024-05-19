@@ -69,7 +69,7 @@ const LinkAnalytics = (props: Props) => {
 
   return (
     <div>
-      <div className="">LinkAnalytics</div>
+      <h2 className="text-2xl my-4">Link Analytics</h2>
       <div className="w-full h-[50vh]">
         {!isLoading && (
           <ResponsiveBar

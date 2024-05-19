@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import stripe from "../config/stripe";
-import Short from "../models/short";
+import Page from "../models/page";
 
-const check_links_limiter_status = async (
+const check_page_limiter_status = async (
   req: any,
   res: Response,
   next: NextFunction
@@ -15,7 +15,7 @@ const check_links_limiter_status = async (
    return next();
   }
 
-  const short = await Short.find({
+  const page = await Page.find({
     user: user?._id,
   });
 
@@ -25,9 +25,9 @@ const check_links_limiter_status = async (
   });
 
   // @ts-ignore
-  const link_limiter = subscription?.data[0]?.plan.metadata.max_link;
+  const page_limiter = subscription?.data[0]?.plan.metadata.max_page;
 
-  if (short.length >= Number(link_limiter)) {
+  if (page.length >= Number(page_limiter)) {
     return res
       .status(StatusCodes.PAYMENT_REQUIRED)
       .send({ message: "Link reached limit" });
@@ -36,4 +36,4 @@ const check_links_limiter_status = async (
   next();
 };
 
-export default check_links_limiter_status;
+export default check_page_limiter_status;

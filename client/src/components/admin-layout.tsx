@@ -1,6 +1,5 @@
 import Header from "./Header";
 import {
-  Link,
   NavLink,
   Outlet,
   useLocation,

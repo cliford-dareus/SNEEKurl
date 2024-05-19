@@ -4,14 +4,14 @@ import {
   retrieveSubscription,
   updateSubscription,
 } from "../controllers/stripe";
-import isFreemiumDone from "../middlewares/checkFreemium";
+import authorize from "../middlewares/authorization";
 
 const router = express.Router();
 
 router
   .route("/retrieve-subscription")
-  .get(isFreemiumDone, retrieveSubscription);
-router.route("/create-subscription").post(create_subscription);
-router.route("/update-subscription").put(isFreemiumDone, updateSubscription);
+  .get(authorize, retrieveSubscription);
+router.route("/create-subscription").post(authorize, create_subscription);
+router.route("/update-subscription").put(authorize, updateSubscription);
 
 export default router;
