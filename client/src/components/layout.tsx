@@ -2,6 +2,8 @@ import Header from './Header'
 import {Outlet, useOutletContext} from 'react-router-dom'
 import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
 import Background from './ui/background';
+import { useAppSelector } from '../app/hook';
+import { RootState } from '../app/store';
 
 type Props = {}
 
@@ -10,8 +12,10 @@ type  ContextType = {
 }
 
 const Layout = (props: Props) => {
-    const {data} = useRetrieveSubscriptionQuery();
+    const user = useAppSelector((state: RootState) => state.auth);
+    const { data } = useRetrieveSubscriptionQuery('', {skip: !user.user.username});
     // const plan = data?.subscription?.data[0].plan.metadata.name;
+    
     const plan = 'pro'
     return (
         <div className=''>

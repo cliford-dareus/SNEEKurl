@@ -44,7 +44,6 @@ const Header = ({ isActive, plan }: Props) => {
     try {
       await logoutUser().unwrap();
       dispatch(removeCredentials());
-      // setMessage(data?.msg);
       Navigate("/");
     } catch (error) {
       console.log(error);
@@ -76,7 +75,6 @@ const Header = ({ isActive, plan }: Props) => {
                 to="/">SNEEK
           </Link>
         </div>
-
 
         {!isActive ? (
             <nav className="mr-auto">

@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 type Props = {};
 const Subscription = () => {
   const user = useAppSelector((state) => state.auth.user);
-  const { data, refetch } = useRetrieveSubscriptionQuery();
+  const { data, refetch } = useRetrieveSubscriptionQuery('');
   const [active_plan, setActivePlan] = useState<number | null>(null);
   const [updateSubscription, isLoading] = useUpdateSubscriptionMutation();
 

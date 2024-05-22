@@ -1,10 +1,5 @@
 import { useEffect } from "react";
-import {
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
 import Layout from "./components/layout";
@@ -28,12 +23,13 @@ import LinkInBio from "./pages/link-in-bio";
 import LinksInBio from "./pages/links-in-bio";
 import ManageLinkInBio from "./pages/manage-link-in-bio";
 import LinkAnalytics from "./pages/link-analytics";
+import { toast } from "react-toastify";
 
 function App() {
   const { pathname } = useLocation();
   const Navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [values, setValue] = useLocalStorage("token", "");
+  const [_, setValue] = useLocalStorage("token", "");
   const [identify] = useIdentifyUserMutation();
   const fpPromise = FingerprintJS.load();
 
@@ -43,22 +39,13 @@ function App() {
       const result = await fp.get();
       try {
         const data = await identify(result).unwrap();
-        data.token && setValue(JSON.stringify(data.token));
-        
+
         if (!data.user) {
-          dispatch(
-            setCredentials({
-              user: {
-                username: "Guest",
-                email: "",
-                stripe_account_id: "",
-                isVerified: false,
-              },
-            })
-          )
+          toast.info("Consider create an account to get full access to all features");
           return;
         }
 
+        data.token && setValue(JSON.stringify(data.token));
         dispatch(
           setCredentials({
             user: {
@@ -71,7 +58,7 @@ function App() {
         );
 
         if (
-          data.user.username !== "Guest" &&
+          !data.user.username &&
           (pathname === "/" ||
             pathname === "/pricing" ||
             pathname === "/checkout" ||

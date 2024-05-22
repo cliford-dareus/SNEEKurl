@@ -14,13 +14,13 @@ import { toast } from "react-toastify";
 type Props = {};
 
 const Pricing = () => {
-  const { data, refetch } = useRetrieveSubscriptionQuery();
+  const { user } = useAppSelector((state) => state.auth);
+  const { data, refetch } = useRetrieveSubscriptionQuery('', {skip: !user.username});
   const Navigate = useNavigate();
   const [create_subscription, { isLoading }] = useCreateSubscriptionMutation();
   const [update_subscription, { isLoading: updateLoading }] =
     useUpdateSubscriptionMutation();
   const [activeplan, setActivePlan] = useState<number | null>(null);
-  const { user } = useAppSelector((state) => state.auth);
   const [subscriptionData, setSubscriptionData] = useState<{
     subscriptionId: string;
     client_secret: string;

@@ -19,7 +19,7 @@ export const stripeApi = createApi({
   baseQuery,
   tagTypes: ["STRIPE"],
   endpoints: (builder) => ({
-    retrieveSubscription: builder.query<any, void>({
+    retrieveSubscription: builder.query<any, any>({
       query: () => "/retrieve-subscription",
       providesTags: ["STRIPE"],
     }),

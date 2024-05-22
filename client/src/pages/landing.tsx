@@ -130,13 +130,11 @@ const HomeLinkItem = ({
 };
 
 const Landing = () => {
-  const user = useAppSelector(selectCurrentUser);
   const { plan } = useUserPlan();
   const isFreePlan = plan === "free";
-  const isAuthenticated = user.user.username !== "Guest";
-  const { data: g_data, isLoading } = useGetGuestUrlQuery("", {
-    skip: isAuthenticated,
-  });
+  const user = useAppSelector(selectCurrentUser);
+  const isAuthenticated = user.user.username;
+  const { data: g_data, isLoading } = useGetGuestUrlQuery('');
   const { data, isSuccess } = useGetUrlsQuery("limit=5");
 
   return (
@@ -170,7 +168,7 @@ const Landing = () => {
                       <HomeLinkItem
                         key={url._id}
                         url={url}
-                        isAuthenticated={isAuthenticated}
+                        isAuthenticated={!!isAuthenticated}
                         isFreePlan={isFreePlan}
                       />
                     ))
@@ -181,7 +179,7 @@ const Landing = () => {
                       <HomeLinkItem
                         key={url._id}
                         url={url}
-                        isAuthenticated={isAuthenticated}
+                        isAuthenticated={!!isAuthenticated}
                         isFreePlan={isFreePlan}
                       />
                     ))}
