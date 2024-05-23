@@ -2,7 +2,7 @@ import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
 import cors from "cors";
-import morgan, { token } from "morgan";
+import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import connectDB from "./lib/db/connect";
@@ -76,7 +76,6 @@ app.use("/user", userRouter);
 app.use("/short", shortRouter);
 app.use("/page", pageRouter);
 app.use("/stripe", stripeRouter);
-app.use(rateLimiter);
 
 app.use(
   "/api/uploadthing",
@@ -161,6 +160,7 @@ webhook(app, bodyParser);
 //custom middleware
 app.use(notfoundMiddleware);
 app.use(errorHandlerMiddleware);
+app.use(rateLimiter);
 
 const PORT = process.env.PORT || 4000;
 
