@@ -111,7 +111,7 @@ app.post("/sneekurl/fp", async (req: any, res) => {
         token: client_id,
       });
     }
-
+    
     // Check if auth_sid is valid and user is verified
     const decoded_payload = jwt.verify(
       auth_sid,
@@ -128,6 +128,7 @@ app.post("/sneekurl/fp", async (req: any, res) => {
 
     // Check if user is verified
     req.session.isAuthenticated = true;
+    // req.session.client_id = user._id
 
     const payload = jwt.sign(
       { user_id: user._id, user_name: user.username },
@@ -140,14 +141,16 @@ app.post("/sneekurl/fp", async (req: any, res) => {
       signed: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
-
-    return res.status(200).send({
+    
+    // Update user with new client_id in db
+    res.status(200).send({
       message: "Login successful",
       user: {
         username: user.username,
         stripe_account_id: user.stripe_account_id,
         isVerified: true,
       },
+      // Doesn't need to send Payload to frontend
       token: payload,
     });
   } catch (error) {

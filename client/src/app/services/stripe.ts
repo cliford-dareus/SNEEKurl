@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
+import { IsAny } from "@reduxjs/toolkit/dist/tsHelpers";
 
 const URL = "http://localhost:4080/stripe";
 
@@ -19,8 +20,8 @@ export const stripeApi = createApi({
   baseQuery,
   tagTypes: ["STRIPE"],
   endpoints: (builder) => ({
-    retrieveSubscription: builder.query<any, any>({
-      query: () => "/retrieve-subscription",
+    retrieveSubscription: builder.query<any, {username: string}>({
+      query: (user) => `/retrieve-subscription/${user?.username}`,
       providesTags: ["STRIPE"],
     }),
     createSubscription: builder.mutation<any, Payload>({

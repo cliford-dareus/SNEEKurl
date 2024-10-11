@@ -1,5 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Url, useGetUrlsQuery } from "../app/services/urlapi";
+import {
+  Url,
+  useDeleteUrlMutation,
+  useGetUrlsQuery,
+} from "../app/services/urlapi";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   LuArrowDown,
@@ -17,7 +21,8 @@ import ShareLinkModal from "../components/ui/modals/share-link-modal";
 import Portal from "../components/portal";
 import VisitLinkButton from "../components/visit-link-button";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
-import { useUserPlan } from "../components/admin-layout";
+import { useUserPlan } from "../components/layout/admin-layout";
+import { toast } from "react-toastify";
 
 const LinkCard = ({ url }: { url: Url }) => {
   const plan = useUserPlan();
@@ -25,6 +30,7 @@ const LinkCard = ({ url }: { url: Url }) => {
   const [editActive, setEditActive] = useState(false);
   const [qrActive, setQrActive] = useState(false);
   const [shareActive, setShareActive] = useState(false);
+  const [deleteUrl] = useDeleteUrlMutation();
 
   return (
     <>
@@ -32,7 +38,7 @@ const LinkCard = ({ url }: { url: Url }) => {
         <img
           className="rounded-full w-[30px] h-[30px]"
           src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-            url.longUrl
+            url.longUrl,
           )}`}
           loading="lazy"
           alt="site favicon"
@@ -96,7 +102,18 @@ const LinkCard = ({ url }: { url: Url }) => {
               >
                 Share
               </div>
-              <div className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300">
+              <div
+                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
+                onClick={async () => {
+                  try {
+                    await deleteUrl(url.short).unwrap();
+                    toast.success("Short Deleted")
+                  } catch (err) {
+                    console.log(err);
+                    toast.error("Something went wrong")
+                  }
+                }}
+              >
                 Delete
               </div>
             </Popover>
@@ -138,7 +155,7 @@ const LinkItems = () => {
 
   const skip = useMemo(
     () => queryParams?.split("").every((x) => x !== ""),
-    [queryParams]
+    [queryParams],
   );
 
   const { data, isLoading } = useGetUrlsQuery(queryParams, {

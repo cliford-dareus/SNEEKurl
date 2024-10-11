@@ -24,6 +24,7 @@ const register = async (req: any, res: Response) => {
     const done = await User.findOneAndDelete({
       clientId: req.session.client_id,
     });
+
     const user = await User.create({
       username,
       password,
@@ -66,7 +67,7 @@ const login = async (req: any, res: Response) => {
     const payload = jwt.sign(
       { user_id: user._id, user_name: user.username },
       process.env.JWT_SECRET!,
-      { expiresIn: "1d" }
+      { expiresIn: "1d" },
     );
 
     res.cookie("auth.sid", payload, {
@@ -80,10 +81,10 @@ const login = async (req: any, res: Response) => {
     // ++++++++++++++++++++++++++++++++++++++++++++
     if (req.session.client_id !== user.clientId) {
       await User.findOneAndDelete({ clientId: req.session.client_id });
-      const updatedUser = await user
-        .updateOne({ clientId: req.session.client_id })
-        .exec();
-      req.session.client_id = updatedUser.clientId;
+      // const updatedUser = await user
+      //   .updateOne({ clientId: req.session.client_id })
+      //   .exec();
+      // req.session.client_id = updatedUser.clientId;
     }
 
     res.status(StatusCodes.OK).json({
@@ -100,7 +101,7 @@ const login = async (req: any, res: Response) => {
     const guest_sid = req.signedCookies["guest.sid"];
     const guest_id = jwt.verify(
       guest_sid,
-      process.env.JWT_SECRET!
+      process.env.JWT_SECRET!,
     ) as jwt.JwtPayload;
 
     try {
@@ -112,11 +113,13 @@ const login = async (req: any, res: Response) => {
         shorts.forEach(async (short) => {
           await Short.findOneAndUpdate(
             { _id: short._id },
-            { user: user._id, $unset: { guest: "" , expired_in: ""}, }
+            { user: user._id, $unset: { guest: "", expired_in: "" } },
           );
         });
 
-        res.status(StatusCodes.OK).json({ message: 'Successful Save Short...' });
+        res
+          .status(StatusCodes.OK)
+          .json({ message: "Successful Save Short..." });
       }
     } catch (error) {}
   } catch (error) {

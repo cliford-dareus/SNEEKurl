@@ -9,7 +9,7 @@ import authorize from "../middlewares/authorization";
 const router = express.Router();
 
 router
-  .route("/retrieve-subscription")
+  .route("/retrieve-subscription/:username")
   .get(authorize, retrieveSubscription);
 router.route("/create-subscription").post(authorize, create_subscription);
 router.route("/update-subscription").put(authorize, updateSubscription);

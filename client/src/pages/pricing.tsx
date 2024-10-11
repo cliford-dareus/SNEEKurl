@@ -15,7 +15,7 @@ type Props = {};
 
 const Pricing = () => {
   const { user } = useAppSelector((state) => state.auth);
-  const { data, refetch } = useRetrieveSubscriptionQuery('', {skip: !user.username});
+  const { data, refetch } = useRetrieveSubscriptionQuery("",{skip: !user.username});
   const Navigate = useNavigate();
   const [create_subscription, { isLoading }] = useCreateSubscriptionMutation();
   const [update_subscription, { isLoading: updateLoading }] =

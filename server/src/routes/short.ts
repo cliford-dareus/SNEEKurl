@@ -1,6 +1,7 @@
 import express from "express";
 import {
   create,
+  deleteUrl,
   editUrl,
   getGuestUrl,
   getUrl,
@@ -17,6 +18,7 @@ router.route("/").get(getGuestUrl);
 router.route("/create").post(create);
 router.route("/urls").get(authorize, getUrls);
 router.route("/edit").put(authorize, editUrl);
+router.route("/delete/:short").delete(deleteUrl);
 router.route("/url/:short").get(getUrl);
 router.route("/:short").get(visitUrl);
 

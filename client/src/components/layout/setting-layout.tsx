@@ -3,7 +3,7 @@ import {Outlet} from "react-router-dom";
 
 const Setting = () => {
     return (
-        <div>
+        <div className=''>
             <Outlet />
         </div>
     )

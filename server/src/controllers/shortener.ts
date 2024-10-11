@@ -112,9 +112,14 @@ const getUrls = async (req: any, res: Response) => {
 const getGuestUrl = async (req: Request, res: Response) => {
   const guest_sid = req.signedCookies["guest.sid"];
   console.log(guest_sid);
+
+  if (!guest_sid) {
+    return;
+  }
+
   const guest = jwt.verify(
     guest_sid,
-    process.env.JWT_SECRET!
+    process.env.JWT_SECRET!,
   ) as jwt.JwtPayload;
 
   try {
@@ -132,6 +137,7 @@ const getGuestUrl = async (req: Request, res: Response) => {
 
 const editUrl = async (req: Request, res: Response) => {
   const { id, longUrl, shortUrl, isShareable } = req.body;
+  // Encode the password in db and verify it here
   const password = req.body.password ?? undefined;
 
   const url = await Short.findById(id);
@@ -173,7 +179,7 @@ const visitUrl = async (req: Request, res: Response) => {
   const userAgent = req.headers["user-agent"];
   const isMobile = userAgent
     ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        userAgent
+        userAgent,
       )
     : false;
 
@@ -203,7 +209,7 @@ const visitUrl = async (req: Request, res: Response) => {
             $inc: { clicks: 1 },
             $set: { lastClick: Date.now() },
             $push: { metadata },
-          }
+          },
         );
         return res.redirect(url.longUrl);
       }
@@ -214,7 +220,7 @@ const visitUrl = async (req: Request, res: Response) => {
           $inc: { clicks: 1 },
           $set: { lastClick: Date.now() },
           $push: { metadata },
-        }
+        },
       );
       return res.redirect(url.longUrl);
     }
@@ -225,4 +231,20 @@ const visitUrl = async (req: Request, res: Response) => {
   }
 };
 
-export { create, getUrls, editUrl, visitUrl, getUrl, getGuestUrl };
+const deleteUrl = async (req: Request, res: Response) => {
+  const { short } = req.params;
+
+  try {
+    const deletedShort = await Short.findOneAndDelete({ short });
+
+    //Check if it was in a page and update the page
+    
+    res.status(StatusCodes.OK).send({ message: "Short deleted!" });
+  } catch (err) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: "Smothing went wrong!" });
+  }
+};
+
+export { create, getUrls, editUrl, visitUrl, getUrl, getGuestUrl, deleteUrl };

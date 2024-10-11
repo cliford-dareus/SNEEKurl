@@ -10,6 +10,7 @@ import Separator from "./ui/separator";
 import Portal from "./portal";
 import ChangeProfileImageModal from "./ui/modals/change-profile-image-modal";
 import { useUpdateUserDetailsMutation } from "../app/services/user";
+import { selectCurrentUser } from "../features/auth/authslice";
 
 export type Profile = {
   username: string;
@@ -18,9 +19,11 @@ export type Profile = {
   newpassword: string;
 };
 const Profile = () => {
-  const user = useAppSelector((state: RootState) => state.auth);
-  const { data } = useRetrieveSubscriptionQuery();
-  const plan = data?.subscription?.data[0].plan.metadata.name;
+  const user = useAppSelector(selectCurrentUser);
+  const { data } = useRetrieveSubscriptionQuery({
+    username: user.user.username,
+  });
+  const plan = data?.subscription?.data[0]?.plan.metadata.name;
   const [editProfileActive, setEditProfileActive] = useState(false);
   const [updateUserDetails] = useUpdateUserDetailsMutation();
 
@@ -34,7 +37,7 @@ const Profile = () => {
   });
 
   const handleChangeprofiledetails: SubmitHandler<Profile> = async (
-    dataform: Profile
+    dataform: Profile,
   ) => {
     try {
       const updatedUser = await updateUserDetails({
@@ -48,10 +51,13 @@ const Profile = () => {
 
   return (
     <>
-      <section>
+      <section className="rounded-md border">
         <>
-          <div>
-            {/*<h2 className='font-bold'>Profile</h2>*/}
+          <div className="p-4">
+            <div className="">
+              <h1 className="font-medium text-2xl">Profile</h1>
+            </div>
+            <Separator />
             <div className="flex gap-4 rounded-md border border-slate-200 px-4 py-8">
               <p className="font-medium">Profile Image</p>
               <div className="flex flex-1 items-center justify-between">
@@ -73,7 +79,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <Separator />
+            
             <form
               className="mt-4 flex flex-col gap-4 rounded-md border border-slate-200 p-4"
               onSubmit={handleSubmit(handleChangeprofiledetails)}

@@ -87,6 +87,12 @@ export const urlapi = createApi({
       }),
       invalidatesTags: ["SHORT"],
     }),
+    deleteUrl: builder.mutation<any, string>({
+      query: (short) => ({
+        url:`/delete/${short}`,
+        method: "DELETE",
+      })
+    })
   }),
 });
 
@@ -95,5 +101,6 @@ export const {
   useGetUrlsQuery,
   useGetUrlQuery,
   useEditUrlMutation,
-  useGetGuestUrlQuery
+  useGetGuestUrlQuery,
+  useDeleteUrlMutation
 } = urlapi;

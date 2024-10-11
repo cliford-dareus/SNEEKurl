@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
-import Layout from "./components/layout";
 import Myurl from "./components/myurl";
 import Login from "./features/auth/login";
 import Register from "./features/auth/register";
@@ -15,15 +14,16 @@ import { useIdentifyUserMutation } from "./app/services/auth";
 import { setCredentials } from "./features/auth/authslice";
 import useLocalStorage from "./Utils/hooks/use-local-storage";
 import { useAppDispatch } from "./app/hook";
-import AdminLayout from "./components/admin-layout";
 import Landing from "./pages/landing";
-import Setting from "./pages/setting";
 import Subscription from "./components/subscription";
 import LinkInBio from "./pages/link-in-bio";
 import LinksInBio from "./pages/links-in-bio";
 import ManageLinkInBio from "./pages/manage-link-in-bio";
 import LinkAnalytics from "./pages/link-analytics";
 import { toast } from "react-toastify";
+import Layout from "./components/layout/layout";
+import AdminLayout from "./components/layout/admin-layout";
+import Setting from "./components/layout/setting-layout";
 
 function App() {
   const { pathname } = useLocation();
@@ -37,11 +37,14 @@ function App() {
     const getUser = async () => {
       const fp = await fpPromise;
       const result = await fp.get();
+
       try {
         const data = await identify(result).unwrap();
 
         if (!data.user) {
-          toast.info("Consider create an account to get full access to all features");
+          toast.info(
+            "Consider create an account to get full access to all features",
+          );
           return;
         }
 
@@ -54,11 +57,10 @@ function App() {
               stripe_account_id: data.user.stripe_account_id,
               isVerified: data.user.isVerified,
             },
-          })
+          }),
         );
-
         if (
-          !data.user.username &&
+          data.user.username &&
           (pathname === "/" ||
             pathname === "/pricing" ||
             pathname === "/checkout" ||

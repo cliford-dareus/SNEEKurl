@@ -1,4 +1,3 @@
-import Header from "./Header";
 import {
   NavLink,
   Outlet,
@@ -6,9 +5,12 @@ import {
   useOutletContext,
 } from "react-router-dom";
 import { useEffect, useState } from "react";
-import DashboardTopInterface from "./dashboard-top-interface";
-import { useRetrieveSubscriptionQuery } from "../app/services/stripe";
-import { SIDEBAR_LINKS } from "../Utils/common";
+import { AuthState, selectCurrentUser } from "../../features/auth/authslice";
+import { useAppSelector } from "../../app/hook";
+import { SIDEBAR_LINKS } from "../../Utils/common";
+import Header from "../Header";
+import DashboardTopInterface from "../dashboard-top-interface";
+
 
 type ContextType = {
   plan: string | null;
@@ -18,9 +20,11 @@ const AdminLayout = () => {
   const { pathname } = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
   const [sub_active, setSub_Active] = useState(0);
-  const { data } = useRetrieveSubscriptionQuery();
-  const plan_name = data?.subscription?.data[0].plan.metadata.name;
+  const user = useAppSelector(selectCurrentUser) as AuthState
+  // const { data } = useRetrieveSubscriptionQuery({username: user.username});
+  // const plan_name = data?.subscription?.data[0]?.plan.metadata.name;
   const plan = "pro";
+  
 
   useEffect(() => {
     SIDEBAR_LINKS.map((link, index) => {
@@ -28,11 +32,11 @@ const AdminLayout = () => {
         setActiveIndex(index);
       }
     });
-  }, []);
+  }, [pathname]);
 
   return (
     <div className="relative">
-      <Header isActive={true} plan={plan} />
+      <Header isActive={true} plan={plan} user={user}/>
       <main className="container mx-auto overflow-hidden px-4 pt-16">
         <DashboardTopInterface pathname={pathname} />
         <div className="flex gap-4 pt-4 h-[80vh]">
@@ -59,7 +63,10 @@ const AdminLayout = () => {
                     {activeIndex === index && pathname.includes("setting") && (
                       <div className="absolute top-12 right-0 left-8 flex flex-col gap-1 rounded-lg bg-slate-100 p-2">
                         {link.children?.map((sub_link, i) => (
-                          <li key={i} className="relative flex w-full items-center">
+                          <li
+                            key={i}
+                            className="relative flex w-full items-center"
+                          >
                             <NavLink
                               className="w-full rounded-md bg-slate-100 px-4 py-2 hover:bg-slate-200"
                               onClick={() => setSub_Active(i)}

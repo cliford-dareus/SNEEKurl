@@ -3,21 +3,48 @@ import { LuCheckCircle } from "react-icons/lu";
 import Button from "./ui/button";
 import { SubcriptionOptions } from "../Utils/common";
 import {
+  useCreateSubscriptionMutation,
   useRetrieveSubscriptionQuery,
   useUpdateSubscriptionMutation,
 } from "../app/services/stripe";
-import { useUserPlan } from "./admin-layout";
 import { useAppSelector } from "../app/hook";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUserPlan } from "./layout/admin-layout";
 
 type Props = {};
+
 const Subscription = () => {
+  const Navigate = useNavigate();
+  const plan = useUserPlan()
   const user = useAppSelector((state) => state.auth.user);
-  const { data, refetch } = useRetrieveSubscriptionQuery('');
   const [active_plan, setActivePlan] = useState<number | null>(null);
   const [updateSubscription, isLoading] = useUpdateSubscriptionMutation();
+  const [create_subscription] = useCreateSubscriptionMutation();
+  const { data } = useRetrieveSubscriptionQuery(
+    { username: user.username },
+    { skip: !user.username },
+  );
+  const [subscriptionData, setSubscriptionData] = useState<{
+    subscriptionId: string;
+    client_secret: string;
+  } | null>(null);
 
+  const handleSubscription = useCallback(
+    async (price: number) => {
+      const payload = { plan_price: price, username: user.username };
+      try {
+        const subscription = await create_subscription(payload).unwrap();
+        const { subscriptionId, client_secret } = subscription;
+        setSubscriptionData({ subscriptionId, client_secret });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [create_subscription, user.username],
+  );
+console.log("PLAN", plan)
   const handleUpdateSubscription = async (price: number) => {
     try {
       await updateSubscription({
@@ -31,9 +58,19 @@ const Subscription = () => {
   };
 
   useEffect(() => {
-    if (!data?.subscription?.data?.length) return;
-    const activePlan = data.subscription.data.find(
-      (x: any) => x.status === "active"
+    if (subscriptionData) {
+      Navigate("/pricing/checkout", { state: subscriptionData });
+    }
+  }, [subscriptionData]);
+
+  useEffect(() => {
+    if (data?.subscription?.data?.length === 0) {
+      setActivePlan(null);
+      return;
+    }
+
+    const activePlan = data?.subscription?.data.find(
+      (x: any) => x.status === "active",
     );
     setActivePlan(activePlan?.items.data[0]?.plan?.amount / 100 || null);
   }, [data]);
@@ -64,7 +101,14 @@ const Subscription = () => {
                 ))}
               </ul>
 
-              {active_plan === options.price ? (
+              {active_plan === null ? (
+                <Button
+                  className="mt-4"
+                  onClick={() => handleSubscription(options.price)}
+                >
+                  Subscribe
+                </Button>
+              ) : active_plan === options.price ? (
                 <Button className="mt-4">Current Plan</Button>
               ) : (
                 <Button

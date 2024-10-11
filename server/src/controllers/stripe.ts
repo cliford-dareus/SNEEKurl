@@ -4,11 +4,15 @@ import { StatusCodes } from "http-status-codes";
 import User from "../models/user";
 
 const retrieveSubscription = async (req: any, res: Response) => {
-  const clientId = req.session.client_id;
+  const { username } = req.params;
 
-  const user = await User.findOne({ clientId });
+  const user = await User.findOne({ username });
 
-  if (!user) return res.status(StatusCodes.BAD_REQUEST).send();
+  if (!user)
+    return res.status(StatusCodes.BAD_REQUEST).send({
+      message: "User not found",
+    });
+
   try {
     const subscription = await stripe.subscriptions.list({
       customer: user.stripe_account_id,
@@ -26,21 +30,36 @@ const create_subscription = async (req: Request, res: Response) => {
   const { plan_price, username } = req.body;
 
   const plan = await get_subscription_plan(plan_price);
-  if (!plan) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Plan not found" });
+  if (!plan)
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "Plan not found" });
 
-  let customer = await User.findOne({ username }).select("stripe_account_id email");
-  if (!customer) return res.status(StatusCodes.BAD_REQUEST).json({ message: "User not found" });
+  let customer = await User.findOne({ username }).select(
+    "stripe_account_id email",
+  );
+  if (!customer)
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ message: "User not found" });
 
-  const isCustomerIdValid = await stripe.customers.retrieve(customer.stripe_account_id as string);
+  const isCustomerIdValid = customer.stripe_account_id
+    ? await stripe.customers.retrieve(customer.stripe_account_id as string)
+    : false;
 
-  if (!customer.stripe_account_id || isCustomerIdValid.deleted) {
-    const newCustomer = await stripe.customers.create({ email: customer.email });
+  if (!customer.stripe_account_id || isCustomerIdValid) {
+    const newCustomer = await stripe.customers.create({
+      email: customer.email,
+    });
     const new_customer = await User.findByIdAndUpdate(
       { _id: customer._id },
       { $set: { stripe_account_id: newCustomer.id } },
-      { new: true }
+      { new: true },
     );
-    if (!new_customer) return res.status(StatusCodes.BAD_REQUEST).json({ message: "Could not create new customer" });
+    if (!new_customer)
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({ message: "Could not create new customer" });
 
     customer = new_customer;
 
@@ -63,7 +82,7 @@ const create_subscription = async (req: Request, res: Response) => {
             subscription_end: subscription.current_period_end,
             max_link: plan?.metadata.max_link,
           },
-        }
+        },
       );
 
       res.status(StatusCodes.OK).send({
@@ -91,7 +110,7 @@ const create_subscription = async (req: Request, res: Response) => {
           subscription_end: subscription.current_period_end,
           max_link: plan.metadata.max_link,
         },
-      }
+      },
     );
 
     res.status(StatusCodes.OK).json({
@@ -100,7 +119,9 @@ const create_subscription = async (req: Request, res: Response) => {
       client_secret: subscription.latest_invoice.payment_intent.client_secret,
     });
   } catch (error: any) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ error: { message: error.message } });
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ error: { message: error.message } });
   }
 };
 
@@ -116,7 +137,7 @@ const updateSubscription = async (req: any, res: Response) => {
 
   try {
     const customer = await User.findOne({ _id: user?._id }).select(
-      "stripe_account_id"
+      "stripe_account_id",
     );
     if (!customer)
       return res
@@ -124,8 +145,9 @@ const updateSubscription = async (req: any, res: Response) => {
         .json({ message: "User not found" });
 
     const isCustomerIdValid = await stripe.customers.retrieve(
-      customer.stripe_account_id as string
+      customer.stripe_account_id as string,
     );
+
     if (!customer.stripe_account_id || isCustomerIdValid.deleted === true)
       return res
         .status(StatusCodes.BAD_REQUEST)
@@ -146,7 +168,7 @@ const updateSubscription = async (req: any, res: Response) => {
             price: plan.id,
           },
         ],
-      }
+      },
     );
 
     res.status(StatusCodes.OK).json({ usubscription });
@@ -166,7 +188,7 @@ const get_subscription_plan = async (plan_price: number) => {
   }
 
   const plan = prices.data.find(
-    (price) => price.unit_amount! / 100 === plan_price
+    (price) => price.unit_amount! / 100 === plan_price,
   );
 
   return plan;

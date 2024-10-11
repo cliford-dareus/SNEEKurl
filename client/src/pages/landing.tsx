@@ -16,9 +16,7 @@ import {
 } from "react-icons/lu";
 import EditQrModal from "../components/ui/modals/edit-qr-modal";
 import EditLinkModal from "../components/ui/modals/edit-link-modal";
-import Portal from "../components/portal";
 import { selectCurrentUser } from "../features/auth/authslice";
-import { useUserPlan } from "../components/layout";
 import HomeCreateLinkManager from "../features/url/urllandingmanager";
 import VisitLinkButton from "../components/visit-link-button";
 import classNames from "classnames";
@@ -27,6 +25,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../components/ui/tooltip";
+import Portal from "../components/portal";
+import { useUserPlan } from "../components/layout/layout";
 
 const HomeLinkItem = ({
   url,
