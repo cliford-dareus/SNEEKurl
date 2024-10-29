@@ -1,36 +1,42 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {EndpointBuilder} from "@reduxjs/toolkit/dist/query/endpointDefinitions";
-import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
+import { BaseQueryArg } from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 const URL = "http://localhost:4080/user";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: URL,
-    credentials: "include", // Set credentials to "include"
+  baseUrl: URL,
+  credentials: "include", // Set credentials to "include"
 });
 export const userapi = createApi({
-    reducerPath: 'userapi',
-    baseQuery,
-    tagTypes: ['USER'],
-    endpoints: (builder) => ({
-        updateUserProfileImage: builder.mutation({
-            query: (file) => ({
-                method: 'PUT',
-                url: '/update-image',
-                body: file
-            })
-        }),
-        updateUserDetails: builder.mutation({
-            query: (information) => ({
-                url: '/update-info',
-                method: 'PUT',
-                body: information
-            })
-        })
+  reducerPath: "userapi",
+  baseQuery,
+  tagTypes: ["USER"],
+  endpoints: (builder) => ({
+    updateUserProfileImage: builder.mutation({
+      query: (file) => ({
+        method: "PUT",
+        url: "/update-image",
+        body: file,
+      }),
     }),
-})
+    updateUserDetails: builder.mutation({
+      query: (information) => ({
+        url: "/update-info",
+        method: "PUT",
+        body: information,
+      }),
+    }),
+    deleteUserAccount: builder.mutation({
+      query: () => ({
+        url: "/delete-account",
+        methode: "DELETE",
+      }),
+    }),
+  }),
+});
 
 export const {
-    useUpdateUserProfileImageMutation,
-    useUpdateUserDetailsMutation
+  useUpdateUserProfileImageMutation,
+  useUpdateUserDetailsMutation,
 } = userapi;
