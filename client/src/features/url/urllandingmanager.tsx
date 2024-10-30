@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import { IFormValues } from "./urlform";
+import { useForm } from "react-hook-form";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
-import { IFormValues } from "./urlform";
+import React, { useEffect, useRef } from "react";
 import { useShortenUrlMutation } from "../../app/services/urlapi";
-import { useForm } from "react-hook-form";
 import { AnimatePresence, useAnimate, usePresence } from "framer-motion";
 
 const Box = ({ children }: { children: React.ReactNode }) => {

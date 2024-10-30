@@ -1,7 +1,3 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../app/hook";
-import BrowserShot from "../assets/706shots_so.webp";
-import { Outlet } from "react-router-dom";
 import {
   Url,
   useGetGuestUrlQuery,
@@ -14,6 +10,10 @@ import {
   LuQrCode,
   LuShare2,
 } from "react-icons/lu";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { useAppSelector } from "../app/hook";
+import BrowserShot from "../assets/706shots_so.webp";
+import { Outlet } from "react-router-dom";
 import { BiCustomize, BiShareAlt } from "react-icons/bi";
 import { MdOutlineSwitchAccessShortcut } from "react-icons/md";
 import EditQrModal from "../components/ui/modals/edit-qr-modal";
@@ -146,7 +146,7 @@ const Section = ({ children }: { children: ReactNode }) => {
           opacity: isInView ? 1 : 0,
           transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
         }}
-        className="sticky h-[300px] p-4 bg-indigo-500 top-[30%] rounded-md flex items-center"
+        className="sticky h-[300px] p-4  top-[30%] rounded-md flex items-center"
       >
         <h3 className="text-5xl font-medium">{children}</h3>
       </div>
@@ -219,7 +219,7 @@ const Landing = () => {
 
       <section className="container mx-auto mt-16 p-4 bg-indigo-500 rounded-md text-white">
         <div className="px-8 mt-4">
-          <div className="flex gap-4 mt-8">
+        <div className="flex gap-4 mt-8">
             <div className="w-[40%]">
               <Section>
                 <MdOutlineSwitchAccessShortcut size="100px" />
