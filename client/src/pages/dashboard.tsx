@@ -1,243 +1,160 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {
-  Url,
-  useDeleteUrlMutation,
-  useGetUrlsQuery,
+    Url,
+    useDeleteUrlMutation, useGetUrlClicksQuery, useGetUrlQuery,
+    useGetUrlsQuery,
 } from "../app/services/urlapi";
-import { Link, useSearchParams } from "react-router-dom";
+import {Link, useParams, useSearchParams} from "react-router-dom";
 import {
-  LuArrowDown,
-  LuArrowUp,
-  LuBarChart,
-  LuFilter,
-  LuLink2,
-  LuMoreVertical,
+    LuArrowDown,
+    LuArrowUp,
+    LuBarChart,
+    LuFilter,
+    LuLink2,
+    LuMoreVertical,
 } from "react-icons/lu";
-import { getSiteUrl } from "../Utils/getSiteUrl";
-import { Popover, PopoverContainer } from "../components/ui/popover";
+import {getSiteUrl} from "../Utils/getSiteUrl";
+import {Popover, PopoverContainer} from "../components/ui/popover";
 import EditLinkModal from "../components/ui/modals/edit-link-modal";
 import EditQrModal from "../components/ui/modals/edit-qr-modal";
 import ShareLinkModal from "../components/ui/modals/share-link-modal";
 import Portal from "../components/portal";
 import VisitLinkButton from "../components/visit-link-button";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
-import { useUserPlan } from "../components/layout/admin-layout";
-import { toast } from "react-toastify";
-
-const LinkCard = ({ url }: { url: Url }) => {
-  const plan = useUserPlan();
-  const [open, setOpen] = useState(false);
-  const [editActive, setEditActive] = useState(false);
-  const [qrActive, setQrActive] = useState(false);
-  const [shareActive, setShareActive] = useState(false);
-  const [deleteUrl] = useDeleteUrlMutation();
-
-  return (
-    <>
-      <div className="flex items-center gap-4 rounded-md bg-slate-100 p-4">
-        <img
-          className="rounded-full w-[30px] h-[30px]"
-          src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-            url.longUrl,
-          )}`}
-          loading="lazy"
-          alt="site favicon"
-        />
-
-        <div className="w-[60%]">
-          <div className="flex items-center gap-4">
-            <VisitLinkButton url={url}>
-              <div className="flex items-center gap-2 text-blue-700">
-                <LuLink2 />
-                sneek.co/{url.short}
-              </div>
-            </VisitLinkButton>
-          </div>
-
-          <p className="mt-1 truncate">{url.longUrl}</p>
-        </div>
-
-        <div className="ml-auto cursor-pointer border rounded-lg bg-slate-100 px-4 py-1 hover:border hover:border-slate-300">
-          {url.clicks} clicks
-        </div>
-        <div className="rounded-lg bg-slate-100 border px-4 py-1  hover:border hover:border-slate-300">
-          <Link to={`/analytics/${url.short}`}>
-            <LuBarChart size={20} />
-          </Link>
-        </div>
-
-        <PopoverContainer classnames="ml-4" triggerFn={setOpen}>
-          <div className="cursor-pointer" onClick={() => setOpen(!open)}>
-            <LuMoreVertical size={24} />
-          </div>
-
-          {open && (
-            <Popover classnames="bg-slate-200 border border-slate-300 flex flex-col gap-2 z-50">
-              <div
-                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
-                onClick={() => {
-                  setQrActive(true);
-                  setOpen(false);
-                }}
-              >
-                Qr
-              </div>
-
-              <div
-                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
-                onClick={() => {
-                  setEditActive(true);
-                  setOpen(false);
-                }}
-              >
-                Edit
-              </div>
-
-              <div
-                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
-                onClick={() => {
-                  setShareActive(true);
-                  setOpen(false);
-                }}
-              >
-                Share
-              </div>
-              <div
-                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
-                onClick={async () => {
-                  try {
-                    await deleteUrl(url.short).unwrap();
-                    toast.success("Short Deleted")
-                  } catch (err) {
-                    console.log(err);
-                    toast.error("Something went wrong")
-                  }
-                }}
-              >
-                Delete
-              </div>
-            </Popover>
-          )}
-        </PopoverContainer>
-      </div>
-
-      <Portal>
-        <EditLinkModal
-          url={url}
-          editActive={editActive}
-          setEditActive={setEditActive}
-          plan={plan.plan!}
-        />
-
-        <EditQrModal
-          url={url}
-          setQrActive={setQrActive}
-          editQrActive={qrActive}
-        />
-
-        <ShareLinkModal
-          shareActive={shareActive}
-          setShareActive={setShareActive}
-          url={url}
-        />
-      </Portal>
-    </>
-  );
-};
-
-const LinkItems = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [queryParams, setQueryParams] = useState<string | null>("");
-
-  const sort = searchParams.get("sort");
-  const page = searchParams.get("page");
-  const clicks = searchParams.get("clicks");
-
-  const skip = useMemo(
-    () => queryParams?.split("").every((x) => x !== ""),
-    [queryParams],
-  );
-
-  const { data, isLoading } = useGetUrlsQuery(queryParams, {
-    refetchOnMountOrArgChange: true,
-    refetchOnFocus: skip,
-  });
-
-  useEffect(() => {
-    const createQueryParams = (s: { [key: string]: string | null }) => {
-      let str = [];
-      for (const [key, value] of Object.entries(s)) {
-        if (value === null) {
-          continue;
-        } else {
-          str.push(`${key}=${value}`);
-        }
-      }
-      setQueryParams(str.join("&"));
-    };
-
-    createQueryParams({ page, sort, clicks });
-  }, [searchParams, page, sort, clicks]);
-
-  return (
-    <div className="flex flex-col gap-4 no-scrollbar">
-      {!isLoading &&
-        data?.urls.map((url) => <LinkCard key={url._id} url={url} />)}
-    </div>
-  );
-};
+import {useUserPlan} from "../components/layout/admin-layout";
+import {toast} from "react-toastify";
+import LinkItems from "../components/link-items";
+import MyResponsiveLine from "../components/ui/responsive-line";
+import {CHART_DATA} from "../Utils/common";
+import {useAppSelector} from "../app/hook";
+import {selectCurrentUser} from "../features/auth/authslice";
+import useQuery from "../hooks/use-query";
+import {clickByMonth} from "../Utils/agregate-by-month";
 
 const Dashboard = () => {
-  const [openFilter, setOpenFilter] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<any[]>([]);
-  // const user = useAppSelector((state: RootState) => state.auth);
-  // const plan = useUserPlan();
+    let query = useQuery();
+    const [openFilter, setOpenFilter] = useState(false);
+    const [activeFilter, setActiveFilter] = useState<any[]>([]);
+    const user = useAppSelector(selectCurrentUser)
+    const {data, isLoading} = useGetUrlsQuery({search: query.get('search')}, {refetchOnMountOrArgChange: true});
+    const {data: d, isLoading: loading} = useGetUrlClicksQuery({})
 
-  return (
-    <>
-      <section className="relative">
-        <div className="sticky top-0 z-20 mb-2 flex gap-4 rounded-md border border-slate-200 bg-slate-100 px-4 py-1">
-          <div className="flex gap-4">
-            {activeFilter.length !== 0 &&
-              activeFilter?.map((filter) => (
-                <div className="relative flex cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm group py-0.5">
-                  <div className="absolute top-0 right-0 h-3 w-3 rounded-full bg-white group-hover:bg-red-500"></div>
-                  {Object.keys(filter)[0]}
-                  <div>
-                    {Object.values(filter)[0] == "asc" ||
-                    Object.values(filter)[0] == "most_click" ? (
-                      <LuArrowDown />
-                    ) : (
-                      <LuArrowUp />
-                    )}
-                  </div>
+    const totalClicks = useMemo(() => {
+        let sum = 0;
+        data?.urls.forEach(e => {
+            if (e.clicks) {
+                sum += e.clicks
+            }
+        });
+        return sum;
+    }, [data]);
+
+    const chartData = useMemo(() => {
+            const clickByMonths = clickByMonth(d);
+            if (!d || clickByMonths == undefined) return [];
+            return [
+                {
+                    "id": "Clicks",
+                    "color": "hsl(331, 70%, 50%)",
+                    "data": clickByMonths
+                }
+            ]
+        },
+        [d, loading]
+    );
+
+    return (
+        <>
+            <section className="relative">
+                <div className="mb-4 flex justify-between items-center">
+                    <div className="">
+                        <h2 className="font-medium text-xl">Hey, {user.user.username}</h2>
+                        <p className="text-slate-500 text-sm">Track your links and customize your bio links</p>
+                    </div>
+                    <div className="">
+
+                    </div>
                 </div>
-              ))}
-          </div>
-          <div className="ml-auto">
-            <div
-              className="flex cursor-pointer items-center gap-2 rounded-full bg-slate-200 px-4 py-0.5"
-              onClick={() => setOpenFilter(true)}
-            >
-              Filter
-              <LuFilter />
-            </div>
-          </div>
-        </div>
+                <div className="w-full grid grid-cols-3 gap-4 h-[200px]">
+                    <div className="flex-1 flex relative border rounded-md p-4">
+                        <div className="absolute top-4 left-4">
+                            <span>{totalClicks}</span>
+                            <p className="text-sm leading-3 text-slate-500">Total clicks</p>
+                        </div>
+                        <div className="h-[130px] w-full mt-auto">
+                            <MyResponsiveLine data={chartData}/>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex relative border rounded-md p-4">
+                        <div className="absolute top-4 left-4">
+                            <span>{totalClicks}</span>
+                            <p className="text-sm leading-3 text-slate-500">Visitors</p>
+                        </div>
+                        <div className="h-[130px] w-full mt-auto">
+                            <MyResponsiveLine data={chartData}/>
+                        </div>
+                    </div>
+                    <div className="flex-1 flex relative border rounded-md p-4">
+                        <div className="absolute top-4 left-4">
+                            <span>{totalClicks}</span>
+                            <p className="text-sm leading-3 text-slate-500">Un-used</p>
+                        </div>
+                        <div className="h-[130px] w-full mt-auto">
+                            <MyResponsiveLine data={chartData}/>
+                        </div>
+                    </div>
+                </div>
 
-        <LinkItems />
+                <div
+                    className="sticky top-0 z-20 my-4 flex items-center gap-4 rounded-md border border-slate-200 bg-white px-4 py-1">
+                    <div className="flex items-center gap-4">
+                        <div className="">
+                            <span>My Links</span>
+                            <p className="text-sm text-slate-500">{data?.urls.length} total links</p>
+                        </div>
+                        {activeFilter.length !== 0 &&
+                            activeFilter?.map((filter) => (
+                                <div
+                                    className="relative flex cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm group py-0.5">
+                                    <div
+                                        className="absolute top-0 right-0 h-3 w-3 rounded-full bg-white group-hover:bg-red-500"></div>
+                                    {Object.keys(filter)[0]}
+                                    <div>
+                                        {Object.values(filter)[0] == "asc" ||
+                                        Object.values(filter)[0] == "most_click" ? (
+                                            <LuArrowDown/>
+                                        ) : (
+                                            <LuArrowUp/>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                    </div>
 
-        <Portal>
-          <FilterLinkModal
-            open={openFilter}
-            setOpen={setOpenFilter}
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-          />
-        </Portal>
-      </section>
-    </>
-  );
+                    <div className="ml-auto">
+                        <div
+                            className="flex cursor-pointer items-center gap-2 rounded-full bg-slate-200 px-4 py-0.5"
+                            onClick={() => setOpenFilter(true)}
+                        >
+                            <p className="text-sm text-slate-500">Filter</p>
+                            <LuFilter/>
+                        </div>
+                    </div>
+                </div>
+
+                <LinkItems/>
+
+                <Portal>
+                    <FilterLinkModal
+                        open={openFilter}
+                        setOpen={setOpenFilter}
+                        activeFilter={activeFilter}
+                        setActiveFilter={setActiveFilter}
+                    />
+                </Portal>
+            </section>
+        </>
+    );
 };
 
 export default Dashboard;

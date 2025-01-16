@@ -5,7 +5,7 @@ import Input from "../Input";
 import {LuSearch} from "react-icons/lu";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {getSiteUrl} from "../../../Utils/getSiteUrl";
-import {UseDebounce} from "../../../Utils/hooks/use-debounce";
+import {UseDebounce} from "../../../hooks/use-debounce";
 import {useSearchParams} from "react-router-dom";
 import {useGetUrlsQuery} from "../../../app/services/urlapi";
 

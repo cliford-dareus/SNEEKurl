@@ -55,7 +55,7 @@ const Popover = ({classnames, children}: Props) => {
         if (bounds >= win) {
             setIsOutScreen(true)
         }
-        }, []);
+    }, []);
 
     return (
         <div

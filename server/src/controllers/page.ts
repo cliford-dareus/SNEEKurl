@@ -4,8 +4,7 @@ import User from "../models/user";
 import { StatusCodes } from "http-status-codes";
 
 const getMyPages = async (req: any, res: Response) => {
-  const client_id = req.session.client_id;
-  const user = await User.findOne({ clientId: client_id });
+  const user = await User.findOne({ _id: req.user._id });
 
   if (!user) {
     return res
@@ -24,9 +23,8 @@ const getMyPages = async (req: any, res: Response) => {
 
 const createPage = async (req: any, res: Response) => {
   const { title, description, slug, isPublic } = req.body;
-  const client_id = req.session.client_id;
 
-  const user = await User.findOne({ clientId: client_id }, { _id: 1 });
+  const user = await User.findOne({ _id: req.user._id });
   if (!user) return res.sendStatus(StatusCodes.BAD_REQUEST);
 
   const isUnique = await Page.findOne({ slug }).select("_id");
@@ -55,7 +53,7 @@ const updatePage = async (req: any, res: Response) => {
     });
   }
 
-  const user = await User.findOne({ clientId: client_id }, { _id: 1 });
+  const user = await User.findOne({_id: req.user._id});
   if (!user) {
     return res
       .status(StatusCodes.BAD_REQUEST)

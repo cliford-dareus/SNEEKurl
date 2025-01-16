@@ -46,15 +46,20 @@ export  const SIDEBAR_LINKS = [
     {
         id: 1,
         name: 'Overview',
-        slug: '/links'
+        slug: '/overview',
     },
     {
         id: 2,
+        name: 'Links',
+        slug: '/links'
+    },
+    {
+        id: 3,
         name: 'Link In Bio',
         slug: '/link-in-bio'
     },
     {
-        id: 3,
+        id: 4,
         name: 'Setting',
         slug: '/setting',
         children: [
@@ -103,3 +108,54 @@ export const MONTHS = [
     "November",
     "December",
   ];
+
+export const CHART_DATA = [
+    {
+        "x": "January",
+        "y": 0
+    },
+    {
+        "x": "February",
+        "y": 0
+    },
+    {
+        "x": "March",
+        "y": 0
+    },
+    {
+        "x": "April",
+        "y": 0
+    },
+    {
+        "x": "May",
+        "y": 0
+    },
+    {
+        "x": "June",
+        "y": 0
+    },
+    {
+        "x": "July",
+        "y": 0
+    },
+    {
+        "x": "August",
+        "y": 0
+    },
+    {
+        "x": "September",
+        "y": 0
+    },
+    {
+        "x": "October",
+        "y": 0
+    },
+    {
+        "x": "November",
+        "y": 0
+    },
+    {
+        "x": "December",
+        "y": 0
+    }
+];

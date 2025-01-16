@@ -24,7 +24,6 @@ const AdminLayout = () => {
   // const { data } = useRetrieveSubscriptionQuery({username: user.username});
   // const plan_name = data?.subscription?.data[0]?.plan.metadata.name;
   const plan = "pro";
-  
 
   useEffect(() => {
     SIDEBAR_LINKS.map((link, index) => {

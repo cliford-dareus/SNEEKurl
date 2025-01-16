@@ -15,30 +15,66 @@ type Props = {
 const FilterLinkModal = ({open, setOpen, activeFilter, setActiveFilter}: Props) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
+    // const updateSearchParams = useCallback(
+    //     (newParams: { [key: string]: string }) => {
+    //         Object.entries(newParams).forEach(([key, value]) => {
+    //             searchParams.set(key, value);
+    //         });
+    //
+    //         setSearchParams(searchParams);
+    //
+    //         if (activeFilter.length === 0) {
+    //             setActiveFilter((prevState) => [...(prevState ?? []), newParams])
+    //         } else if (activeFilter.length !== 0 &&
+    //             activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length !== 0 &&
+    //             activeFilter.filter(x => Object.values(x)[0] == Object.values(newParams)[0]).length == 0
+    //         ) {
+    //             setActiveFilter(
+    //                 [...activeFilter.filter(x => Object.keys(x)[0] !== Object.keys(newParams)[0]), newParams]);
+    //         } else if (activeFilter.length !== 0 &&
+    //             activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length == 0) {
+    //             setActiveFilter((prevState) => [...(prevState ?? []), newParams]);
+    //
+    //         }
+    //     },
+    //     [searchParams]
+    // );
+
     const updateSearchParams = useCallback(
         (newParams: { [key: string]: string }) => {
+            // Step 1: Update the search parameters
             Object.entries(newParams).forEach(([key, value]) => {
                 searchParams.set(key, value);
             });
-
             setSearchParams(searchParams);
 
-            if (activeFilter.length === 0) {
-                setActiveFilter((prevState) => [...(prevState ?? []), newParams])
-            } else if (activeFilter.length !== 0 &&
-                activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length !== 0 &&
-                activeFilter.filter(x => Object.values(x)[0] == Object.values(newParams)[0]).length == 0
-            ) {
-                setActiveFilter(
-                    [...activeFilter.filter(x => Object.keys(x)[0] !== Object.keys(newParams)[0]), newParams]);
-            } else if (activeFilter.length !== 0 &&
-                activeFilter.filter(x => Object.keys(x)[0] == Object.keys(newParams)[0]).length == 0) {
-                setActiveFilter((prevState) => [...(prevState ?? []), newParams]);
+            // Step 2: Update the active filters
+            const [newKey, newValue] = Object.entries(newParams)[0]; // Extract key-value pair from `newParams`
 
-            }
+            setActiveFilter((prevState) => {
+                const updatedFilters = prevState ?? [];
+
+                // Check if a filter with the same key already exists
+                const existingFilterIndex = updatedFilters.findIndex(
+                    (filter) => Object.keys(filter)[0] === newKey
+                );
+
+                if (existingFilterIndex !== -1) {
+                    // If the filter exists but has a different value, replace it
+                    if (Object.values(updatedFilters[existingFilterIndex])[0] !== newValue) {
+                        updatedFilters[existingFilterIndex] = newParams;
+                    }
+                } else {
+                    // If the filter doesn't exist, add it
+                    updatedFilters.push(newParams);
+                }
+
+                return [...updatedFilters];
+            });
         },
         [searchParams]
     );
+
 
     useEffect(() => {
         if (!searchParams.size) {

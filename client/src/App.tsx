@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
+import {Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
 import Myurl from "./components/myurl";
@@ -12,7 +12,7 @@ import Pricing from "./pages/pricing";
 import Checkout from "./components/checkout";
 import { useIdentifyUserMutation } from "./app/services/auth";
 import { setCredentials } from "./features/auth/authslice";
-import useLocalStorage from "./Utils/hooks/use-local-storage";
+import useLocalStorage from "./hooks/use-local-storage";
 import { useAppDispatch } from "./app/hook";
 import Landing from "./pages/landing";
 import Subscription from "./components/subscription";
@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 import Layout from "./components/layout/layout";
 import AdminLayout from "./components/layout/admin-layout";
 import Setting from "./components/layout/setting-layout";
+import Links from "./pages/links";
 
 function App() {
   const { pathname } = useLocation();
@@ -95,7 +96,8 @@ function App() {
 
         <Route element={<ProtectedRoutes />}>
           <Route element={<AdminLayout />}>
-            <Route path="/links" element={<Dashboard />} />
+            <Route path="/overview" element={<Dashboard />} />
+            <Route path="/links" element={<Links />} />
             <Route path="/link-in-bio" element={<LinkInBio />} />
             <Route path="/link-in-bio/:id" element={<ManageLinkInBio />} />
             <Route path="/analytics/:id" element={<LinkAnalytics />} />

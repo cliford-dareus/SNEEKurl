@@ -1,4 +1,4 @@
-import { useWindowSize, Size } from "../Utils/hooks/windowSize";
+import { useWindowSize, Size } from "../hooks/windowSize";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMoon, IoMoonOutline, IoPowerOutline } from "react-icons/io5";
 import { useAppDispatch, useAppSelector } from "../app/hook";
@@ -11,8 +11,8 @@ import {
 } from "../features/auth/authslice";
 import { LuMoon, LuSunDim, LuUserCircle2 } from "react-icons/lu";
 import { useLogoutUserMutation } from "../app/services/auth";
-import useLocalStorage from "../Utils/hooks/use-local-storage";
-import useScroll from "../Utils/hooks/use-scroll";
+import useLocalStorage from "../hooks/use-local-storage";
+import useScroll from "../hooks/use-scroll";
 import classNames from "classnames";
 
 type Props = {

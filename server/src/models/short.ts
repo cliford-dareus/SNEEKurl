@@ -34,8 +34,6 @@ const ShortSchema = new mongoose.Schema<IShort>(
     },
     guest: { type: String },
     password: { type: String },
-    clicks: { type: Number },
-    lastClick: { type: Date },
     expired_in: { type: Date },
     metadata: [
       {

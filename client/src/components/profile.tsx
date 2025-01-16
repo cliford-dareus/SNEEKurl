@@ -64,7 +64,7 @@ const Profile = () => {
                 <div className="rounded-full bg-red-500 w-[50px] h-[50px] ring-1 ring-indigo-500 overflow-hidden">
                   <img
                     src={`https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg`}
-                    alt=""
+                    alt="profile image"
                   />
                 </div>
                 <div className="flex items-center gap-4">

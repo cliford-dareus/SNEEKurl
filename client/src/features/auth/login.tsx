@@ -6,7 +6,7 @@ import { useLoginMutation } from "../../app/services/auth";
 import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { AuthState, selectCurrentUser, setCredentials } from "./authslice";
 import { useEffect } from "react";
-import useLocalStorage from "../../Utils/hooks/use-local-storage";
+import useLocalStorage from "../../hooks/use-local-storage";
 
 type Props = {};
 
