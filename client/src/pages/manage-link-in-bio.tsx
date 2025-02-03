@@ -4,7 +4,7 @@ import {
   useReorderPageLinksMutation,
 } from "../app/services/page";
 import { LuArrowLeft, LuSettings, LuTrash } from "react-icons/lu";
-import { DragEvent, useRef, useState } from "react";
+import {DragEvent, useEffect, useRef, useState} from "react";
 import { Popover, PopoverContainer } from "../components/ui/popover";
 import Button from "../components/ui/button";
 import Portal from "../components/portal";
@@ -97,7 +97,7 @@ const ManageLinkInBio = ({}: Props) => {
   const [open, setOpen] = useState(false);
   const [blockSelected, setBlockSelected] = useState("");
   const [createLinkBlockActive, setCreateLinkBlockActive] = useState(false);
-  const [reorderLinks] = useReorderPageLinksMutation();
+  const [reorderLinks, { isLoading: reorderLoading }] = useReorderPageLinksMutation();
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
   const manageLinksOrder = async (newOrder: any) => {
@@ -108,6 +108,10 @@ const ManageLinkInBio = ({}: Props) => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    iframeRef.current?.contentWindow?.location.reload();
+  }, [reorderLoading, createLinkBlockActive])
 
   return (
     <section className="relative">
@@ -165,7 +169,7 @@ const ManageLinkInBio = ({}: Props) => {
           )}
         </div>
         <div className="w-[300px] h-[700px] border">
-          {!isLoading ? (
+          {!reorderLoading ? (
             <iframe
               ref={iframeRef}
               width="300"
@@ -173,7 +177,9 @@ const ManageLinkInBio = ({}: Props) => {
               src={`http://localhost:5173/${id}`}
             ></iframe>
           ) : (
-            <h1>Loading...</h1>
+              <div className="w-[300px] h-[700px] border flex justify-center items-center">
+                <p>Loading...</p>
+              </div>
           )}
         </div>
       </div>

@@ -10,12 +10,16 @@ import {
 } from "../app/services/stripe";
 import { SubcriptionOptions } from "../Utils/common";
 import { toast } from "react-toastify";
+import {RootState} from "../app/store";
 
 type Props = {};
 
-const Pricing = () => {
-  const { user } = useAppSelector((state) => state.auth);
-  const { data, refetch } = useRetrieveSubscriptionQuery("",{skip: !user.username});
+const Pricing = (): JSX.Element => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { data, refetch } = useRetrieveSubscriptionQuery(
+    { username: user.username },
+    { skip: !user.username }
+  );
   const Navigate = useNavigate();
   const [create_subscription, { isLoading }] = useCreateSubscriptionMutation();
   const [update_subscription, { isLoading: updateLoading }] =
@@ -27,7 +31,7 @@ const Pricing = () => {
   } | null>(null);
 
   const handleSubscription = useCallback(
-    async (price: number) => {
+    async (price: number): Promise<void> => {
       const payload = { plan_price: price, username: user.username };
       try {
         const subscription = await create_subscription(payload).unwrap();
@@ -41,7 +45,7 @@ const Pricing = () => {
   );
 
   const handleUpdateSubscription = useCallback(
-    async (price: number) => {
+    async (price: number): Promise<void> => {
       try {
         await update_subscription({
           plan_price: price,

@@ -8,45 +8,51 @@ import jwt from "jsonwebtoken";
 import Click from "../models/clicks";
 
 const create = async (req: any, res: Response) => {
-    const {longUrl, backhalf} = req.body;
-    const guest_sid = req.signedCookies["guest.sid"];
-    const auth_sid = req.signedCookies["auth.sid"];
-    const isAuthenticated = req.session?.isAuthenticated;
+    try {
+        const {longUrl, backhalf} = req.body;
 
-    const guest =
-        guest_sid &&
-        (jwt.verify(guest_sid, process.env.JWT_SECRET!) as jwt.JwtPayload);
-    const auth =
-        auth_sid &&
-        (jwt.verify(auth_sid, process.env.JWT_SECRET!) as jwt.JwtPayload);
+        if (!longUrl) {
+            return res.status(StatusCodes.BAD_REQUEST).send({message: "Enter a long URL"});
+        }
 
-    if (guest_sid && !isAuthenticated) {
-        const short = await Short.create({
-            longUrl,
-            expired_in: new Date(Date.now() + 30 * 60 * 1000),
-            guest: guest.client_id,
-        });
+        const guest_sid = req.signedCookies["guest.sid"];
+        const auth_sid = req.signedCookies["auth.sid"];
+        const isAuthenticated = req.session?.isAuthenticated;
+
+        let user;
+        let short;
+
+        if (guest_sid && !isAuthenticated) {
+            const guest = jwt.verify(guest_sid, process.env.JWT_SECRET!) as jwt.JwtPayload;
+            short = await Short.create({
+                longUrl,
+                expired_in: new Date(Date.now() + 30 * 60 * 1000),
+                guest: guest.client_id,
+            });
+        } else if (auth_sid && isAuthenticated) {
+            const auth = jwt.verify(auth_sid, process.env.JWT_SECRET!) as jwt.JwtPayload;
+            user = await User.findById(auth["user_id"]);
+
+            if (!user) {
+                return res.status(StatusCodes.UNAUTHORIZED).send({message: "Unauthorized"});
+            }
+
+            const isUrlExist = await Short.findOne({longUrl, user: user._id});
+            if (isUrlExist) {
+                return res.status(StatusCodes.BAD_REQUEST).json({short: isUrlExist});
+            }
+
+            short = backhalf
+                ? await Short.create({longUrl, short: backhalf, user: user._id})
+                : await Short.create({longUrl, user: user._id});
+        } else {
+            return res.status(StatusCodes.UNAUTHORIZED).send({message: "Unauthorized"});
+        }
 
         return res.status(StatusCodes.OK).json({short});
-    } else if (auth_sid && isAuthenticated && auth) {
-        const user = await User.findById(auth["user_id"]);
-
-        if (!user || !longUrl) {
-            return res
-                .status(StatusCodes.BAD_REQUEST)
-                .send({message: "Enter a long URL"});
-        }
-
-        const isUrlExist = await Short.findOne({longUrl, user: user._id});
-        if (isUrlExist) {
-            return res.status(StatusCodes.BAD_REQUEST).json({short: isUrlExist});
-        }
-
-        const short = backhalf
-            ? await Short.create({longUrl, short: backhalf, user: user._id})
-            : await Short.create({longUrl, user: user._id});
-
-        res.status(StatusCodes.OK).json({short});
+    } catch (error) {
+        console.error(error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({message: "Internal Server Error"});
     }
 };
 
@@ -168,7 +174,8 @@ const visitUrl = async (req: Request, res: Response) => {
 
     if (!url) {
         return res.sendStatus(StatusCodes.BAD_REQUEST);
-    };
+    }
+    ;
 
     // Check if user is on Mobile or not
     const userAgent = req.headers["user-agent"];
@@ -192,7 +199,7 @@ const visitUrl = async (req: Request, res: Response) => {
     try {
         if (url.password && !providedPassword) {
             return res.status(StatusCodes.FORBIDDEN)
-                        .send(`Link is protected by password`);
+                .send(`Link is protected by password`);
         } else if (url.password && providedPassword) {
             const isCorrectPassword = providedPassword === url.password;
 

@@ -12,7 +12,7 @@ import EditLinkModal from "./ui/modals/edit-link-modal";
 import EditQrModal from "./ui/modals/edit-qr-modal";
 import ShareLinkModal from "./ui/modals/share-link-modal";
 
-const LinkCard = ({ url }: { url: Url }) => {
+const LinkCard = ({url}: { url: Url }) => {
     const plan = useUserPlan();
     const [open, setOpen] = useState(false);
     const [editActive, setEditActive] = useState(false);
@@ -36,7 +36,7 @@ const LinkCard = ({ url }: { url: Url }) => {
                     <div className="flex items-center gap-4">
                         <VisitLinkButton url={url}>
                             <div className="flex items-center gap-2 text-blue-700">
-                                <LuLink2 />
+                                <LuLink2/>
                                 sneek.co/{url.short}
                             </div>
                         </VisitLinkButton>
@@ -45,18 +45,19 @@ const LinkCard = ({ url }: { url: Url }) => {
                     <p className="mt-1 truncate text-sm text-slate-500">{url.longUrl}</p>
                 </div>
 
-                <div className="ml-auto cursor-pointer border rounded-lg bg-slate-100 px-4 py-1 hover:border hover:border-slate-300 text-sm text-slate-500">
+                <div
+                    className="ml-auto cursor-pointer border rounded-lg bg-slate-100 px-4 py-1 hover:border hover:border-slate-300 text-sm text-slate-500">
                     {url.clicks} clicks
                 </div>
                 <div className="rounded-lg bg-slate-100 border px-4 py-1  hover:border hover:border-slate-300">
                     <Link to={`/analytics/${url.short}`}>
-                        <LuBarChart size={20} />
+                        <LuBarChart size={20}/>
                     </Link>
                 </div>
 
                 <PopoverContainer classnames="ml-4" triggerFn={setOpen}>
                     <div className="cursor-pointer" onClick={() => setOpen(!open)}>
-                        <LuMoreVertical size={24} />
+                        <LuMoreVertical size={24}/>
                     </div>
 
                     {open && (
