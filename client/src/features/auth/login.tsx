@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hook";
 import { AuthState, selectCurrentUser, setCredentials } from "./authslice";
 import { useEffect } from "react";
 import useLocalStorage from "../../hooks/use-local-storage";
+import { useAuth } from "../../hooks/useAuth";
 
 type Props = {};
 
@@ -19,11 +20,15 @@ export type IUserFormValues = {
 const Login = (props: Props) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [Value, setValue] = useLocalStorage("token", "");
-  const user = useAppSelector(selectCurrentUser) as AuthState;
-
+  const { isAuthenticated } = useAuth();
   const [useLogin, { isLoading, isError }] = useLoginMutation();
-  const { register, handleSubmit } = useForm<IUserFormValues>();
+  const { register, handleSubmit } = useForm<IUserFormValues>({
+    defaultValues: {
+      email: "",
+      username: "",
+      password: "",
+    },
+  });
 
   const onsubmit: SubmitHandler<IUserFormValues> = async (formData) => {
     try {
@@ -32,8 +37,7 @@ const Login = (props: Props) => {
         password: formData.password,
       }).unwrap();
 
-      setValue(JSON.stringify(data.token));
-
+      // Don't store token in localStorage anymore
       dispatch(
         setCredentials({
           user: {
@@ -51,10 +55,10 @@ const Login = (props: Props) => {
   };
 
   useEffect(() => {
-    if (user.token) {
+    if (isAuthenticated) {
       navigate("/links");
     }
-  }, []);
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="flex h-screen w-screen container p-4 items-center justify-center">

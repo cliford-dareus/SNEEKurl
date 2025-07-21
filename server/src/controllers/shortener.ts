@@ -5,54 +5,85 @@ import {StatusCodes} from "http-status-codes";
 import Short from "../models/short";
 import User from "../models/user";
 import jwt from "jsonwebtoken";
+import Page from "../models/page";
 import Click from "../models/clicks";
 
 const create = async (req: any, res: Response) => {
     try {
-        const {longUrl, backhalf} = req.body;
+        const { longUrl, backhalf } = req.body;
 
         if (!longUrl) {
-            return res.status(StatusCodes.BAD_REQUEST).send({message: "Enter a long URL"});
+            return res.status(StatusCodes.BAD_REQUEST).send({
+                message: "Enter a long URL"
+            });
         }
 
-        const guest_sid = req.signedCookies["guest.sid"];
-        const auth_sid = req.signedCookies["auth.sid"];
-        const isAuthenticated = req.session?.isAuthenticated;
-
-        let user;
         let short;
 
-        if (guest_sid && !isAuthenticated) {
-            const guest = jwt.verify(guest_sid, process.env.JWT_SECRET!) as jwt.JwtPayload;
-            short = await Short.create({
-                longUrl,
-                expired_in: new Date(Date.now() + 30 * 60 * 1000),
-                guest: guest.client_id,
-            });
-        } else if (auth_sid && isAuthenticated) {
-            const auth = jwt.verify(auth_sid, process.env.JWT_SECRET!) as jwt.JwtPayload;
-            user = await User.findById(auth["user_id"]);
+        if (req.userType === "authenticated") {
+            // Authenticated user logic
+            const user = req.user;
+            const isUrlExist = await Short.findOne({ longUrl, user: user._id });
 
-            if (!user) {
-                return res.status(StatusCodes.UNAUTHORIZED).send({message: "Unauthorized"});
-            }
-
-            const isUrlExist = await Short.findOne({longUrl, user: user._id});
             if (isUrlExist) {
-                return res.status(StatusCodes.BAD_REQUEST).json({short: isUrlExist});
+                return res.status(StatusCodes.BAD_REQUEST).json({
+                    short: isUrlExist,
+                    message: "URL already exists"
+                });
             }
 
             short = backhalf
-                ? await Short.create({longUrl, short: backhalf, user: user._id})
-                : await Short.create({longUrl, user: user._id});
-        } else {
-            return res.status(StatusCodes.UNAUTHORIZED).send({message: "Unauthorized"});
+                ? await Short.create({ longUrl, short: backhalf, user: user._id })
+                : await Short.create({ longUrl, user: user._id });
+
+            // Include limit info in response
+            const response = {
+                short,
+                limits: req.linkLimits || null
+            };
+
+            return res.status(StatusCodes.OK).json(response);
+
+        } else if (req.userType === "guest") {
+            // Guest user logic with limitations
+            const guest = req.guest;
+
+            // Check guest limits (handled by middleware, but double-check)
+            const guestUrls = await Short.countDocuments({ guest: guest.client_id });
+            if (guestUrls >= 5) { // Guest limit
+                return res.status(StatusCodes.PAYMENT_REQUIRED).json({
+                    message: "Guest limit reached. Please sign up for more links.",
+                    current: guestUrls,
+                    limit: 5,
+                    upgradeRequired: true
+                });
+            }
+
+            short = await Short.create({
+                longUrl,
+                expired_in: new Date(Date.now() + 30 * 60 * 1000), // 30 min expiry
+                guest: guest.client_id,
+            });
+
+            return res.status(StatusCodes.OK).json({
+                short,
+                limits: {
+                    current: guestUrls + 1,
+                    limit: 5,
+                    remaining: 4 - guestUrls
+                }
+            });
         }
 
-        return res.status(StatusCodes.OK).json({short});
+        return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Invalid user type"
+        });
+
     } catch (error) {
-        console.error(error);
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({message: "Internal Server Error"});
+        console.error("Link creation error:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+            message: "Internal Server Error"
+        });
     }
 };
 
@@ -71,6 +102,14 @@ const getUrl = async (req: any, res: Response) => {
 
 const getUrls = async (req: any, res: Response) => {
     const {page, skip, sort, clicks, limit, search} = req.query;
+    console.log("Guest");
+
+    if (req.userType === "guest") {
+        const guest = req.guest;
+        const urls = await Short.find({guest: guest.client_id});
+        return res.status(StatusCodes.OK).json({urls});
+    }
+
     const user = await User.findOne({_id: req.user._id});
 
     if (!user) {
@@ -107,32 +146,7 @@ const getUrls = async (req: any, res: Response) => {
         res.status(StatusCodes.OK).json({urls});
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST)
-            .send({message: "Something went wrong!"});
-    }
-};
-
-const getGuestUrl = async (req: Request, res: Response) => {
-    const guest_sid = req.signedCookies["guest.sid"];
-
-    if (!guest_sid) {
-        return;
-    }
-
-    const guest = jwt.verify(
-        guest_sid,
-        process.env.JWT_SECRET!,
-    ) as jwt.JwtPayload;
-
-    try {
-        const shorts = await Short.find({
-            guest: guest.client_id,
-        });
-
-        res.status(StatusCodes.OK).json({urls: shorts});
-    } catch (error) {
-        res
-            .status(StatusCodes.BAD_REQUEST)
-            .send({message: "Something went wrong"});
+            .json({message: "Something went wrong!"});
     }
 };
 
@@ -236,14 +250,26 @@ const deleteUrl = async (req: Request, res: Response) => {
     try {
         const deletedShort = await Short.findOneAndDelete({short});
 
-        //Check if it was in a page and update the page
+    //Check if it was in a page and update the page
+    const page = await Page.find({ user: deletedShort?.user }).populate(
+      "links",
+    );
 
-        res.status(StatusCodes.OK).send({message: "Short deleted!"});
-    } catch (err) {
-        res
-            .status(StatusCodes.BAD_REQUEST)
-            .send({message: "Smothing went wrong!"});
-    }
+    page.forEach(async (pag) => {
+      const filter = pag.links.filter((x) => {
+        console.log(x, deletedShort?._id);
+        return x.link !== deletedShort?._id;
+      });
+      console.log("FILTER", filter);
+      await Page.findOneAndUpdate({ _id: pag._id }, { links: filter });
+    });
+
+    res.status(StatusCodes.OK).send({ message: "Short deleted!" });
+  } catch (err) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send({ message: "Smothing went wrong!" });
+  }
 };
 
 const getClicks = async (req: any, res: Response) => {
@@ -259,4 +285,4 @@ const getClicks = async (req: any, res: Response) => {
     }
 };
 
-export {create, getUrls, editUrl, visitUrl, getUrl, getGuestUrl, deleteUrl, getClicks};
+export {create, getUrls, editUrl, visitUrl, getUrl, deleteUrl, getClicks};

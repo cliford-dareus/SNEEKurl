@@ -9,6 +9,7 @@ import connectDB from "./lib/db/connect";
 import bodyParser from "body-parser";
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import csrf from "csurf";
 dotenv.config();
 import { createRouteHandler } from "uploadthing/express";
 import { uploadRouter } from "./config/uploadThing";
@@ -22,7 +23,7 @@ import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 import { webhook } from "./config/webhook";
 import cron_job from "./config/cron";
-import rateLimiter from "./middlewares/rate-limiter";
+import { generalRateLimiter } from "./middlewares/rate-limiter";
 
 const MongoDBStore = require("connect-mongodb-session")(session);
 
@@ -45,24 +46,27 @@ app.use(cookieParser(process.env.JWT_SECRET));
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: process.env.CLIENT_URL?.split(',') || ["http://localhost:5173"],
     credentials: true,
     methods: "GET, POST, PUT, DELETE",
   })
 );
+
+// Apply general rate limiter early
+app.use(generalRateLimiter);
 
 app.use(
   session({
     name: "session.sid",
     secret: process.env.JWT_SECRET!,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false, // Don't create session until something stored
     cookie: {
       httpOnly: true,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: "auto",
-      sameSite: "lax",
+      secure: process.env.ENVIRONMENT === "production", // HTTPS only in production
+      sameSite: "strict", // CSRF protection
     },
     store: store,
   })
@@ -71,11 +75,20 @@ app.use(
 app.use(passport.initialize());
 require("./config/strategy");
 
-app.use("/auth", authRouter);
-app.use("/user", userRouter);
+const csrfProtection = csrf({
+  cookie: {
+    httpOnly: true,
+    secure: process.env.ENVIRONMENT === "production",
+    sameSite: "strict"
+  }
+});
+
+// Routes with specific rate limiters applied in route files
+app.use("/auth", csrfProtection, authRouter);
+app.use("/user", csrfProtection, userRouter);
 app.use("/short", shortRouter);
-app.use("/page", pageRouter);
-app.use("/stripe", stripeRouter);
+app.use("/page", csrfProtection, pageRouter);
+app.use("/stripe", csrfProtection, stripeRouter);
 app.use("/sneekurl/fp", onbordingRouter);
 
 app.use(
@@ -88,10 +101,14 @@ app.use(
 
 webhook(app, bodyParser);
 
+app.get("/csrf-token", csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
+
 //custom middleware
 app.use(notfoundMiddleware);
 app.use(errorHandlerMiddleware);
-app.use(rateLimiter);
+// Remove rate limiter from here - it should be applied earlier
 
 const PORT = process.env.PORT || 4000;
 

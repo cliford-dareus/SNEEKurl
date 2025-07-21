@@ -35,6 +35,11 @@ const create_subscription = async (req: Request, res: Response) => {
       .status(StatusCodes.BAD_REQUEST)
       .json({ message: "Plan not found" });
 
+  // Determine max_link based on plan price
+  let maxLinks = 5; // Default free
+  if (plan_price === 10) maxLinks = 100;   // Pro
+  if (plan_price === 20) maxLinks = 1000;  // Premium
+
   let customer = await User.findOne({ username }).select(
     "stripe_account_id email",
   );
@@ -80,7 +85,7 @@ const create_subscription = async (req: Request, res: Response) => {
         {
           $set: {
             subscription_end: subscription.current_period_end,
-            max_link: plan?.metadata.max_link,
+            max_link: maxLinks, // Update max_link based on plan
           },
         },
       );
@@ -108,7 +113,7 @@ const create_subscription = async (req: Request, res: Response) => {
       {
         $set: {
           subscription_end: subscription.current_period_end,
-          max_link: plan.metadata.max_link,
+          max_link: maxLinks, // Update max_link based on plan
         },
       },
     );

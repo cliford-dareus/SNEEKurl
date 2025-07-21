@@ -45,7 +45,17 @@ export interface UrlRequest {
 
 const baseQuery = fetchBaseQuery({
     baseUrl: URL,
-    credentials: "include", // Set credentials to "include"
+    credentials: "include",
+    headers: {
+        Accept: "application/json",
+    },
+    prepareHeaders: (headers, { getState }) => {
+        const csrfToken = sessionStorage.getItem("csrfToken");
+        if (csrfToken) {
+            headers.set("X-CSRF-Token", csrfToken);
+        }
+        return headers;
+    },
 });
 
 export const urlapi = createApi({
@@ -75,7 +85,7 @@ export const urlapi = createApi({
         }),
         getUrls: builder.query<UrlsResponse, any>({
             query: (query) => ({
-                url: `/urls?${query ?query : ""}`,
+                url: `/urls?${query?query : ""}`,
             }),
             providesTags: ["SHORT"],
         }),

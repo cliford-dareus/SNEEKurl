@@ -1,15 +1,9 @@
 import express from "express";
+import { getUserLimits } from "../controllers/user";
 import authorize from "../middlewares/authorization";
-import {
-  resetPassword,
-  updateProfileDetails,
-  updateProfileImage,
-} from "../controllers/user";
 
 const router = express.Router();
 
-router.route("/update-image").put(authorize, updateProfileImage);
-router.route("/update-info").put(authorize, updateProfileDetails);
-router.route("/reset-password").get(authorize, resetPassword);
+router.route("/limits").get(authorize, getUserLimits);
 
 export default router;

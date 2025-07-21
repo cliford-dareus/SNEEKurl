@@ -158,7 +158,7 @@ const ManageLinkInBio = ({}: Props) => {
               {!isLoading &&
                 data?.links.map((link: any, index: number) => (
                   <LinkItem
-                    key={link._id._id}
+                    key={link._id}
                     link={link}
                     index={index}
                     items={data?.links}

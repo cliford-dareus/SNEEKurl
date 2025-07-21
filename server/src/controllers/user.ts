@@ -4,6 +4,8 @@ import User from "../models/user";
 import bcrypt from "bcrypt";
 import { SendVerifyPasswordEmail } from "../lib/utils/send-verify-password-email";
 import jwt from "jsonwebtoken";
+import Short from "../models/short";
+import stripe from "../config/stripe";
 
 const updateProfileImage = async (req: Request, res: Response) => {
   const { file } = req.body;
@@ -153,10 +155,85 @@ const deleteAccount = async (req: Request, res: Response) => {
   const user = req.user;
 };
 
+const getUserLimits = async (req: any, res: Response) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        message: "User not authenticated"
+      });
+    }
+
+    // Get current link count
+    const linkCount = await Short.countDocuments({ user: user._id });
+
+    let maxLinks = user.max_link || 5;
+    let planName = "Free";
+    let subscriptionStatus = "inactive";
+
+    // Check Stripe subscription if user has stripe_account_id
+    if (user.stripe_account_id) {
+      try {
+        const subscriptions = await stripe.subscriptions.list({
+          customer: user.stripe_account_id,
+          status: "active",
+          limit: 1,
+        });
+
+        if (subscriptions.data.length > 0) {
+          const subscription = subscriptions.data[0];
+          subscriptionStatus = subscription.status;
+
+          const priceAmount = subscription.items.data[0]?.price?.unit_amount || 0;
+          const priceInDollars = priceAmount / 100;
+
+          // Determine plan based on price
+          if (priceInDollars === 10) {
+            maxLinks = 100;
+            planName = "Pro";
+          } else if (priceInDollars === 20) {
+            maxLinks = 1000;
+            planName = "Premium";
+          }
+
+          // Update user's cached limit if different
+          if (user.max_link !== maxLinks) {
+            await User.findByIdAndUpdate(user._id, { max_link: maxLinks });
+          }
+        }
+      } catch (stripeError) {
+        console.error("Stripe error in getUserLimits:", stripeError);
+      }
+    }
+
+    res.status(StatusCodes.OK).json({
+      limits: {
+        links: {
+          current: linkCount,
+          limit: maxLinks,
+          remaining: Math.max(0, maxLinks - linkCount)
+        }
+      },
+      plan: {
+        name: planName,
+        subscriptionStatus
+      }
+    });
+
+  } catch (error) {
+    console.error("Get user limits error:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: "Failed to get user limits"
+    });
+  }
+};
+
 export {
   updateProfileImage,
   deleteProfileImage,
   updateProfileDetails,
   deleteAccount,
   resetPassword,
+  getUserLimits
 };

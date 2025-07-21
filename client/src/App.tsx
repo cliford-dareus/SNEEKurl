@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {Link, Route, Routes, useLocation, useNavigate} from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Profile from "./components/profile";
@@ -25,14 +25,36 @@ import Layout from "./components/layout/layout";
 import AdminLayout from "./components/layout/admin-layout";
 import Setting from "./components/layout/setting-layout";
 import Links from "./pages/links";
+import { useTokenRefresh } from "./hooks/useTokenRefresh";
 
 function App() {
   const { pathname } = useLocation();
   const Navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [_, setValue] = useLocalStorage("token", "");
   const [identify] = useIdentifyUserMutation();
+  const [csrfToken, setCsrfToken] = useState<string>("");
   const fpPromise = FingerprintJS.load();
+
+  // Add automatic token refresh
+  useTokenRefresh();
+
+  useEffect(() => {
+    const getCsrfToken = async () => {
+      try {
+        const response = await fetch("http://localhost:4080/csrf-token", {
+          credentials: "include"
+        });
+        const data = await response.json();
+        setCsrfToken(data.csrfToken);
+        // Store in sessionStorage for other components to use
+        sessionStorage.setItem("csrfToken", data.csrfToken);
+      } catch (error) {
+        console.error("Failed to get CSRF token:", error);
+      }
+    };
+
+    getCsrfToken();
+  }, []);
 
   useEffect(() => {
     const getUser = async () => {
@@ -49,7 +71,7 @@ function App() {
           return;
         }
 
-        data.token && setValue(JSON.stringify(data.token));
+        // Don't store token in localStorage
         dispatch(
           setCredentials({
             user: {
@@ -60,6 +82,7 @@ function App() {
             },
           }),
         );
+
         if (
           data.user.username &&
           (pathname === "/" ||

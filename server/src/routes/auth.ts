@@ -1,11 +1,13 @@
 import express from "express";
-import { login, logout, register } from "../controllers/auth";
+import { register, login, logout, refreshToken } from "../controllers/auth";
+import { authRateLimiter } from "../middlewares/rate-limiter";
 
 const router = express.Router();
 
-router.post('/register', register);
-router.post('/login', login);
-router.post('/logout', logout);
-
+// Apply strict rate limiting to auth endpoints
+router.route("/register").post(authRateLimiter, register);
+router.route("/login").post(authRateLimiter, login);
+router.route("/logout").post(logout); // No rate limit for logout
+router.route("/refresh").post(refreshToken); // No rate limit for refresh
 
 export default router;

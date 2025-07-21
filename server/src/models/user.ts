@@ -7,15 +7,16 @@ export interface IUser extends Document {
     password: string;
     clientId?: string;
     stripe_account_id?: string;
-    profile?: string; // Make profile optional
-    provider?: string; // Make provider optional
+    profile?: string;
+    provider?: string;
     isVerified: boolean;
-    freemium?: number; // Make freemium optional;
+    freemium?: number;
     subscription_end?: Date;
-    max_link: number; // Make subscription credits optional
-
+    max_link: number;
     passwordTokenLife?: Date | null;
     passwordToken?: string;
+    refreshToken?: string;
+    refreshTokenExpiry?: Date;
 
     comparePassword(candidatePassword: string): Promise<Error | boolean>;
 }
@@ -40,7 +41,9 @@ const UserSchema = new Schema<IUser>(
         freemium: {type: Number, default: 5},
         max_link: {type: Number, default: 5},
         passwordToken: {type: String},
-        passwordTokenLife: {type: Date}
+        passwordTokenLife: {type: Date},
+        refreshToken: {type: String},
+        refreshTokenExpiry: {type: Date},
     },
     {
         timestamps: true,

@@ -7,6 +7,16 @@ const URL = "http://localhost:4080/user";
 const baseQuery = fetchBaseQuery({
   baseUrl: URL,
   credentials: "include", // Set credentials to "include"
+  headers: {
+    Accept: "application/json",
+  },
+  prepareHeaders: (headers, { getState }) => {
+    const csrfToken = sessionStorage.getItem("csrfToken");
+    if (csrfToken) {
+      headers.set("X-CSRF-Token", csrfToken);
+    }
+    return headers;
+  },
 });
 export const userapi = createApi({
   reducerPath: "userapi",
@@ -33,10 +43,17 @@ export const userapi = createApi({
         methode: "DELETE",
       }),
     }),
+    getUserLimits: builder.query({
+      query: () => ({
+        url: "/get-limits",
+      }),
+      providesTags: ["USER"],
+    }),
   }),
 });
 
 export const {
   useUpdateUserProfileImageMutation,
   useUpdateUserDetailsMutation,
+  useGetUserLimitsQuery,
 } = userapi;

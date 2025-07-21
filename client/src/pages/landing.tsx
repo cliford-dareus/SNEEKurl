@@ -1,6 +1,7 @@
 import {
     Url,
     useGetGuestUrlQuery,
+    useGetUrlQuery,
     useGetUrlsQuery,
 } from "../app/services/urlapi";
 import {
@@ -159,7 +160,6 @@ const Landing = () => {
     const isFreePlan = plan === "free";
     const user = useAppSelector(selectCurrentUser);
     const isAuthenticated = user.user.username;
-    const {data: g_data, isLoading} = useGetGuestUrlQuery("");
     const {data, isSuccess} = useGetUrlsQuery("limit=5");
 
     return (
@@ -186,8 +186,7 @@ const Landing = () => {
                             />
                         </div>
                         <div className="flex flex-col gap-2 max-w-[500px] mx-auto w-full">
-                            {isAuthenticated
-                                ? data?.urls
+                            {data?.urls
                                     .slice(0, 3)
                                     .map((url) => (
                                         <HomeLinkItem
@@ -197,17 +196,7 @@ const Landing = () => {
                                             isFreePlan={isFreePlan}
                                         />
                                     ))
-                                : !isLoading &&
-                                g_data?.urls
-                                    ?.slice(0, 3)
-                                    .map((url) => (
-                                        <HomeLinkItem
-                                            key={url._id}
-                                            url={url}
-                                            isAuthenticated={!!isAuthenticated}
-                                            isFreePlan={isFreePlan}
-                                        />
-                                    ))}
+                               }
                         </div>
                     </div>
                 </div>

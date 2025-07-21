@@ -14,14 +14,14 @@ import { useLogoutUserMutation } from "../app/services/auth";
 import useLocalStorage from "../hooks/use-local-storage";
 import useScroll from "../hooks/use-scroll";
 import classNames from "classnames";
+import { useAuth } from "../hooks/useAuth";
 
 type Props = {
   isActive: boolean;
   plan?: string;
-  user: AuthState
 };
 
-const Header = ({ isActive, plan, user }: Props) => {
+const Header = ({ isActive, plan }: Props) => {
   const scrolled = useScroll(80);
   const [value, setValue] = useLocalStorage("darkmode", "light");
   const Navigate = useNavigate();
@@ -29,6 +29,7 @@ const Header = ({ isActive, plan, user }: Props) => {
   const dispatch = useAppDispatch();
   const [message, setMessage] = useState<string>("");
   const [darkMode, setDarkMode] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -127,20 +128,20 @@ const Header = ({ isActive, plan, user }: Props) => {
             {!darkMode ? <LuMoon size={24} /> : <LuSunDim size={24} />}
           </div>
 
-          {!user?.token ? (
+          {!isAuthenticated ? (
             <Button>
-              <Link to="/login">Sign In</Link>{" "}
+              <Link to="/login">Sign In</Link>
             </Button>
           ) : (
             <Button className="flex items-center gap-2">
               <Link to="/links" className="flex items-center gap-2">
                 <LuUserCircle2 size={24} />
-                <p>{user?.user?.username}</p>
+                <p>{user.username}</p>
               </Link>
             </Button>
           )}
 
-          {user?.token ? (
+          {isAuthenticated ? (
             <Button onClick={logout}>Sign Out</Button>
           ) : (
             <Button>
