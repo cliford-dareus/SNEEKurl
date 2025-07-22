@@ -69,7 +69,7 @@ const HomeCreateLinkManager = React.memo(
           <AnimatePresence>
             {open && (
               <Box>
-                <Button>Create</Button>
+                <Button classnames="bg-primary">Create</Button>
               </Box>
             )}
           </AnimatePresence>

@@ -16,18 +16,18 @@ const Links = () => {
         <div>
             <section className="relative">
                 <div
-                    className="sticky top-0 z-20 mb-4 flex items-center gap-4 rounded-md border border-slate-200 bg-slate-100 px-4 py-1">
+                    className="sticky top-0 z-20 mb-4 flex items-center gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
                     <div className="flex gap-4 items-center">
                         <div className="">
                             <span>My Links</span>
-                            <p className="text-sm text-slate-500">{data?.urls.length} total links</p>
+                            <p className="text-xs text-base-content">{data?.urls.length} total links</p>
                         </div>
                         {activeFilter.length !== 0 &&
                             activeFilter?.map((filter) => (
                                 <div
-                                    className="relative flex cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm group py-0.5">
+                                    className="relative flex cursor-pointer items-center rounded-md border border-base-200 px-4 text-sm group py-0.5">
                                     <div
-                                        className="absolute top-0 right-0 h-3 w-3 rounded-full bg-white group-hover:bg-red-500"></div>
+                                        className="absolute top-0 right-0 h-3 w-3 rounded-full bg-base-100 group-hover:bg-red-500"></div>
                                     {Object.keys(filter)[0]}
                                     <div>
                                         {Object.values(filter)[0] == "asc" ||
@@ -42,7 +42,7 @@ const Links = () => {
                     </div>
                     <div className="ml-auto">
                         <div
-                            className="flex cursor-pointer items-center gap-2 rounded-full bg-slate-200 px-4 py-0.5"
+                            className="flex cursor-pointer items-center gap-2 rounded-full bg-base-200 px-4 py-0.5"
                             onClick={() => setOpenFilter(true)}
                         >
                             Filter

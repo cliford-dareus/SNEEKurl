@@ -57,7 +57,7 @@ const CustomDropzone = ({ fileData, setValue, setFileData}: Props) => {
                 event.stopPropagation()
                 event.preventDefault()
             }}
-            className='relative z-20 mt-4 flex w-full items-center justify-center border border-dashed border-slate-300 h-[200px]'
+            className='relative z-20 mt-4 flex w-full items-center justify-center border border-dashed border-base-300 h-[200px]'
         >
             <p>Drag and Drop Image Here...</p>
         </div>

@@ -28,7 +28,7 @@ const Switch = ({ isChecked, fn, register, disabled, label }: Props) => {
         {...(fn && { onChange: handleToggle })}
         // onChange={handleToggle}
       />
-      <div className="w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-2 peer-focus:ring-indigo-300 peer-checked:bg-indigo-500 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-1/2 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transform after:-translate-y-1/2 after:transition-all peer-checked:after:border-blue-600"></div>
+      <div className="w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-2 peer-focus:ring-primary peer-checked:bg-primary peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-1/2 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transform after:-translate-y-1/2 after:transition-all peer-checked:after:border-blue-600"></div>
     </label>
   );
 };

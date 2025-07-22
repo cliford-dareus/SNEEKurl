@@ -12,7 +12,6 @@ import Pricing from "./pages/pricing";
 import Checkout from "./components/checkout";
 import { useIdentifyUserMutation } from "./app/services/auth";
 import { setCredentials } from "./features/auth/authslice";
-import useLocalStorage from "./hooks/use-local-storage";
 import { useAppDispatch } from "./app/hook";
 import Landing from "./pages/landing";
 import Subscription from "./components/subscription";
@@ -63,7 +62,6 @@ function App() {
 
       try {
         const data = await identify(result).unwrap();
-
         if (!data.user) {
           toast.info(
             "Consider create an account to get full access to all features",
@@ -71,7 +69,6 @@ function App() {
           return;
         }
 
-        // Don't store token in localStorage
         dispatch(
           setCredentials({
             user: {

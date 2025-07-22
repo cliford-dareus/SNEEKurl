@@ -19,6 +19,7 @@ import shortRouter from "./routes/short";
 import pageRouter from "./routes/page";
 import stripeRouter from "./routes/stripe";
 import onbordingRouter from "./routes/onbording";
+import analyticsRouter from "./routes/analytics";
 import notfoundMiddleware from "./middlewares/NotFound";
 import errorHandlerMiddleware from "./middlewares/errorHandler";
 import { webhook } from "./config/webhook";
@@ -83,19 +84,19 @@ const csrfProtection = csrf({
   }
 });
 
-// Routes with specific rate limiters applied in route files
+// Routes
 app.use("/auth", csrfProtection, authRouter);
 app.use("/user", csrfProtection, userRouter);
 app.use("/short", shortRouter);
 app.use("/page", csrfProtection, pageRouter);
 app.use("/stripe", csrfProtection, stripeRouter);
 app.use("/sneekurl/fp", onbordingRouter);
+app.use("/short/analytics", analyticsRouter);
 
 app.use(
   "/api/uploadthing",
   createRouteHandler({
     router: uploadRouter,
-    // config: { ... },
   })
 );
 
@@ -105,10 +106,8 @@ app.get("/csrf-token", csrfProtection, (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
-//custom middleware
 app.use(notfoundMiddleware);
 app.use(errorHandlerMiddleware);
-// Remove rate limiter from here - it should be applied earlier
 
 const PORT = process.env.PORT || 4000;
 

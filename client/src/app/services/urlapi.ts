@@ -61,7 +61,7 @@ const baseQuery = fetchBaseQuery({
 export const urlapi = createApi({
     reducerPath: "urlapi",
     baseQuery,
-    tagTypes: ["SHORT", "GUEST_SHORT", "SHORT_CLICKS"],
+    tagTypes: ["SHORT", "GUEST_SHORT", "SHORT_CLICKS", "USER"],
     endpoints: (builder) => ({
         shortenUrl: builder.mutation<UrlResponse, UrlRequest>({
             query: (credentials) => ({
@@ -69,7 +69,7 @@ export const urlapi = createApi({
                 method: "POST",
                 body: credentials,
             }),
-            invalidatesTags: ["SHORT", "GUEST_SHORT"],
+            invalidatesTags: ["SHORT", "GUEST_SHORT", "USER"],
         }),
         getUrlClicks: builder.query({
             query: () => ({
@@ -108,8 +108,20 @@ export const urlapi = createApi({
                 url: `/delete/${short}`,
                 method: "DELETE",
             }),
-            invalidatesTags: ['SHORT']
-        })
+            invalidatesTags: ['SHORT', 'USER']
+        }),
+        getLinkAnalytics: builder.query({
+            query: (shortCode) => ({
+                url: `/analytics/link/${shortCode}`,
+            }),
+            providesTags: ["SHORT"],
+        }),
+        getUserAnalytics: builder.query({
+            query: () => ({
+                url: `/analytics/user`,
+            }),
+            providesTags: ["SHORT"],
+        }),
     }),
 });
 
@@ -120,5 +132,7 @@ export const {
     useGetUrlClicksQuery,
     useEditUrlMutation,
     useGetGuestUrlQuery,
-    useDeleteUrlMutation
+    useDeleteUrlMutation,
+    useGetLinkAnalyticsQuery,
+    useGetUserAnalyticsQuery,
 } = urlapi;

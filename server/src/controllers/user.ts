@@ -6,6 +6,7 @@ import { SendVerifyPasswordEmail } from "../lib/utils/send-verify-password-email
 import jwt from "jsonwebtoken";
 import Short from "../models/short";
 import stripe from "../config/stripe";
+import Page from "../models/page";
 
 const updateProfileImage = async (req: Request, res: Response) => {
   const { file } = req.body;
@@ -153,6 +154,51 @@ const requestAccountDeletion = async (req: Request, res: Response) => {
 
 const deleteAccount = async (req: Request, res: Response) => {
   const user = req.user;
+
+  try {
+    // @ts-ignore
+    const isUserInDb = await User.findOne({ _id: user?._id });
+
+    if (!isUserInDb) {
+      return res
+        .status(StatusCodes.BAD_REQUEST)
+        .send({ message: "User not found" });
+    }
+
+    // Delete all user's short links
+    await Short.deleteMany({ user: isUserInDb._id });
+
+    // Delete all user's pages
+    await Page.deleteMany({ user: isUserInDb._id });
+
+    // Cancel Stripe subscription if exists
+    if (isUserInDb.stripe_account_id) {
+      try {
+        const subscriptions = await stripe.subscriptions.list({
+          customer: isUserInDb.stripe_account_id,
+          status: "active",
+        });
+
+        for (const subscription of subscriptions.data) {
+          await stripe.subscriptions.cancel(subscription.id);
+        }
+      } catch (stripeError) {
+        console.error("Error canceling Stripe subscription:", stripeError);
+      }
+    }
+
+    // Delete the user account
+    await User.findByIdAndDelete(isUserInDb._id);
+
+    res.status(StatusCodes.OK).send({
+      message: "Account deleted successfully"
+    });
+  } catch (error) {
+    console.error("Delete account error:", error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+      message: "Failed to delete account"
+    });
+  }
 };
 
 const getUserLimits = async (req: any, res: Response) => {

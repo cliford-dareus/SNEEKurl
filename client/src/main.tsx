@@ -7,24 +7,27 @@ import { store } from "./app/store";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { BrowserRouter } from "react-router-dom";
-
-import { ToastContainer, toast } from 'react-toastify';
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Use environment variable for publishable key
 const stripePromise = loadStripe(
-  "pk_test_51MiOgZKUFU6FXAtFupYpHGTemphVsscjKMmIHn38u9OVBdvdgLwSZufnm3KUXocUwchbwlUrHYJOay2phaMoKOxS00aM4Em5dC",
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
   { apiVersion: "2023-10-16" }
 );
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <Elements stripe={stripePromise}>
-      <Provider store={store}>
-        <BrowserRouter>
-          <App />
-          <ToastContainer position="top-right" theme="dark" />
-        </BrowserRouter>
-      </Provider>
-    </Elements>
+    <ThemeProvider>
+      <Elements stripe={stripePromise}>
+        <Provider store={store}>
+          <BrowserRouter>
+            <App />
+            <ToastContainer position="top-right" theme="dark" />
+          </BrowserRouter>
+        </Provider>
+      </Elements>
+    </ThemeProvider>
   </React.StrictMode>
 );

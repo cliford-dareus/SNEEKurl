@@ -1,101 +1,131 @@
 import { BodyParser } from "body-parser";
 import { Express, Request, Response } from "express";
 import stripe from "./stripe";
+import User from "../models/user";
 
 export const webhook = (app: Express, bodyParser: BodyParser) => {
   app.post(
     "/webhook",
     bodyParser.raw({ type: "application/json" }),
     async (req: Request, res: Response) => {
+      const sig = req.header("Stripe-Signature");
+      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+      if (!sig || !webhookSecret) {
+        console.log("⚠️ Missing webhook signature or secret");
+        return res.status(400).send("Missing signature or secret");
+      }
+
       let event;
 
       try {
-        event = stripe.webhooks.constructEvent(
-          req.body,
-          req.header("Stripe-Signature") as string,
-          process.env.STRIPE_WEBHOOK_SECRET!
-        );
-      } catch (err) {
-        console.log(err);
-        console.log(`⚠️  Webhook signature verification failed.`);
-        console.log(
-          `⚠️  Check the env file and enter the correct webhook secret.`
-        );
-        return res.sendStatus(400);
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+      } catch (err: any) {
+        console.log(`⚠️ Webhook signature verification failed: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
       }
 
-      // Extract the object from the event.
-      const dataObject = event.data.object;
-
-      // Handle the event
-      // Review important events for Billing webhooks
-      // https://stripe.com/docs/billing/webhooks
-      // Remove comment to see the various objects sent for this sample
-      switch (event.type) {
-        case "invoice.payment_succeeded":
-            //@ts-ignore
-          if (dataObject["billing_reason"] == "subscription_create") {
-            // The subscription automatically activates after successful payment
-            // Set the payment method used to pay the first invoice
-            // as the default payment method for that subscription
-            //@ts-ignore
-            const subscription_id = dataObject["subscription"];
-            //@ts-ignore
-            const payment_intent_id = dataObject["payment_intent"];
-
-            // Retrieve the payment intent used to pay the subscription
-            const payment_intent = await stripe.paymentIntents.retrieve(
-              payment_intent_id
-            );
-
-            try {
-              const subscription = await stripe.subscriptions.update(
-                subscription_id,
-                {
-                  //@ts-ignore
-                  default_payment_method: payment_intent.payment_method,
-                }
-              );
-
-              console.log(
-                "Default payment method set for subscription:" +
-                  payment_intent.payment_method
-              );
-            } catch (err) {
-              console.log(err);
-              console.log(
-                `⚠️  Falied to update the default payment method for subscription: ${subscription_id}`
-              );
-            }
-          }
-
-          break;
-        case "invoice.payment_failed":
-          // If the payment fails or the customer does not have a valid payment method,
-          //  an invoice.payment_failed event is sent, the subscription becomes past_due.
-          // Use this webhook to notify your user that their payment has
-          // failed and to retrieve new card details.
-          break;
-        case "invoice.finalized":
-          // If you want to manually send out invoices to your customers
-          // or store them locally to reference to avoid hitting Stripe rate limits.
-          break;
-        case "customer.subscription.deleted":
-          if (event.request != null) {
-            // handle a subscription cancelled by your request
-            // from above.
-          } else {
-            // handle subscription cancelled automatically based
-            // upon your subscription settings.
-          }
-          break;
-        case "customer.subscription.trial_will_end":
-          // Send notification to your user that the trial will end
-          break;
-        default:
-        // Unexpected event type
+      try {
+        await handleWebhookEvent(event);
+        res.status(200).send("Webhook handled successfully");
+      } catch (error: any) {
+        console.error("Webhook handling error:", error);
+        res.status(500).send("Webhook handling failed");
       }
-      res.sendStatus(200);
     }
   );
+};
+
+const handleWebhookEvent = async (event: any) => {
+  const dataObject = event.data.object;
+
+  switch (event.type) {
+    case "invoice.payment_succeeded":
+      await handlePaymentSucceeded(dataObject);
+      break;
+
+    case "invoice.payment_failed":
+      await handlePaymentFailed(dataObject);
+      break;
+
+    case "customer.subscription.deleted":
+      await handleSubscriptionDeleted(dataObject);
+      break;
+
+    case "customer.subscription.updated":
+      await handleSubscriptionUpdated(dataObject);
+      break;
+
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
+  }
+};
+
+const handlePaymentSucceeded = async (invoice: any) => {
+  if (invoice.billing_reason === "subscription_create") {
+    const subscriptionId = invoice.subscription;
+    const paymentIntentId = invoice.payment_intent;
+
+    try {
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+      await stripe.subscriptions.update(subscriptionId, {
+        default_payment_method: paymentIntent.payment_method as string,
+      });
+
+      console.log(`Default payment method set for subscription: ${subscriptionId}`);
+    } catch (error) {
+      console.error(`Failed to update default payment method: ${error}`);
+    }
+  }
+
+  // Update user subscription status
+  if (invoice.customer) {
+    await updateUserSubscriptionStatus(invoice.customer, "active");
+  }
+};
+
+const handlePaymentFailed = async (invoice: any) => {
+  console.log(`Payment failed for customer: ${invoice.customer}`);
+
+  if (invoice.customer) {
+    await updateUserSubscriptionStatus(invoice.customer, "past_due");
+  }
+};
+
+const handleSubscriptionDeleted = async (subscription: any) => {
+  console.log(`Subscription deleted: ${subscription.id}`);
+
+  if (subscription.customer) {
+    await updateUserSubscriptionStatus(subscription.customer, "canceled");
+  }
+};
+
+const handleSubscriptionUpdated = async (subscription: any) => {
+  console.log(`Subscription updated: ${subscription.id}`);
+
+  if (subscription.customer) {
+    const status = subscription.status;
+    await updateUserSubscriptionStatus(subscription.customer, status);
+  }
+};
+
+const updateUserSubscriptionStatus = async (customerId: string, status: string) => {
+  try {
+    const user = await User.findOne({ stripe_account_id: customerId });
+
+    if (user) {
+      const updateData: any = { subscription_status: status };
+
+      if (status === "canceled" || status === "incomplete_expired") {
+        updateData.max_link = 5; // Reset to free plan
+        updateData.subscription_end = null;
+      }
+
+      await User.findByIdAndUpdate(user._id, updateData);
+      console.log(`Updated user ${user.username} subscription status to: ${status}`);
+    }
+  } catch (error) {
+    console.error("Error updating user subscription status:", error);
+  }
 };

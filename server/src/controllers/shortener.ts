@@ -102,7 +102,6 @@ const getUrl = async (req: any, res: Response) => {
 
 const getUrls = async (req: any, res: Response) => {
     const {page, skip, sort, clicks, limit, search} = req.query;
-    console.log("Guest");
 
     if (req.userType === "guest") {
         const guest = req.guest;
@@ -189,25 +188,46 @@ const visitUrl = async (req: Request, res: Response) => {
     if (!url) {
         return res.sendStatus(StatusCodes.BAD_REQUEST);
     }
-    ;
 
-    // Check if user is on Mobile or not
-    const userAgent = req.headers["user-agent"];
-    const isMobile = userAgent
-        ? /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-            userAgent,
-        ) : false;
+    // Enhanced metadata collection
+    const userAgent = req.headers["user-agent"] || "";
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent);
 
-    // const ipAddress = req.headers["x-forwarded-for"]
-    const ipAddress = req.socket.remoteAddress;
-    const geo = geoip.lookup(ipAddress as string);
+    // Better IP extraction
+    const ipAddress = (req.headers["x-forwarded-for"] as string)?.split(',')[0]?.trim() ||
+                     req.headers["x-real-ip"] as string ||
+                     req.socket.remoteAddress ||
+                     req.connection.remoteAddress ||
+                     "unknown";
+
+    const geo = geoip.lookup(ipAddress);
+
+    // Enhanced referrer processing
+    let referrer = req.headers.referer || "";
+    let referrerDomain = "Direct";
+    if (referrer) {
+        try {
+            const url = new URL(referrer);
+            referrerDomain = url.hostname;
+        } catch {
+            referrerDomain = "Unknown";
+        }
+    }
 
     const metadata = {
         time: new Date(),
-        userAgent: req.headers["user-agent"],
-        referer: req.headers.referer,
+        ipAddress: ipAddress !== "unknown" ? ipAddress : undefined,
+        userAgent,
+        referer: referrer || undefined,
+        referrerDomain,
         country: geo?.country || "Unknown",
+        region: geo?.region || undefined,
+        city: geo?.city || undefined,
+        timezone: geo?.timezone || undefined,
         isMobile,
+        browser: extractBrowser(userAgent),
+        os: extractOS(userAgent),
+        sessionId: generateSessionId(req)
     };
 
     try {
@@ -218,29 +238,64 @@ const visitUrl = async (req: Request, res: Response) => {
             const isCorrectPassword = providedPassword === url.password;
 
             if (isCorrectPassword) {
-                await Short.updateOne({_id: url._id}, {$push: {metadata}});
-
-                await Click.create({
-                    user: url.user,
-                    link: url._id,
-                    date: Date.now()
-                });
+                // Update metadata and create click record atomically
+                await Promise.all([
+                    Short.updateOne(
+                        {_id: url._id},
+                        {
+                            $push: {metadata},
+                            $inc: {totalClicks: 1},
+                            $set: {lastClick: new Date()}
+                        }
+                    ),
+                    Click.create({
+                        user: url.user,
+                        guest: url.guest,
+                        link: url._id,
+                        date: new Date(),
+                        metadata: {
+                            country: metadata.country,
+                            isMobile: metadata.isMobile,
+                            referrerDomain: metadata.referrerDomain,
+                            browser: metadata.browser,
+                            os: metadata.os
+                        }
+                    })
+                ]);
                 return res.redirect(url.longUrl);
             }
         } else {
-            await Short.updateOne({_id: url._id}, {$push: {metadata}});
-
-            await Click.create({
-                user: url.user,
-                link: url._id,
-                date: Date.now()
-            });
+            // Update metadata and create click record atomically
+            await Promise.all([
+                Short.updateOne(
+                    {_id: url._id},
+                    {
+                        $push: {metadata},
+                        $inc: {totalClicks: 1},
+                        $set: {lastClick: new Date()}
+                    }
+                ),
+                Click.create({
+                    user: url.user,
+                    guest: url.guest,
+                    link: url._id,
+                    date: new Date(),
+                    metadata: {
+                        country: metadata.country,
+                        isMobile: metadata.isMobile,
+                        referrerDomain: metadata.referrerDomain,
+                        browser: metadata.browser,
+                        os: metadata.os
+                    }
+                })
+            ]);
 
             return res.redirect(url.longUrl);
         }
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST)
-            .send({message: "Something went wrong!"});
+        console.error("Visit tracking error:", error);
+        // Still redirect even if tracking fails
+        return res.redirect(url.longUrl);
     }
 };
 
@@ -286,3 +341,29 @@ const getClicks = async (req: any, res: Response) => {
 };
 
 export {create, getUrls, editUrl, visitUrl, getUrl, deleteUrl, getClicks};
+
+// Helper functions for better data extraction
+const extractBrowser = (userAgent: string): string => {
+    if (userAgent.includes('Chrome')) return 'Chrome';
+    if (userAgent.includes('Firefox')) return 'Firefox';
+    if (userAgent.includes('Safari') && !userAgent.includes('Chrome')) return 'Safari';
+    if (userAgent.includes('Edge')) return 'Edge';
+    if (userAgent.includes('Opera')) return 'Opera';
+    return 'Other';
+};
+
+const extractOS = (userAgent: string): string => {
+    if (userAgent.includes('Windows')) return 'Windows';
+    if (userAgent.includes('Mac OS')) return 'macOS';
+    if (userAgent.includes('Linux')) return 'Linux';
+    if (userAgent.includes('Android')) return 'Android';
+    if (userAgent.includes('iOS')) return 'iOS';
+    return 'Other';
+};
+
+const generateSessionId = (req: Request): string => {
+    // Generate a simple session identifier for tracking unique visits
+    const ip = req.socket.remoteAddress || '';
+    const ua = req.headers["user-agent"] || '';
+    return require('crypto').createHash('md5').update(ip + ua + Date.now()).digest('hex').substring(0, 16);
+};

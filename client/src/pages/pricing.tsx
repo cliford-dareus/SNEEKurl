@@ -8,7 +8,7 @@ import {
   useRetrieveSubscriptionQuery,
   useUpdateSubscriptionMutation,
 } from "../app/services/stripe";
-import { SubcriptionOptions } from "../Utils/common";
+import { pricingPlans } from "../Utils/common";
 import { toast } from "react-toastify";
 import {RootState} from "../app/store";
 
@@ -66,18 +66,21 @@ const Pricing = (): JSX.Element => {
   }, [subscriptionData, Navigate]);
 
   useEffect(() => {
-    if (!data?.subscription?.data?.length) return;
+    if (!data?.subscription?.data?.length) {
+        setActivePlan(0);
+        return;
+    };
     const activePlan = data.subscription.data.find(
       (x: any) => x.status === "active"
     );
     setActivePlan(activePlan?.items.data[0]?.plan?.amount / 100 || null);
-  }, [data]);
+  }, []);
 
   return (
     <>
-      <section className="container relative mx-auto flex flex-col justify-center p-4 text-center text-black dark:text-white">
+      <section className="container relative mx-auto flex flex-col justify-center p-4 text-center text-neutral dark:text-neutral-content">
         <div className="mt-16">
-          <h1 className="mx-auto mt-5 text-7xl text-black max-w-[700px] dark:text-white">
+          <h1 className="mx-auto mt-5 text-7xl text-neutral max-w-[700px] dark:text-neutral-content">
             Prices small, connect big!
           </h1>
           <p className="mt-4">
@@ -87,12 +90,12 @@ const Pricing = (): JSX.Element => {
         </div>
 
         <div className="mx-auto mt-16 flex w-full gap-4 text-left max-w-[1000px]">
-          {SubcriptionOptions.map((opt) => (
+          {pricingPlans.map((opt) => (
             <div
               key={opt.id}
               className={classNames(
                 "flex-1 p-4 rounded-lg shadow-lg",
-                opt.popular ? "bg-indigo-400" : "bg-slate-200 mt-8"
+                opt.popular ? "bg-primary" : "bg-base-200 mt-8"
               )}
             >
               <div className="border-b px-2 py-8">
@@ -115,12 +118,13 @@ const Pricing = (): JSX.Element => {
                     onClick={() => {
                       if (
                         user.username !== "Guest" &&
-                        activeplan !== opt.price
+                        activeplan !== opt.price &&
+                        user.stripe_account_id
                       ) {
                         // Upgrade plan
                         handleUpdateSubscription(opt.price);
                         console.log("Upgrade plan");
-                      } else if (user.username !== "Guest" && !activeplan) {
+                      } else if (user.username !== "Guest" && !user.stripe_account_id) {
                         handleSubscription(opt.price);
                       } else {
                         // Navigate to login
@@ -141,7 +145,7 @@ const Pricing = (): JSX.Element => {
                 <p className="font-bold">What's included :</p>
 
                 <ul className="mt-4 flex flex-col gap-2">
-                  {opt.perks.map((perk, index) => (
+                  {opt.features.map((perk, index) => (
                     <li key={index} className="py-1">
                       {perk}
                     </li>

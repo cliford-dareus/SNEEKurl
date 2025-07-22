@@ -1,51 +1,25 @@
-import { Path, UseFormRegister } from "react-hook-form";
-import { IFormValues } from "../../features/url/urlform";
-import { IQrFormValues } from "../../features/qr/qrform";
-import { IUserFormValues } from "../../features/auth/login";
-import { Url } from "../../app/services/urlapi";
-import { Profile } from "../profile";
-import { CreateLinkInBioProp } from "./modals/create-link-in-bio-modal";
-import { forwardRef } from "react";
+import React from "react";
+import { UseFormRegister } from "react-hook-form";
 
 type Props = {
-  register: UseFormRegister<
-    | IFormValues
-    | IQrFormValues
-    | IUserFormValues
-    | Url
-    | Profile
-    | CreateLinkInBioProp
-    | { search: string }
-    | any
-  >;
-  label: Path<
-    | IFormValues
-    | IQrFormValues
-    | IUserFormValues
-    | Url
-    | Profile
-    | CreateLinkInBioProp
-    | { search: string }
-  >;
-  placeholder: string;
+  register: UseFormRegister<any>;
+  label: string;
   hidden: boolean;
+  placeholder: string;
   disabled?: boolean;
-  type?: string;
+  className?: string;
 };
 
-const Input = (
-  { label, register, placeholder, hidden, disabled, type }: Props,
-  ref: any
-) => {
+const Input = ({ register, label, hidden, placeholder, disabled = false, className = "" }: Props) => {
   return (
     <input
-      disabled={disabled}
-      className="w-full rounded-full border border-slate-200 px-4 py-1 text-black outline-none focus:ring-2 focus:ring-indigo-500"
-      placeholder={placeholder}
+      className={`input input-bordered w-full ${className} ${disabled ? 'cursor-not-allowed' : ''}`}
       {...register(label)}
-      hidden={hidden}
-      type={type}
+      type={hidden ? "password" : "text"}
+      placeholder={placeholder}
+      disabled={disabled}
     />
   );
 };
+
 export default Input;

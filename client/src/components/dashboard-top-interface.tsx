@@ -20,31 +20,31 @@ const DashboardTopInterface = ({pathname}: Props) => {
             <div className="flex items-center gap-4 py-4 h-[10vh]">
                 {pathname !== "/link-in-bio" ? (
                     <div
-                        className="rounded-md border border-slate-200 p-4 min-w-[256px]"
+                        className="rounded-md border border-base-300 p-4 min-w-[256px]"
                         onClick={() => setAddLinkActive(true)}
                     >
-                        <Button classnames="">Add New Link</Button>
+                        <Button classnames="bg-primary">Add New Link</Button>
                     </div>
                 ) : (
                     <div
-                        className="rounded-md border border-slate-200 p-4 min-w-[256px]"
+                        className="rounded-md border border-base-300 p-4 min-w-[256px]"
                         onClick={() => setCreateLinkInBioActive(true)}
                     >
-                        <Button>Add New Page</Button>
+                        <Button classnames="bg-primary">Add New Page</Button>
                     </div>
                 )}
 
-                <div className="flex-1 rounded-md border border-slate-200 p-3.5">
+                <div className="flex-1 rounded-md border border-base-300 p-3.5">
                     <div
-                        className="ml-auto flex w-full justify-between gap-4 rounded-full border border-slate-200 px-4 py-1"
+                        className="ml-auto flex w-full justify-between gap-4 rounded-full border border-base-300 px-4 py-1"
                         onClick={() => setSearchLinkActive(true)}
                     >
                         <input
-                            className="w-[80%]"
+                            className="w-[80%] bg-transparent outline-none"
                             onFocus={() => setSearchLinkActive(true)}
                             placeholder="Search links..."
                         />
-                        <Button>
+                        <Button classnames="bg-primary">
                             <LuSearch/>
                         </Button>
                     </div>

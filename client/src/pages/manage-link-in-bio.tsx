@@ -64,7 +64,7 @@ const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
       onDragStart={(e) => handleDragStart(index, e)}
       onDragOver={(e) => handleDragOver(index, e)}
       onDrop={(e) => handleDrop(index, e)}
-      className="w-full flex items-center gap-4 mt-2 rounded-md border border-slate-200 bg-slate-100 px-4 py-1"
+      className="w-full flex items-center gap-4 mt-2 rounded-md border border-base-200 bg-base-200 px-4 py-1"
     >
       <div
         className={classNames(
@@ -74,7 +74,7 @@ const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
             ? "bg-red-500"
             : link.category === "marketing"
             ? "bg-green-300"
-            : "bg-slate-300",
+            : "bg-base-300",
           "h-5 w-5 rounded-full"
         )}
       ></div>
@@ -115,10 +115,10 @@ const ManageLinkInBio = ({}: Props) => {
 
   return (
     <section className="relative">
-      <div className="sticky top-0 z-20 mb-2 flex gap-4 rounded-md border border-slate-200 bg-slate-100 px-4 py-1">
+      <div className="sticky top-0 z-20 mb-2 flex gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
         <div
           onClick={() => Navigate(-1)}
-          className="flex cursor-pointer items-center gap-2 rounded-full bg-slate-100 py-0.5"
+          className="flex cursor-pointer items-center gap-2 rounded-full bg-base-200 py-0.5"
         >
           <LuArrowLeft />
           Back
@@ -130,7 +130,7 @@ const ManageLinkInBio = ({}: Props) => {
           <PopoverContainer triggerFn={setOpen} classnames="">
             <Button onClick={() => setOpen(!open)}>Add Block</Button>
             {open && (
-              <Popover classnames="!bg-slate-100 border border-slate-200">
+              <Popover classnames="!bg-base-300 border border-base-100">
                 <div className="flex flex-col gap-2 items-center">
                   <p className="text-center font-bold">Select a Block</p>
                 </div>
@@ -143,7 +143,7 @@ const ManageLinkInBio = ({}: Props) => {
                         setCreateLinkBlockActive(true);
                         setOpen(false);
                       }}
-                      className="w-full px-4 py-2 hover:bg-slate-200 rounded-md cursor-pointer"
+                      className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer"
                     >
                       {block.name}
                     </div>
@@ -168,7 +168,7 @@ const ManageLinkInBio = ({}: Props) => {
             </ul>
           )}
         </div>
-        <div className="w-[300px] h-[700px] border">
+        <div className="w-[300px] h-[700px]">
           {!reorderLoading ? (
             <iframe
               ref={iframeRef}
@@ -177,7 +177,7 @@ const ManageLinkInBio = ({}: Props) => {
               src={`http://localhost:5173/${id}`}
             ></iframe>
           ) : (
-              <div className="w-[300px] h-[700px] border flex justify-center items-center">
+              <div className="w-[300px] h-[700px] flex justify-center items-center">
                 <p>Loading...</p>
               </div>
           )}

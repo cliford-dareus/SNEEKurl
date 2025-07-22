@@ -44,7 +44,7 @@ const Subscription = () => {
     },
     [create_subscription, user.username],
   );
-console.log("PLAN", plan)
+
   const handleUpdateSubscription = async (price: number) => {
     try {
       await updateSubscription({
@@ -76,15 +76,15 @@ console.log("PLAN", plan)
   }, [data]);
 
   return (
-    <section className="rounded-md border">
+    <section className="rounded-md border border-base-300">
       <div className="p-4">
         <h1 className="text-2xl font-medium">Subscription</h1>
         <Separator />
         <div className="grid grid-cols-3 gap-4">
-          {SubcriptionOptions.map((options, index) => (
+          {pricingPlans.map((options, index) => (
             <div
               key={options.id + index}
-              className="flex flex-col gap-4 rounded-md bg-slate-100 p-4 shadow shadow-slate-200"
+              className="flex flex-col gap-4 rounded-md bg-base-200 p-4 shadow shadow-base-300"
             >
               <h2 className="text-2xl font-medium">{options.name}</h2>
               <p className="flex gap-1 text-4xl font-medium">
@@ -93,10 +93,10 @@ console.log("PLAN", plan)
               </p>
               <Separator />
               <ul className="mb-auto">
-                {options.perks.map((perk, index) => (
+                {options.features.map((perk, index) => (
                   <li key={index} className="flex items-center gap-4">
-                    <LuCheckCircle className="h-4 w-4 text-slate-700" />
-                    <p className="text-slate-700">{perk}</p>
+                    <LuCheckCircle className="h-4 w-4 text-accent" />
+                    <p className="text-accent">{perk}</p>
                   </li>
                 ))}
               </ul>
@@ -112,7 +112,7 @@ console.log("PLAN", plan)
                 <Button className="mt-4">Current Plan</Button>
               ) : (
                 <Button
-                  className="mt-4 bg-red-500 ring-2 ring-indigo-500"
+                  className="mt-4 bg-primary ring-2 ring-primary"
                   onClick={() => {
                     if (
                       user.username !== "Guest" &&

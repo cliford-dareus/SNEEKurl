@@ -6,7 +6,7 @@ type Props = {
 }
 const Separator = ({classnames}: Props) => {
     return(
-        <div className={classNames('h-1 border-b border-slate-200 my-4', classnames)} />
+        <div className={classNames('h-1 border-b border-base-200 my-4', classnames)} />
     )
 };
 

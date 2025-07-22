@@ -22,7 +22,7 @@ const LinkCard = ({url}: { url: Url }) => {
 
     return (
         <>
-            <div className="flex items-center gap-4 rounded-md bg-slate-100 p-4">
+            <div className="flex items-center gap-4 rounded-md bg-base-200 p-4">
                 <img
                     className="rounded-full w-[30px] h-[30px]"
                     src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
@@ -35,21 +35,21 @@ const LinkCard = ({url}: { url: Url }) => {
                 <div className="w-[60%]">
                     <div className="flex items-center gap-4">
                         <VisitLinkButton url={url}>
-                            <div className="flex items-center gap-2 text-blue-700">
+                            <div className="flex items-center gap-2 text-accent">
                                 <LuLink2/>
                                 sneek.co/{url.short}
                             </div>
                         </VisitLinkButton>
                     </div>
 
-                    <p className="mt-1 truncate text-sm text-slate-500">{url.longUrl}</p>
+                    <p className="mt-1 truncate text-sm text-base-content">{url.longUrl}</p>
                 </div>
 
                 <div
-                    className="ml-auto cursor-pointer border rounded-lg bg-slate-100 px-4 py-1 hover:border hover:border-slate-300 text-sm text-slate-500">
+                    className="ml-auto cursor-pointer rounded-lg bg-base-200 px-4 py-1 hover:bg-base-300 text-sm text-base-content">
                     {url.clicks} clicks
                 </div>
-                <div className="rounded-lg bg-slate-100 border px-4 py-1  hover:border hover:border-slate-300">
+                <div className="rounded-lg bg-base-200 px-4 py-1  hover:bg-base-300">
                     <Link to={`/analytics/${url.short}`}>
                         <LuBarChart size={20}/>
                     </Link>
@@ -61,9 +61,9 @@ const LinkCard = ({url}: { url: Url }) => {
                     </div>
 
                     {open && (
-                        <Popover classnames="bg-slate-200 border border-slate-300 flex flex-col gap-2 z-50">
+                        <Popover classnames="bg-base-200 border border-base-300 flex flex-col gap-2 z-50">
                             <div
-                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-base-300"
                                 onClick={() => {
                                     setQrActive(true);
                                     setOpen(false);
@@ -73,7 +73,7 @@ const LinkCard = ({url}: { url: Url }) => {
                             </div>
 
                             <div
-                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-base-300"
                                 onClick={() => {
                                     setEditActive(true);
                                     setOpen(false);
@@ -83,7 +83,7 @@ const LinkCard = ({url}: { url: Url }) => {
                             </div>
 
                             <div
-                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-base-300"
                                 onClick={() => {
                                     setShareActive(true);
                                     setOpen(false);
@@ -92,7 +92,7 @@ const LinkCard = ({url}: { url: Url }) => {
                                 Share
                             </div>
                             <div
-                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-slate-300"
+                                className="flex w-full cursor-pointer items-center justify-center p-2 shadow-md hover:bg-base-300"
                                 onClick={async () => {
                                     try {
                                         await deleteUrl(url.short).unwrap();

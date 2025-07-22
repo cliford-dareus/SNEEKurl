@@ -48,10 +48,10 @@ const Urlform = ({ shortenFn }: Props) => {
           />
         </div>
 
-        <Button>Generate Short</Button>
+        <Button classnames="bg-primary">Generate Short</Button>
       </form>
 
-      <div className="mx-auto mt-4 flex aspect-square w-8 items-center justify-center rounded-full bg-white text-black">
+      <div className="mx-auto mt-4 flex aspect-square w-8 items-center justify-center rounded-full bg-accent text-black">
         <span>OR</span>
       </div>
 
@@ -77,7 +77,7 @@ const Urlform = ({ shortenFn }: Props) => {
           />
         </div>
 
-        <Button>Generate custom short</Button>
+        <Button classnames="bg-primary">Generate custom short</Button>
         <span className="">
           Lorem ipsum dolor sit amet consectetur adipisicing.
         </span>

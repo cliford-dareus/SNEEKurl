@@ -61,9 +61,9 @@ const EditLinkModal = ({
       {editActive && (
         <>
           <Sheet triggerFn={setEditActive} />
-          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100 border border-slate-200">
+          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-100">
             <div className="relative h-full w-[500px]">
-              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
+              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-200 p-4">
                 <img
                   src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
                     url.longUrl
@@ -93,7 +93,7 @@ const EditLinkModal = ({
                   <div>
                     <Label>Short Url</Label>
                     <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-white px-2 py-1">
+                      <div className="rounded-full bg-accent px-2 py-1">
                         sneek.co/
                       </div>
                       <Input
@@ -105,7 +105,7 @@ const EditLinkModal = ({
                     </div>
                   </div>
 
-                  <div className="my-4 border-t border-b border-slate-200 py-4 text-center">
+                  <div className="my-4 border-t border-b border-base-300 py-4 text-center">
                     Optionals
                   </div>
 
@@ -129,6 +129,7 @@ const EditLinkModal = ({
                   </div>
 
                   <Button
+                    classnames="bg-primary"
                     disabled={!(user.user.username && plan !== "free")}
                     type="submit"
                   >

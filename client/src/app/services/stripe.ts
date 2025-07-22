@@ -13,6 +13,16 @@ type Payload = {
 const baseQuery = fetchBaseQuery({
   baseUrl: URL,
   credentials: "include", // Set credentials to "include"
+  headers: {
+    Accept: "application/json",
+  },
+  prepareHeaders: (headers, { getState }) => {
+    const csrfToken = sessionStorage.getItem("csrfToken");
+    if (csrfToken) {
+      headers.set("X-CSRF-Token", csrfToken);
+    }
+    return headers;
+  },
 });
 
 export const stripeApi = createApi({

@@ -23,7 +23,7 @@ const UrlItem = ({ url }: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex gap-8 rounded-lg bg-slate-300 p-4 shadow-md">
+    <div className="flex gap-8 rounded-lg bg-base-200 p-4 shadow-md">
       <div>
         <img
           className="rounded-full w-[30px] h-[30px]"
@@ -37,7 +37,7 @@ const UrlItem = ({ url }: Props) => {
 
       <div className="flex flex-col gap-4 w-[60%]">
         <div className="text-left">
-          <p className="flex items-center gap-2 text-blue-700">
+          <p className="flex items-center gap-2 text-accent">
             <LuLink2 />
             sneek.co/{url.short}
           </p>

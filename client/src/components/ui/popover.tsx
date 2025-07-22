@@ -61,7 +61,7 @@ const Popover = ({classnames, children}: Props) => {
         <div
             ref={ref}
             className={classNames(
-                "absolute min-w-[200px] p-4 bg-slate-300 rounded-md right-2 z-20 animate-slide-up-fade items-center border border-gray-200 drop-shadow-lg",
+                "absolute min-w-[200px] p-4 bg-base-200 rounded-md right-2 z-20 animate-slide-up-fade items-center border border-base-300 drop-shadow-lg",
                 isOutScreen ? "bottom-0" : "top-8 ",
                 classnames
             )}

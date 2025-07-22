@@ -73,24 +73,24 @@ const Login = (props: Props) => {
           >
             <path
               d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-              fill="black"
+              fill="currentColor"
             />
           </svg>
         </Link>
       </div>
 
-      <div className="rounded-xl bg-indigo-500 w-[400px] text-white">
-        <div className="rounded-t-xl bg-indigo-600 p-4 text-center ">
-          <h1 className="text-4xl">Sneek</h1>
-          <p className="mt-2 text-xl ">
+      <div className="rounded-xl bg-primary-content w-[400px]">
+        <div className="rounded-t-xl bg-primary p-4 text-center ">
+          <h1 className="text-4xl text-neutral-content">Sneek</h1>
+          <p className="mt-2 text-xl text-neutral-content">
             Lorem ipsum dolor sit amet consectetur adipisicing.
           </p>
         </div>
 
         <div className="mt-4 p-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl">Login</h2>
-            <div className="flex items-center gap-2">
+            <h2 className="text-2xl text-neutral">Login</h2>
+            <div className="flex items-center gap-2 text-neutral">
               <span>or</span>
               <Link className="underline" to="/register">
                 create a new account
@@ -117,15 +117,15 @@ const Login = (props: Props) => {
               hidden={false}
             />
 
-            <Button>Continue</Button>
+            <Button classnames="bg-primary">Continue</Button>
           </form>
 
           <div>
-            <Button>Sign With Github</Button>
+            <Button classnames="bg-primary">Sign With Github</Button>
           </div>
 
-          <div className="mt-16">
-            <span>
+          <div className="mt-16 text-neutral">
+            <span className="text-sm">
               By clicking "Continue", you agree to the Terms of Service and
               Privacy policy.
             </span>

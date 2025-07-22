@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 // General API rate limiter - more reasonable limits
 export const generalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per 15 minutes
+  max: 500, // 100 requests per 15 minutes
   message: {
     error: 'Too many requests from this IP, please try again later.',
     retryAfter: '15 minutes'

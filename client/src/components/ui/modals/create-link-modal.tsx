@@ -28,6 +28,10 @@ const CreateLinkModal = ({ addLinkActive, setAddLinkActive }: Props) => {
       setAddLinkActive(false);
       reset();
     } catch (e) {
+        if (e.status === 402) {
+            toast.error("Please upgrade your plan to create more links");
+            return;
+        }
       toast.error("Link creation failed");
     }
   };
@@ -37,9 +41,9 @@ const CreateLinkModal = ({ addLinkActive, setAddLinkActive }: Props) => {
       {addLinkActive && (
         <>
           <Sheet triggerFn={setAddLinkActive} />
-          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
+          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-100">
             <div className="relative h-full w-[500px]">
-              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
+              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-200 p-4">
                 <svg
                   width="40"
                   height="40"
@@ -49,7 +53,7 @@ const CreateLinkModal = ({ addLinkActive, setAddLinkActive }: Props) => {
                 >
                   <path
                     d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                    fill="black"
+                    fill="currentColor"
                   />
                 </svg>
                 <p>Creating new Link</p>
@@ -74,7 +78,7 @@ const CreateLinkModal = ({ addLinkActive, setAddLinkActive }: Props) => {
                   <div>
                     <Label>Short Url</Label>
                     <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-white px-2 py-1">
+                      <div className="rounded-full bg-accent px-2 py-1">
                         sneek.co/
                       </div>
                       <Input
@@ -85,7 +89,7 @@ const CreateLinkModal = ({ addLinkActive, setAddLinkActive }: Props) => {
                       />
                     </div>
                   </div>
-                  <Button classnames="self-start">Create</Button>
+                  <Button classnames="self-start bg-primary">Create</Button>
                 </div>
               </form>
             </div>

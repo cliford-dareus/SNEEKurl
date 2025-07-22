@@ -9,9 +9,11 @@ interface IShort extends Document {
   user: { type: ObjectId; ref: string };
   guest?: string;
   password?: string;
-  clicks: number;
+  totalClicks: number;
   lastClick: Date;
   expired_in: Date | undefined;
+  createdAt: Date;
+  updatedAt: Date;
   metadata: {
     time: Date;
     ipAddress: string | undefined;
@@ -35,6 +37,8 @@ const ShortSchema = new mongoose.Schema<IShort>(
     guest: { type: String },
     password: { type: String },
     expired_in: { type: Date },
+    totalClicks: { type: Number, default: 0 },
+    lastClick: { type: Date },
     metadata: [
       {
         time: { type: Date },

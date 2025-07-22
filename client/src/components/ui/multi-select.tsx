@@ -68,14 +68,14 @@ const MultiSelect = ({
     <div className="relative">
       <div
         onClick={() => setOpen(!open)}
-        className="flex h-8 w-full items-center justify-between rounded-full bg-white px-4 hover:ring-2 hover:ring-indigo-500"
+        className="flex h-8 w-full items-center justify-between rounded-full bg-accent px-4 hover:ring-2 hover:ring-primary"
       >
         {selectedItems.length > 0 ? (
           <div className="flex items-center gap-2 overflow-hidden w-[90%]">
             {selectedItems.map((item, index) => (
               <div
                 key={index}
-                className="cursor-pointer rounded-md bg-slate-200 px-2 text-sm py-0.5"
+                className="cursor-pointer rounded-md bg-base-200 px-2 text-sm py-0.5"
               >
                 {item}
               </div>
@@ -87,12 +87,12 @@ const MultiSelect = ({
         <LuChevronDown />
       </div>
 
-      <div className="relative bg-slate-200">
+      <div className="relative bg-base-200">
         {open && (
-          <div className="absolute top-2 z-20 w-full h-[300px] overflow-y-scroll bg-slate-100 no-scrollbar">
+          <div className="absolute top-2 z-20 w-full h-[300px] overflow-y-scroll bg-base-200 no-scrollbar">
             <div className="relative mb-10">
               <input
-                className="fixed left-4 right-4 rounded-full border border-slate-200 px-4 py-1 text-black outline-none focus:ring-2 focus:ring-indigo-500"
+                className="fixed left-4 right-4 rounded-full border border-base-300 px-4 py-1 text-black outline-none focus:ring-2 focus:ring-primary"
                 type="text"
                 placeholder="Search"
                 onChange={handleSearch}
@@ -101,7 +101,7 @@ const MultiSelect = ({
             {!isLoading &&
               filterDate?.map((item) => (
                 <div
-                  className=" flex cursor-pointer items-center rounded-md border border-slate-200 px-4 text-sm py-0.5 hover: hover:ring-2 hover:ring-indigo-500 mt-1"
+                  className=" flex cursor-pointer items-center rounded-md border border-base-300 px-4 text-sm py-0.5 hover: hover:ring-2 hover:ring-primary mt-1"
                   key={item._id}
                   onClick={() => handleSelectChange(item._id)}
                 >

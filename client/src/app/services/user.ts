@@ -40,7 +40,7 @@ export const userapi = createApi({
     deleteUserAccount: builder.mutation({
       query: () => ({
         url: "/delete-account",
-        methode: "DELETE",
+        method: "DELETE",
       }),
     }),
     getUserLimits: builder.query({
@@ -55,5 +55,6 @@ export const userapi = createApi({
 export const {
   useUpdateUserProfileImageMutation,
   useUpdateUserDetailsMutation,
+  useDeleteUserAccountMutation,
   useGetUserLimitsQuery,
 } = userapi;
