@@ -1,7 +1,7 @@
 import Separator from "./ui/separator";
 import { LuCheckCircle } from "react-icons/lu";
 import Button from "./ui/button";
-import { SubcriptionOptions } from "../Utils/common";
+import { pricingPlans } from "../Utils/common";
 import {
   useCreateSubscriptionMutation,
   useRetrieveSubscriptionQuery,
@@ -103,16 +103,16 @@ const Subscription = () => {
 
               {active_plan === null ? (
                 <Button
-                  className="mt-4"
+                  classnames="mt-4"
                   onClick={() => handleSubscription(options.price)}
                 >
                   Subscribe
                 </Button>
               ) : active_plan === options.price ? (
-                <Button className="mt-4">Current Plan</Button>
+                <Button classnames="mt-4">Current Plan</Button>
               ) : (
                 <Button
-                  className="mt-4 bg-primary ring-2 ring-primary"
+                  classnames="mt-4 bg-primary ring-2 ring-primary"
                   onClick={() => {
                     if (
                       user.username !== "Guest" &&

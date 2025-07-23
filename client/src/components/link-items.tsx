@@ -2,8 +2,10 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {useSearchParams} from "react-router-dom";
 import {useGetUrlsQuery} from "../app/services/urlapi";
 import LinkCard from "./link-card";
+import {useUserPlan} from "./layout/admin-layout";
 
 const LinkItems = () => {
+    const plan = useUserPlan();
     const [searchParams, setSearchParams] = useSearchParams();
     const [queryParams, setQueryParams] = useState<string | null>("");
 
@@ -40,7 +42,7 @@ const LinkItems = () => {
     return (
         <div className="flex flex-col gap-4 no-scrollbar">
             {!isLoading &&
-                data?.urls.map((url) => <LinkCard key={url._id} url={url} />)}
+                data?.urls.map((url) => <LinkCard key={url._id} url={url}  plan={plan.plan!}/>)}
         </div>
     );
 };

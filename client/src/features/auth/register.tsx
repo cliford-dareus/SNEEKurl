@@ -1,28 +1,58 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { Link } from "react-router-dom";
 import { useRegisterMutation } from "../../app/services/auth";
 
-type Props = {};
-
 export type IUserFormValues = {
   username: string;
   email: string;
   password: string;
+  confirmPassword: string;
 };
 
-const Register = (props: Props) => {
-  const [useRegister, { isLoading, isSuccess }] = useRegisterMutation();
-  const { register, handleSubmit } = useForm<IUserFormValues>();
+const Register = () => {
+  const [useRegister, { isLoading, isSuccess, isError }] = useRegisterMutation();
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<IUserFormValues>({
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
+    }
+  });
+
+  const watchPassword = watch("password");
 
   const onsubmit: SubmitHandler<IUserFormValues> = async (data) => {
-    await useRegister({
-      username: data.username,
-      password: data.password,
-      email: data.email,
-    });
+    try {
+      await useRegister({
+        username: data.username,
+        password: data.password,
+        email: data.email,
+      }).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  if (isSuccess) {
+    return (
+      <div className="mt-4 p-4 text-center">
+        <h2 className="text-2xl text-success mb-4">Registration Successful!</h2>
+        <p className="mb-4">Please check your email to verify your account.</p>
+        <Link to="/login" className="text-primary underline">
+          Go to Login
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="flex container h-screen p-4 items-center justify-center">
@@ -56,37 +86,113 @@ const Register = (props: Props) => {
             <div className="flex items-center gap-2 text-neutral">
               <span>or</span>
               <Link className="underline" to="/login">
-                login
+                sign in to existing account
               </Link>
             </div>
           </div>
 
           <form
-            action=""
             className="mt-16 flex flex-col gap-4"
             onSubmit={handleSubmit(onsubmit)}
           >
-            <Input
-              register={register}
-              label="username"
-              placeholder="Enter a username"
-              hidden={false}
-            />
-            <Input
-              register={register}
-              label="email"
-              placeholder="Enter your email address"
-              hidden={false}
+            <Controller
+              name="username"
+              control={control}
+              rules={{
+                required: "Username is required",
+                minLength: {
+                  value: 3,
+                  message: "Username must be at least 3 characters"
+                },
+                pattern: {
+                  value: /^[a-zA-Z0-9_]+$/,
+                  message: "Username can only contain letters, numbers, and underscores"
+                }
+              }}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  placeholder="Enter your username"
+                  error={fieldState.error?.message}
+                />
+              )}
             />
 
-            <Input
-              register={register}
-              label="password"
-              placeholder="Enter your password"
-              hidden={false}
+            <Controller
+              name="email"
+              control={control}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "Please enter a valid email address"
+                }
+              }}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="Enter your email"
+                  error={fieldState.error?.message}
+                />
+              )}
             />
 
-            <Button classnames="bg-primary">Continue</Button>
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters"
+                },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
+                  message: "Password must contain at least one uppercase letter, one lowercase letter, and one number"
+                }
+              }}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Enter your password"
+                  error={fieldState.error?.message}
+                />
+              )}
+            />
+
+            <Controller
+              name="confirmPassword"
+              control={control}
+              rules={{
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === watchPassword || "Passwords do not match"
+              }}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Confirm your password"
+                  error={fieldState.error?.message}
+                />
+              )}
+            />
+
+            <Button
+              type="submit"
+              classnames="bg-primary"
+              disabled={isLoading}
+            >
+              {isLoading ? "Creating account..." : "Create Account"}
+            </Button>
+
+            {isError && (
+              <p className="text-sm text-destructive text-center">
+                Registration failed. Please try again.
+              </p>
+            )}
           </form>
 
           <div className="mt-16 text-neutral">

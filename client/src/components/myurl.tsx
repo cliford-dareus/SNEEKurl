@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Sheet, SheetContent } from "./ui/sheet";
 import Button from "./ui/button";
 import { Url, useGetUrlsQuery } from "../app/services/urlapi";
-import { Popover, PopoverContainer } from "./ui/popover";
+import { Popover, PopoverContainer, PopoverTrigger } from "./ui/popover";
 import {
   LuChevronLeft,
   LuChevronRight,
@@ -55,10 +55,10 @@ const UrlItem = ({ url }: Props) => {
         </div>
       </div>
 
-      <PopoverContainer classnames="ml-auto" triggerFn={setOpen}>
-        <div className="cursor-pointer" onClick={() => setOpen(!open)}>
+      <Popover>
+        <PopoverTrigger>
           <LuMoreVertical size={24} />
-        </div>
+        </PopoverTrigger>
 
         {open && (
           <Popover classnames="right-0 top-6 flex flex-col gap-2 z-50">
@@ -67,7 +67,7 @@ const UrlItem = ({ url }: Props) => {
             <div className="p-2 shadow-md">Delete</div>
           </Popover>
         )}
-      </PopoverContainer>
+      </Popover>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
-import {Sheet, SheetContent} from "../sheet";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../dialog";
 import {getSiteUrl} from "../../../Utils/getSiteUrl";
 import Button from "../button";
 import Separator from "../separator";
@@ -60,23 +60,30 @@ const ChangeProfileImageModal = ({
         <>
             {editProfileActive &&
                 <>
-                    <Sheet triggerFn={setEditProfileActive}/>
-                    <SheetContent
-                        classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-200">
-                        <div className="relative h-full w-[500px]">
-                            <div
-                                className="absolute top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-300 p-4">
-                                <svg width="40"
-                                     height="40"
-                                     viewBox="0 0 200 250"
-                                     fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                          fill="currentColor"/>
+                    <Dialog open={editProfileActive} onOpenChange={setEditProfileActive}/>
+                    <DialogContent>
+                           <DialogHeader>
+                                <div className="flex items-center gap-3">
+                                <svg
+                                    width="40"
+                                    height="40"
+                                    viewBox="0 0 200 250"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                    d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                    fill="currentColor"
+                                    />
                                 </svg>
-                                <p>Change Profile Picture</p>
-                            </div>
+                                <div>
+                                    <DialogTitle>Create New Link</DialogTitle>
+                                    <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                                </div>
+                                </div>
+                            </DialogHeader>
 
+                        <div className="px-6 py-4">
                             <form
                                 action=""
                                 className="h-full gap-4 p-4 pt-20"
@@ -96,7 +103,7 @@ const ChangeProfileImageModal = ({
                                 <Button classnames="bg-primary">Update</Button>
                             </form>
                         </div>
-                    </SheetContent>
+                    </DialogContent>
                 </>
             }
 

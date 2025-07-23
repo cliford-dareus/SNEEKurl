@@ -13,14 +13,23 @@ export type IFormValues = {
 };
 
 const Urlform = ({ shortenFn }: Props) => {
-  const { register, handleSubmit, control, watch } = useForm<
-    IFormValues | any
-  >();
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors }
+  } = useForm<IFormValues>({
+    defaultValues: {
+      long: "",
+      "back-half": ""
+    }
+  });
 
   const onsubmit: SubmitHandler<IFormValues> = async (data) => {
     if (data["back-half"] === "") {
       shortenFn({ longUrl: data["long"] });
-      return
+      return;
     }
 
     shortenFn({ longUrl: data["long"], backhalf: data["back-half"] });
@@ -39,10 +48,19 @@ const Urlform = ({ shortenFn }: Props) => {
           <Controller
             name="long"
             control={control}
-            render={({ field }) => (
-              <input
-                className="w-full rounded-full px-4 py-1 text-black"
+            rules={{
+              required: "URL is required",
+              pattern: {
+                value: /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
+                message: "Please enter a valid URL"
+              }
+            }}
+            render={({ field, fieldState }) => (
+              <Input
                 {...field}
+                className="w-full rounded-full px-4 py-1"
+                placeholder="https://example.com"
+                error={fieldState.error?.message}
               />
             )}
           />
@@ -60,20 +78,31 @@ const Urlform = ({ shortenFn }: Props) => {
         onSubmit={handleSubmit(onsubmit)}
       >
         <Controller
-          name="long2"
+          name="long"
           control={control}
           render={({ field }) => (
-            <input hidden {...field} value={input1Value} />
+            <input type="hidden" {...field} value={input1Value || ""} />
           )}
         />
 
         <div className="flex flex-col items-start">
-          <Label>Enter a back-half(Optional)</Label>
-          <Input
-            register={register}
-            label="back-half"
-            placeholder="Enter long url..."
-            hidden={false}
+          <Label>Enter a back-half (Optional)</Label>
+          <Controller
+            name="back-half"
+            control={control}
+            rules={{
+              pattern: {
+                value: /^[a-zA-Z0-9-_]+$/,
+                message: "Only letters, numbers, hyphens and underscores allowed"
+              }
+            }}
+            render={({ field, fieldState }) => (
+              <Input
+                {...field}
+                placeholder="custom-alias"
+                error={fieldState.error?.message}
+              />
+            )}
           />
         </div>
 

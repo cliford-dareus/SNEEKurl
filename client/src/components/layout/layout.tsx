@@ -19,10 +19,8 @@ const Layout = (props: Props) => {
       skip: !user.user.username,
     },
   );
-  // const plan = data?.subscription?.data[0].plan.metadata.name;
+  const plan = data?.subscription?.data[0].plan.metadata.name || "free";
 
-  const plan = "pro";
-  
   return (
     <div className="">
       <Header isActive={false} user={user} plan={plan} />

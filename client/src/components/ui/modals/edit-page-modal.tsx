@@ -1,9 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Sheet, SheetContent } from "../sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog";
 import MultiSelect from "../multi-select";
 import Input from "../Input";
 import Label from "../label";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { CreateLinkInBioProp } from "./create-link-in-bio-modal";
 import Switch from "../switch";
 import Button from "../button";
@@ -22,7 +22,7 @@ interface UpdateLinkInBioProps extends CreateLinkInBioProp {
 const EditPageModal = ({ editPageActive, setEditPageActive, page }: Props) => {
   const [updatePage] = useUpdatePageMutation();
   const [isChecked, setChecked] = useState(page.isPublic);
-  const { register, handleSubmit, setValue } = useForm<UpdateLinkInBioProps>({
+  const { register, control, handleSubmit, setValue } = useForm<UpdateLinkInBioProps>({
     defaultValues: {
       title: page.title,
       description: page.description,
@@ -53,64 +53,80 @@ const EditPageModal = ({ editPageActive, setEditPageActive, page }: Props) => {
     }
   };
 
+  const handleSetEditPageActive = (newState: boolean) => {
+    setEditPageActive({ state: newState, id: "" });
+  };
+
   return (
     <>
       {editPageActive && (
         <>
-          <Sheet
-            triggerFn={() => setEditPageActive({ state: false, id: "" })}
-          />
-          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-slate-100">
-            <div className="relative h-full w-[500px]">
-              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-slate-200 p-4">
-                <svg
-                  width="40"
-                  height="40"
-                  viewBox="0 0 200 250"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                    fill="black"
-                  />
-                </svg>
-                <p>Editing Page</p>
-              </div>
-
+          <Dialog open={editPageActive} onOpenChange={handleSetEditPageActive}>
+          <DialogContent>
+              <DialogHeader>
+                                     <div className="flex items-center gap-3">
+                                       <svg
+                                         width="40"
+                                         height="40"
+                                         viewBox="0 0 200 250"
+                                         fill="none"
+                                         xmlns="http://www.w3.org/2000/svg"
+                                       >
+                                         <path
+                                           d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                           fill="currentColor"
+                                         />
+                                       </svg>
+                                       <div>
+                                         <DialogTitle>Create New Link</DialogTitle>
+                                         <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                                       </div>
+                                     </div>
+                                   </DialogHeader>
+            <div className="px-6 py-4">
               <form
-                action=""
-                className="h-full p-4 pt-20"
                 onSubmit={handleSubmit(handleUpdatePage)}
               >
                 <div className="flex flex-col gap-4 pt-8">
                   <div>
                     <Label>Title</Label>
-                    <Input
-                      register={register}
-                      placeholder=""
-                      label="title"
-                      hidden={false}
+                    <Controller
+                      name="title"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter a title"
+                        />
+                      )}
                     />
                   </div>
 
                   <div>
                     <Label>Description</Label>
-                    <Input
-                      register={register}
-                      placeholder=""
-                      label="description"
-                      hidden={false}
+                      <Controller
+                      name="description"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter a description"
+                        />
+                      )}
                     />
                   </div>
 
                   <div>
                     <Label>Slug</Label>
-                    <Input
-                      register={register}
-                      placeholder=""
-                      label="slug"
-                      hidden={false}
+                    <Controller
+                      name="slug"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          {...field}
+                          placeholder="Enter a slug"
+                        />
+                      )}
                     />
                   </div>
 
@@ -129,7 +145,8 @@ const EditPageModal = ({ editPageActive, setEditPageActive, page }: Props) => {
                 </div>
               </form>
             </div>
-          </SheetContent>
+          </DialogContent>
+          </Dialog>
         </>
       )}
     </>

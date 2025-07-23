@@ -2,79 +2,76 @@ import classNames from "classnames";
 import { ReactNode, useEffect, useRef, useCallback, useState } from "react";
 import { createPortal } from "react-dom";
 import { LuX } from "react-icons/lu";
+import { createContext, useContext } from "react";
 
-type SheetSide = "top" | "right" | "bottom" | "left";
-
-interface SheetProps {
+interface DialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   children?: ReactNode;
   modal?: boolean;
 }
 
-interface SheetTriggerProps {
+interface DialogTriggerProps {
   children: ReactNode;
   asChild?: boolean;
   className?: string;
 }
 
-interface SheetContentProps {
+interface DialogContentProps {
   children: ReactNode;
   className?: string;
-  side?: SheetSide;
   size?: "sm" | "md" | "lg" | "xl" | "full";
   showCloseButton?: boolean;
   closeOnOutsideClick?: boolean;
   closeOnEscape?: boolean;
+  position?: "center" | "top" | "bottom";
 }
 
-interface SheetHeaderProps {
+interface DialogHeaderProps {
   children: ReactNode;
   className?: string;
 }
 
-interface SheetTitleProps {
+interface DialogTitleProps {
   children: ReactNode;
   className?: string;
 }
 
-interface SheetDescriptionProps {
+interface DialogDescriptionProps {
   children: ReactNode;
   className?: string;
 }
 
-interface SheetFooterProps {
+interface DialogFooterProps {
   children: ReactNode;
   className?: string;
 }
 
-// Context for sheet state management
-import { createContext, useContext } from "react";
-
-interface SheetContextValue {
+// Context for dialog state management
+interface DialogContextValue {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const SheetContext = createContext<SheetContextValue | null>(null);
+const DialogContext = createContext<DialogContextValue | null>(null);
 
-const useSheet = () => {
-  const context = useContext(SheetContext);
+const useDialog = () => {
+  const context = useContext(DialogContext);
   if (!context) {
-    throw new Error("Sheet components must be used within a Sheet");
+    throw new Error("Dialog components must be used within a Dialog");
   }
   return context;
 };
 
 /**
- * Main Sheet component - manages state and context
+ * Main Dialog component - manages state and context
  */
-const Sheet = ({ open = false, onOpenChange, children, modal = true }: SheetProps) => {
+const Dialog = ({ open = false, onOpenChange, children, modal = true }: DialogProps) => {
   const [internalOpen, setInternalOpen] = useState(open);
-
+  
   const isControlled = onOpenChange !== undefined;
   const isOpen = isControlled ? open : internalOpen;
-
+  
   const handleOpenChange = useCallback((newOpen: boolean) => {
     if (isControlled) {
       onOpenChange?.(newOpen);
@@ -90,23 +87,23 @@ const Sheet = ({ open = false, onOpenChange, children, modal = true }: SheetProp
     }
   }, [open, isControlled]);
 
-  const contextValue: SheetContextValue = {
+  const contextValue: DialogContextValue = {
     open: isOpen,
     onOpenChange: handleOpenChange,
   };
 
   return (
-    <SheetContext.Provider value={contextValue}>
+    <DialogContext.Provider value={contextValue}>
       {children}
-    </SheetContext.Provider>
+    </DialogContext.Provider>
   );
 };
 
 /**
- * Sheet Trigger - opens the sheet
+ * Dialog Trigger - opens the dialog
  */
-const SheetTrigger = ({ children, asChild = false, className }: SheetTriggerProps) => {
-  const { onOpenChange } = useSheet();
+const DialogTrigger = ({ children, asChild = false, className }: DialogTriggerProps) => {
+  const { onOpenChange } = useDialog();
 
   const handleClick = useCallback(() => {
     onOpenChange(true);
@@ -135,10 +132,10 @@ const SheetTrigger = ({ children, asChild = false, className }: SheetTriggerProp
 };
 
 /**
- * Sheet Overlay - backdrop/overlay component
+ * Dialog Overlay - backdrop/overlay component
  */
-const SheetOverlay = ({ className }: { className?: string }) => {
-  const { open, onOpenChange } = useSheet();
+const DialogOverlay = ({ className }: { className?: string }) => {
+  const { open, onOpenChange } = useDialog();
 
   if (!open) return null;
 
@@ -148,6 +145,7 @@ const SheetOverlay = ({ className }: { className?: string }) => {
         "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm",
         "data-[state=open]:animate-in data-[state=open]:fade-in-0",
         "data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
+        "transition-all duration-200",
         className
       )}
       data-state={open ? "open" : "closed"}
@@ -158,18 +156,18 @@ const SheetOverlay = ({ className }: { className?: string }) => {
 };
 
 /**
- * Sheet Content - main content container
+ * Dialog Content - main content container
  */
-const SheetContent = ({
+const DialogContent = ({
   children,
   className,
-  side = "right",
   size = "md",
   showCloseButton = true,
   closeOnOutsideClick = true,
   closeOnEscape = true,
-}: SheetContentProps) => {
-  const { open, onOpenChange } = useSheet();
+  position = "center",
+}: DialogContentProps) => {
+  const { open, onOpenChange } = useDialog();
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Handle escape key
@@ -228,66 +226,33 @@ const SheetContent = ({
   if (!open) return null;
 
   const sizeClasses = {
-    sm: {
-      right: "w-80",
-      left: "w-80",
-      top: "h-1/3",
-      bottom: "h-1/3",
-    },
-    md: {
-      right: "w-96",
-      left: "w-96",
-      top: "h-1/2",
-      bottom: "h-1/2",
-    },
-    lg: {
-      right: "w-[500px]",
-      left: "w-[500px]",
-      top: "h-2/3",
-      bottom: "h-2/3",
-    },
-    xl: {
-      right: "w-[600px]",
-      left: "w-[600px]",
-      top: "h-3/4",
-      bottom: "h-3/4",
-    },
-    full: {
-      right: "w-full",
-      left: "w-full",
-      top: "h-full",
-      bottom: "h-full",
-    },
+    sm: "max-w-sm w-full",
+    md: "max-w-md w-full",
+    lg: "max-w-lg w-full",
+    xl: "max-w-xl w-full",
+    full: "max-w-[95vw] w-full max-h-[95vh]",
   };
 
   const positionClasses = {
-    top: "top-0 left-0 right-0 border-b",
-    right: "top-0 right-0 bottom-0 border-l",
-    bottom: "bottom-0 left-0 right-0 border-t",
-    left: "top-0 left-0 bottom-0 border-r",
-  };
-
-  const animationClasses = {
-    top: "data-[state=open]:slide-in-from-top data-[state=closed]:slide-out-to-top",
-    right: "data-[state=open]:slide-in-from-right data-[state=closed]:slide-out-to-right",
-    bottom: "data-[state=open]:slide-in-from-bottom data-[state=closed]:slide-out-to-bottom",
-    left: "data-[state=open]:slide-in-from-left data-[state=closed]:slide-out-to-left",
+    center: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+    top: "top-[10%] left-1/2 -translate-x-1/2",
+    bottom: "bottom-[10%] left-1/2 -translate-x-1/2",
   };
 
   return createPortal(
     <>
-      <SheetOverlay />
+      <DialogOverlay />
       <div
         ref={contentRef}
         role="dialog"
         aria-modal="true"
         className={classNames(
-          "fixed z-50 bg-base-100 shadow-lg",
-          "data-[state=open]:animate-in data-[state=closed]:animate-out",
-          "data-[state=closed]:duration-300 data-[state=open]:duration-500",
-          positionClasses[side],
-          sizeClasses[size][side],
-          animationClasses[side],
+          "fixed z-50 bg-base-100 shadow-xl rounded-lg border border-base-300",
+          "data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95",
+          "data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95",
+          "transition-all duration-200",
+          sizeClasses[size],
+          positionClasses[position],
           className
         )}
         data-state={open ? "open" : "closed"}
@@ -301,7 +266,7 @@ const SheetContent = ({
             <LuX className="h-4 w-4" />
           </button>
         )}
-        <div className="h-full overflow-auto">
+        <div className="max-h-[80vh] overflow-auto">
           {children}
         </div>
       </div>
@@ -311,20 +276,20 @@ const SheetContent = ({
 };
 
 /**
- * Sheet Header - header section
+ * Dialog Header - header section
  */
-const SheetHeader = ({ children, className }: SheetHeaderProps) => {
+const DialogHeader = ({ children, className }: DialogHeaderProps) => {
   return (
-    <div className={classNames("flex flex-col space-y-2 text-center sm:text-left p-6 pb-0", className)}>
+    <div className={classNames("flex flex-col space-y-2 text-center sm:text-left p-6 pb-4", className)}>
       {children}
     </div>
   );
 };
 
 /**
- * Sheet Title - title component
+ * Dialog Title - title component
  */
-const SheetTitle = ({ children, className }: SheetTitleProps) => {
+const DialogTitle = ({ children, className }: DialogTitleProps) => {
   return (
     <h2 className={classNames("text-lg font-semibold text-base-content", className)}>
       {children}
@@ -333,9 +298,9 @@ const SheetTitle = ({ children, className }: SheetTitleProps) => {
 };
 
 /**
- * Sheet Description - description component
+ * Dialog Description - description component
  */
-const SheetDescription = ({ children, className }: SheetDescriptionProps) => {
+const DialogDescription = ({ children, className }: DialogDescriptionProps) => {
   return (
     <p className={classNames("text-sm text-base-content/70", className)}>
       {children}
@@ -344,23 +309,23 @@ const SheetDescription = ({ children, className }: SheetDescriptionProps) => {
 };
 
 /**
- * Sheet Footer - footer section
+ * Dialog Footer - footer section
  */
-const SheetFooter = ({ children, className }: SheetFooterProps) => {
+const DialogFooter = ({ children, className }: DialogFooterProps) => {
   return (
-    <div className={classNames("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 p-6 pt-0", className)}>
+    <div className={classNames("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 p-6 pt-4 border-t border-base-300", className)}>
       {children}
     </div>
   );
 };
 
-// Legacy compatibility - simple sheet with trigger function
-interface LegacySheetProps {
+// Legacy compatibility - simple dialog with trigger function
+interface LegacyDialogProps {
   classnames?: string;
   triggerFn?: React.Dispatch<React.SetStateAction<boolean>> | (() => void);
 }
 
-const LegacySheet = ({ classnames, triggerFn }: LegacySheetProps) => {
+const LegacyDialog = ({ classnames, triggerFn }: LegacyDialogProps) => {
   const handleClick = useCallback(() => {
     if (triggerFn) {
       if (typeof triggerFn === 'function') {
@@ -386,16 +351,16 @@ const LegacySheet = ({ classnames, triggerFn }: LegacySheetProps) => {
 };
 
 export {
-  Sheet,
-  SheetTrigger,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-  SheetOverlay,
-//   LegacySheet as Sheet, // For backward compatibility
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogOverlay,
+  LegacyDialog,
 };
 
-// Export the new Sheet as default, but keep legacy as named export
-export default Sheet;
+// Export the new Dialog as default
+export default Dialog;

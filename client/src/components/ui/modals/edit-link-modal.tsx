@@ -1,7 +1,14 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Sheet, SheetContent } from "../sheet";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "../dialog";
 import { Url, useEditUrlMutation } from "../../../app/services/urlapi";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Input from "../Input";
 import { getSiteUrl } from "../../../Utils/getSiteUrl";
 import Button from "../button";
@@ -12,18 +19,16 @@ import { useAppSelector } from "../../../app/hook";
 import { selectCurrentUser } from "../../../features/auth/authslice";
 import { toast } from "react-toastify";
 
-const EditLinkModal = ({
-  plan,
-  url,
-  editActive,
-  setEditActive,
-}: {
-  plan: string;
+type Props = {
   url: Url;
   editActive: boolean;
   setEditActive: Dispatch<SetStateAction<boolean>>;
-}) => {
+  plan: string;
+};
+
+const EditLinkModal = ({ url, editActive, setEditActive, plan }: Props) => {
   const {
+    control,
     register,
     handleSubmit,
     setValue,
@@ -57,91 +62,110 @@ const EditLinkModal = ({
   };
 
   return (
-    <>
-      {editActive && (
-        <>
-          <Sheet triggerFn={setEditActive} />
-          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-100">
-            <div className="relative h-full w-[500px]">
-              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-200 p-4">
-                <img
-                  src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(
-                    url.longUrl
-                  )}`}
-                  className="w-[30px]"
-                  alt=""
+    <Dialog open={editActive} onOpenChange={setEditActive}>
+      <DialogContent>
+        <DialogHeader>
+          <div className="flex items-center gap-3">
+            <img
+              src={`http://www.google.com/s2/favicons?domain=${getSiteUrl(url.longUrl)}`}
+              className="w-8 h-8 rounded"
+              alt="Site favicon"
+            />
+            <div>
+              <DialogTitle>Edit Link</DialogTitle>
+              <DialogDescription>
+                Editing sneek.co/{url.short}
+              </DialogDescription>
+            </div>
+          </div>
+        </DialogHeader>
+
+        <div className="px-6 py-4">
+          <form
+            onSubmit={handleSubmit(handleLinkUpdate)}
+          >
+            <div className="flex flex-col gap-4 pt-8">
+              <div>
+                <Label>Destination Url</Label>
+                <Controller
+                  name="longUrl"
+                  control={control}
+                  render={({ field, fieldState }) => (
+                    <Input
+                      {...field}
+                      placeholder="https://"
+                      pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9\-].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$"
+                      title="Must be valid URL"
+                      error={fieldState.error?.message}
+                    />
+                  )}
                 />
-                <p>Editing sneek.co/{url.short}</p>
               </div>
 
-              <form
-                className="h-full p-4 pt-20"
-                action=""
-                onSubmit={handleSubmit(handleLinkUpdate)}
-              >
-                <div className="mt-4 flex flex-col gap-4">
-                  <div>
-                    <Label>Destination Url</Label>
-                    <Input
-                      register={register}
-                      placeholder=""
-                      label="longUrl"
-                      hidden={false}
-                    />
+              <div>
+                <Label>Short Url</Label>
+                <div className="flex items-center gap-2">
+                  <div className="rounded-full bg-accent px-2 py-1">
+                    sneek.co/
                   </div>
-
-                  <div>
-                    <Label>Short Url</Label>
-                    <div className="flex items-center gap-2">
-                      <div className="rounded-full bg-accent px-2 py-1">
-                        sneek.co/
-                      </div>
+                  <Controller
+                    name="short"
+                    control={control}
+                    render={({ field, fieldState }) => (
                       <Input
-                        register={register}
-                        placeholder=""
-                        label="short"
-                        hidden={false}
+                        {...field}
+                        placeholder="Enter a back-half(Optional)"
+                        error={fieldState.error?.message}
                       />
-                    </div>
-                  </div>
-
-                  <div className="my-4 border-t border-b border-base-300 py-4 text-center">
-                    Optionals
-                  </div>
-
-                  <PasswordEditSection
-                    register={register}
-                    password={url.password!}
-                    setvalue={setValue}
-                    plan={plan}
+                    )}
                   />
-                  <div className="flex items-center justify-between">
-                    <p>isShareale</p>
-                    <Switch
-                      label="isShareable"
-                      register={register}
-                      isChecked={shareable}
-                      fn={setIsShareable}
-                      disabled={
-                        !(user.user.username !== "Guest" && plan !== "free")
-                      }
-                    />
-                  </div>
-
-                  <Button
-                    classnames="bg-primary"
-                    disabled={!(user.user.username && plan !== "free")}
-                    type="submit"
-                  >
-                    Submit
-                  </Button>
                 </div>
-              </form>
+              </div>
+
+              <div className="my-4 border-t border-b border-base-300 py-4 text-center">
+                Optionals
+              </div>
+
+              <PasswordEditSection
+                control={control}
+                password={url.password!}
+                setvalue={setValue}
+                plan={plan}
+              />
+              <div className="flex items-center justify-between">
+                <p>isShareale</p>
+                <Switch
+                  label="isShareable"
+                  register={register}
+                  isChecked={shareable}
+                  fn={setIsShareable}
+                  disabled={
+                    !(user.user.username !== "Guest" && plan !== "free")
+                  }
+                />
+              </div>
             </div>
-          </SheetContent>
-        </>
-      )}
-    </>
+
+          </form>
+        </div>
+            <DialogFooter className="space-y-4">
+                <Button
+                    // variant="outline"
+                    onClick={() => setEditActive(false)}
+                >
+                    Cancel
+                </Button>
+                <Button
+                    type="submit"
+                    disabled={!(user.user.username !== undefined && plan !== "free")}
+                    classnames="bg-primary text-primary-content"
+                >
+                    Save Changes
+                </Button>
+            </DialogFooter>
+
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -3,20 +3,22 @@ import {Sheet, SheetContent} from "../sheet";
 import Label from "../label";
 import Input from "../Input";
 import {LuSearch} from "react-icons/lu";
-import {SubmitHandler, useForm} from "react-hook-form";
+import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {getSiteUrl} from "../../../Utils/getSiteUrl";
 import {UseDebounce} from "../../../hooks/use-debounce";
 import {useSearchParams} from "react-router-dom";
 import {useGetUrlsQuery} from "../../../app/services/urlapi";
+import Dialog, {DialogContent} from "../dialog";
 
 type Props = {
     searchLinkActive: boolean;
     setSearchLinkActive: Dispatch<SetStateAction<boolean>>;
 }
+
 const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchTerm, setSearchTerm] = useState<string | null>('')
-    const {register, handleSubmit,watch} = useForm<{ search: string }>();
+    const {control, handleSubmit,watch} = useForm<{ search: string }>();
     const debounceValue = UseDebounce<string>(watch('search') as unknown as string)
     const {data, isLoading} = useGetUrlsQuery(searchTerm, {skip: searchTerm?.split('=')[1] == '', refetchOnMountOrArgChange: true})
     const search = searchParams.get('search');
@@ -52,9 +54,8 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
         <>
             {searchLinkActive &&
                 <>
-                    <Sheet triggerFn={setSearchLinkActive}/>
-                    <SheetContent
-                        classnames="top-[20%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-200">
+                    <Dialog open={searchLinkActive} onOpenChange={setSearchLinkActive}>
+                    <DialogContent>
                         <div className="relative h-full w-[500px]">
                             <div
                                 className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-300 p-4">
@@ -78,11 +79,17 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
                                 <div className="mt-8 flex flex-col gap-4">
                                     <div>
                                         <Label>Destination Url</Label>
-                                        <Input
-                                            register={register}
-                                            placeholder=""
-                                            label="search"
-                                            hidden={false}
+                                        <Controller
+                                            name="search"
+                                            control={control}
+                                            render={({ field }) => (
+                                                <Input
+                                                    {...field}
+                                                    placeholder="https://"
+                                                    pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9\-].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$"
+                                                    title="Must be valid URL"
+                                                />
+                                            )}
                                         />
                                     </div>
                                     {/*<Button classnames="self-start">Search</Button>*/}
@@ -96,11 +103,12 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
                                     <li className="cursor-pointer" key={url._id}>{url.longUrl}</li>
                                 ))}
                             </div>}
-                    </SheetContent>
+                    </DialogContent>
+                    </Dialog>
                 </>
             }
         </>
-    )
+    );
 };
 
 export default SearchLinkModal;

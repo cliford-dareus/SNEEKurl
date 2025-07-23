@@ -1,19 +1,19 @@
 import {useEffect, useState} from "react";
 import Switch from "../switch";
 import {Url} from "../../../app/services/urlapi";
-import {UseFormRegister} from "react-hook-form";
+import {Controller, UseFormRegister} from "react-hook-form";
 import Input from "../Input";
 import {useAppSelector} from "../../../app/hook";
 import {selectCurrentUser} from "../../../features/auth/authslice";
 
 type Props = {
-    register: UseFormRegister<Url | any>;
+    control: any;
     password: string;
     setvalue: any;
     plan: string;
 };
 
-const PasswordEditSection = ({register, password, setvalue, plan}: Props) => {
+const PasswordEditSection = ({control, password, setvalue, plan}: Props) => {
     const [enable, setEnable] = useState(!!password);
     const user = useAppSelector(selectCurrentUser);
 
@@ -38,12 +38,16 @@ const PasswordEditSection = ({register, password, setvalue, plan}: Props) => {
 
             {enable && (
                 <div>
-                    <Input
-                        disabled={!(user.user.username !== "Guest" && plan !== "free")}
-                        register={register}
-                        label="password"
-                        hidden={false}
-                        placeholder="Enter password"
+                    <Controller
+                        name="password"
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                {...field}
+                                placeholder="Enter password"
+                                hidden={false}
+                            />
+                        )}
                     />
                 </div>
             )}

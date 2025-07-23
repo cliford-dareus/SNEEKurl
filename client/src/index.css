@@ -1,0 +1,207 @@
+/* Dialog animations */
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-zoom-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dialog-zoom-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.95);
+  }
+}
+
+/* Apply animations */
+.fade-in-0 {
+  animation: dialog-fade-in 200ms ease-out;
+}
+
+.fade-out-0 {
+  animation: dialog-fade-out 200ms ease-in;
+}
+
+.zoom-in-95 {
+  animation: dialog-zoom-in 200ms ease-out;
+}
+
+.zoom-out-95 {
+  animation: dialog-zoom-out 200ms ease-in;
+}
+
+/* Dialog specific styles */
+[role="dialog"] {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Focus styles for dialog */
+[role="dialog"]:focus {
+  outline: none;
+}
+
+/* Ensure dialog content is scrollable */
+.dialog-content {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar for dialog content */
+.dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dialog-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dialog-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.dialog-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Popover animations - improved for positioning */
+@keyframes popover-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popover-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes popover-zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes popover-zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Apply animations */
+.animate-slide-up-fade {
+  animation: slide-up-fade 200ms ease-out;
+}
+
+/* Popover specific styles */
+[role="dialog"][data-side] {
+  transform-origin: var(--radix-popover-content-transform-origin);
+}
+
+[role="dialog"][data-side="top"] {
+  transform-origin: bottom center;
+}
+
+[role="dialog"][data-side="right"] {
+  transform-origin: left center;
+}
+
+[role="dialog"][data-side="bottom"] {
+  transform-origin: top center;
+}
+
+[role="dialog"][data-side="left"] {
+  transform-origin: right center;
+}
+
+/* Positioning states */
+.popover-positioning {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.popover-positioned {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* Arrow styles */
+.popover-arrow {
+  fill: currentColor;
+}
+
+/* Focus styles for popover trigger */
+[aria-haspopup="dialog"]:focus {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Ensure popover content is properly layered */
+.popover-content {
+  z-index: 50;
+}
+
+/* Smooth transitions for position updates */
+[role="dialog"][data-side] {
+  transition: left 150ms ease-out, top 150ms ease-out;
+}

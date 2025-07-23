@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAppSelector } from "../app/hook";
 import { RootState } from "../app/store";
 import { useRetrieveSubscriptionQuery } from "../app/services/stripe";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Input from "./ui/Input";
 import Button from "./ui/button";
 import ChangePasswordSection from "./ui/modals/change-password-section";
@@ -33,7 +33,7 @@ const Profile = () => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [updateUserDetails, { isLoading }] = useUpdateUserDetailsMutation();
 
-  const { register, handleSubmit, setValue, formState: { errors, isDirty } } = useForm<Profile>({
+  const { register, handleSubmit, setValue, control, formState: { errors, isDirty } } = useForm<Profile>({
     defaultValues: {
       username: user.user.username,
       email: user.user.email,
@@ -149,13 +149,17 @@ const Profile = () => {
                   <LuUser size={16} />
                   Username
                 </label>
-                <Input
-                  register={register}
-                  label="username"
-                  hidden={false}
-                  placeholder="Enter your username"
-                  disabled={!isEditing}
-                  className={`${!isEditing ? 'bg-base-200' : 'bg-base-100'}`}
+                <Controller
+                  name="username"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Enter your username"
+                      disabled={!isEditing}
+                      className={`${!isEditing ? 'bg-base-200' : 'bg-base-100'}`}
+                    />
+                  )}
                 />
                 {errors.username && (
                   <p className="text-error text-sm">{errors.username.message}</p>
@@ -167,13 +171,17 @@ const Profile = () => {
                   <LuMail size={16} />
                   Email Address
                 </label>
-                <Input
-                  register={register}
-                  label="email"
-                  hidden={false}
-                  placeholder="Enter your email"
-                  disabled={!isEditing}
-                  className={`${!isEditing ? 'bg-base-200' : 'bg-base-100'}`}
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      placeholder="Enter your email"
+                      disabled={!isEditing}
+                      className={`${!isEditing ? 'bg-base-200' : 'bg-base-100'}`}
+                    />
+                  )}
                 />
                 {errors.email && (
                   <p className="text-error text-sm">{errors.email.message}</p>
@@ -188,7 +196,7 @@ const Profile = () => {
                   <LuShield className="text-warning" size={20} />
                   <h3 className="font-medium">Change Password</h3>
                 </div>
-                <ChangePasswordSection register={register} setvalue={setValue} />
+                <ChangePasswordSection register={register} control={control} setvalue={setValue} />
               </div>
             )}
 

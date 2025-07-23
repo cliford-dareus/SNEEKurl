@@ -1,30 +1,30 @@
-import { SubmitHandler, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/button";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../app/services/auth";
-import { useAppDispatch, useAppSelector } from "../../app/hook";
-import { AuthState, selectCurrentUser, setCredentials } from "./authslice";
+import { useAppDispatch } from "../../app/hook";
+import { setCredentials } from "./authslice";
 import { useEffect } from "react";
-import useLocalStorage from "../../hooks/use-local-storage";
 import { useAuth } from "../../hooks/useAuth";
-
-type Props = {};
 
 export type IUserFormValues = {
   username: string;
-  email: string;
   password: string;
 };
 
-const Login = (props: Props) => {
+const Login = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAuth();
   const [useLogin, { isLoading, isError }] = useLoginMutation();
-  const { register, handleSubmit } = useForm<IUserFormValues>({
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors }
+  } = useForm<IUserFormValues>({
     defaultValues: {
-      email: "",
       username: "",
       password: "",
     },
@@ -37,7 +37,6 @@ const Login = (props: Props) => {
         password: formData.password,
       }).unwrap();
 
-      // Don't store token in localStorage anymore
       dispatch(
         setCredentials({
           user: {
@@ -99,29 +98,65 @@ const Login = (props: Props) => {
           </div>
 
           <form
-            action=""
             className="mt-16 flex flex-col gap-4"
             onSubmit={handleSubmit(onsubmit)}
           >
-            <Input
-              register={register}
-              label="username"
-              placeholder="Enter your username"
-              hidden={false}
+            <Controller
+              name="username"
+              control={control}
+              rules={{
+                required: "Username is required",
+                minLength: {
+                  value: 3,
+                  message: "Username must be at least 3 characters"
+                }
+              }}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  placeholder="Enter your username"
+                  error={fieldState.error?.message}
+                />
+              )}
             />
 
-            <Input
-              register={register}
-              label="password"
-              placeholder="Enter your password"
-              hidden={false}
+            <Controller
+              name="password"
+              control={control}
+              rules={{
+                required: "Password is required",
+                minLength: {
+                  value: 2,
+                  message: "Password must be at least 6 characters"
+                }
+              }}
+              render={({ field, fieldState }) => (
+                <Input
+                  {...field}
+                  type="password"
+                  placeholder="Enter your password"
+                  error={fieldState.error?.message}
+                />
+              )}
             />
 
-            <Button classnames="bg-primary">Continue</Button>
+            <Button
+              type="submit"
+              classnames="bg-primary"
+              disabled={isLoading}
+            >
+              {isLoading ? "Signing in..." : "Continue"}
+            </Button>
+
+            {isError && (
+              <p className="text-sm text-destructive text-center">
+                Login failed. Please check your credentials.
+              </p>
+            )}
           </form>
 
           <div>
-            <Button classnames="bg-primary">Sign With Github</Button>
+            <Button  classnames="bg-primary">Sign With Github</Button>
           </div>
 
           <div className="mt-16 text-neutral">

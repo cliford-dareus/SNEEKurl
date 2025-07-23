@@ -24,6 +24,7 @@ import Layout from "./components/layout/layout";
 import AdminLayout from "./components/layout/admin-layout";
 import Setting from "./components/layout/setting-layout";
 import Links from "./pages/links";
+import CustomizeQr from "./pages/customize-qr";
 import { useTokenRefresh } from "./hooks/useTokenRefresh";
 
 function App() {
@@ -105,7 +106,6 @@ function App() {
         <Route path="/:slug" element={<LinksInBio />} />
 
         <Route element={<Layout />}>
-          <Route path="/test" element={<Report />} />
           <Route path="/pricing" element={<Pricing />}>
             <Route path="checkout" element={<Checkout />} />
           </Route>
@@ -121,6 +121,7 @@ function App() {
             <Route path="/link-in-bio" element={<LinkInBio />} />
             <Route path="/link-in-bio/:id" element={<ManageLinkInBio />} />
             <Route path="/analytics/:id" element={<LinkAnalytics />} />
+            <Route path="/qr/customize" element={<CustomizeQr />} />
             <Route path="/setting" element={<Setting />}>
               <Route index element={<Profile />} />
               <Route path="subscription" element={<Subscription />} />

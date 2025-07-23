@@ -4,12 +4,13 @@ import {LuArrowDown, LuArrowUp, LuFilter} from "react-icons/lu";
 import LinkItems from "../components/link-items";
 import Portal from "../components/portal";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
+import {useUserPlan} from "../components/layout/admin-layout";
 
 const Links = () => {
     const [openFilter, setOpenFilter] = useState(false);
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     // const user = useAppSelector((state: RootState) => state.auth);
-    // const plan = useUserPlan();
+    const plan = useUserPlan();
     const {data, isLoading} = useGetUrlsQuery({});
 
     return (

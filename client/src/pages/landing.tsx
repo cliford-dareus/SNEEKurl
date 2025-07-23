@@ -37,6 +37,7 @@ import {
     Tooltip,
     TooltipProvider,
     TooltipTrigger,
+    TooltipContent,
 } from "../components/ui/tooltip";
 import Portal from "../components/portal";
 import {useUserPlan} from "../components/layout/layout";
@@ -50,10 +51,12 @@ const HomeLinkItem = ({
                           url,
                           isAuthenticated,
                           isFreePlan,
+                          plan,
                       }: {
     url: Url;
     isAuthenticated: boolean;
     isFreePlan: boolean;
+    plan: string;
 }) => {
     const [active, setActive] = useState(false);
     const [open, setOpen] = useState(false);
@@ -85,7 +88,7 @@ const HomeLinkItem = ({
             <div
                 className={classNames(
                     timeLeft.expires ? "opacity-50" : "",
-                    "flex items-center justify-between rounded-lg bg-base-300 px-4 py-2 h-[60px] w-full",
+                    "relative flex items-center justify-between rounded-lg bg-base-300 px-4 py-2 h-[60px] w-full",
                 )}
             >
                 <div className="w-[80%]">
@@ -112,18 +115,17 @@ const HomeLinkItem = ({
                             </div>
 
                             {!isAuthenticated && (
-                                <TooltipProvider>
-                                    <TooltipTrigger>
-                                        <div className="flex items-center gap-1">
-                                            <LuClock size={18}/>
-                                            {timeLeft.hours === 0 ? "" : `${timeLeft.hours} hours`}
-                                            {timeLeft.minutes}m
-                                        </div>
-                                    </TooltipTrigger>
-                                    <div className="relative">
-                                        <Tooltip content="Tooltip content" direction="bottom"/>
+                                <Tooltip
+                                    content="Link will expire in 24 hours"
+                                    side="bottom"
+                                    delayDuration={500}
+                                >
+                                    <div className="flex items-center gap-1 text-xs cursor-help">
+                                        <LuClock size={18}/>
+                                        {timeLeft.hours === 0 ? "" : `${timeLeft.hours} hours`}
+                                        {timeLeft.minutes}m
                                     </div>
-                                </TooltipProvider>
+                                </Tooltip>
                             )}
                         </div>
                     </div>
@@ -150,6 +152,12 @@ const HomeLinkItem = ({
                     shareActive={shareActive}
                     setShareActive={setShareActive}
                     url={url}
+                />
+                <EditLinkModal
+                    url={url}
+                    editActive={active}
+                    setEditActive={setActive}
+                    plan={plan}
                 />
             </Portal>
         </>
@@ -180,8 +188,9 @@ const Landing = () => {
     const {plan} = useUserPlan();
     const isFreePlan = plan === "free";
     const user = useAppSelector(selectCurrentUser);
-    const isAuthenticated = user.user.username;
+    const isAuthenticated = user.user.username !== undefined;
     const {data, isSuccess} = useGetUrlsQuery("limit=5");
+
 
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -211,12 +220,12 @@ const Landing = () => {
 
                 <div className="mt-4">
                     <div className="mx-auto flex flex-col gap-4 max-w-[500px] w-full">
-                        <div className="w-full">
+
                             <HomeCreateLinkManager
                                 isAuthenticated={isAuthenticated}
                                 isFreePlan={isFreePlan}
                             />
-                        </div>
+
                         <div className="flex flex-col gap-2 max-w-[500px] mx-auto w-full">
                             {data?.urls
                                     .slice(0, 3)
@@ -226,6 +235,7 @@ const Landing = () => {
                                             url={url}
                                             isAuthenticated={!!isAuthenticated}
                                             isFreePlan={isFreePlan}
+                                            plan={plan!}
                                         />
                                     ))
                                }

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import Input from "../Input";
-import { Sheet, SheetContent } from "../sheet";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog";
 import { Dispatch, SetStateAction } from "react";
 import { Url } from "../../../app/services/urlapi";
 import { getSiteUrl } from "../../../Utils/getSiteUrl";
@@ -87,21 +87,30 @@ const ShareLinkModal = ({ shareActive, setShareActive, url }: Props) => {
     <>
       {shareActive && (
         <>
-          <Sheet triggerFn={setShareActive} />
-          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-200">
-            <div className="relative p-4 w-[500px]">
-              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-300 p-4">
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-                    url.longUrl
-                  )}`}
-                  className="w-[30px]"
-                  alt=""
-                />
-                <p>Sharing sneek.co/{url.short}</p>
-              </div>
+          <Dialog open={shareActive} onOpenChange={setShareActive}>
+            <DialogContent>
+               <DialogHeader>
+                    <div className="flex items-center gap-3">
+                                        <svg
+                                          width="40"
+                                          height="40"
+                                          viewBox="0 0 200 250"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                            fill="currentColor"
+                                          />
+                                        </svg>
+                                        <div>
+                                          <DialogTitle>Create New Link</DialogTitle>
+                                          <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                                        </div>
+                                      </div>
+                </DialogHeader>
 
-              <div className="pt-20">
+              <div className="px-6 py-4">
                 <h2 className="font-bold text-center mb-4">
                   Share Link with friends
                 </h2>
@@ -190,8 +199,8 @@ const ShareLinkModal = ({ shareActive, setShareActive, url }: Props) => {
                   </Button>
                 </div>
               </div>
-            </div>
-          </SheetContent>
+            </DialogContent>
+            </Dialog>
         </>
       )}
     </>

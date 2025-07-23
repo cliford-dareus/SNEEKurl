@@ -1,8 +1,11 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Sheet, SheetContent } from "../sheet";
+import { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog";
 import { Url } from "../../../app/services/urlapi";
 import { getSiteUrl } from "../../../Utils/getSiteUrl";
 import { QRCodeSVG } from "qrcode.react";
+import Button from "../button";
+import { useNavigate } from "react-router-dom";
+import Dialog from "../dialog";
 
 const URLs = "http://localhost:4080";
 
@@ -16,25 +19,36 @@ const EditQrModal = ({
   setQrActive: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [props, setProps] = useState(url);
+  const Navigate = useNavigate();
 
   return (
     <>
       {editQrActive && (
         <>
-          <Sheet triggerFn={setQrActive} />
-          <SheetContent classnames="top-[50%] left-[50%] absolute -translate-x-[50%] -translate-y-[50%] rounded-lg bg-base-200">
-            <div className="relative h-full p-4">
-              <div className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-300 p-4">
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-                    url.longUrl
-                  )}`}
-                  className="w-[30px]"
-                  alt=""
-                />
-                <p>Qr sneek.co/{url.short}</p>
-              </div>
-              <div className="px-4 pt-20 pb-4">
+          <Dialog open={editQrActive} onOpenChange={setQrActive}>
+          <DialogContent>
+               <DialogHeader>
+                        <div className="flex items-center gap-3">
+                          <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 200 250"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <div>
+                            <DialogTitle>Create New Link</DialogTitle>
+                            <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                          </div>
+                        </div>
+                      </DialogHeader>
+            <div className="">
+              <div className="px-4 pb-4">
                 <QRCodeSVG
                   id="qr-svg"
                   className="w-full"
@@ -42,8 +56,14 @@ const EditQrModal = ({
                   value={`${URLs}/${url.short}`}
                 />
               </div>
+
+              <div className="flex w-full flex-col items-center justify-center rounded-bl-lg rounded-br-lg p-4">
+                <Button classnames="bg-primary" onClick={() => Navigate("/qr/customize")
+                }>Customize</Button>
+              </div>
             </div>
-          </SheetContent>
+          </DialogContent>
+          </Dialog>
         </>
       )}
     </>

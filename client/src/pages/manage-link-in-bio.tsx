@@ -5,7 +5,11 @@ import {
 } from "../app/services/page";
 import { LuArrowLeft, LuSettings, LuTrash } from "react-icons/lu";
 import {DragEvent, useEffect, useRef, useState} from "react";
-import { Popover, PopoverContainer } from "../components/ui/popover";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "../components/ui/popover";
 import Button from "../components/ui/button";
 import Portal from "../components/portal";
 import CreateLinkBlockModal from "../components/ui/modals/create-link-block-modal";
@@ -78,7 +82,7 @@ const LinkItem = ({ items, link, index, manageLinksOrder }: any) => {
           "h-5 w-5 rounded-full"
         )}
       ></div>
-      {getSiteUrl(link._id.longUrl)}
+      {getSiteUrl(link?._id?.longUrl)}
 
       <button className="ml-auto">
         <LuSettings />
@@ -127,31 +131,35 @@ const ManageLinkInBio = ({}: Props) => {
 
       <div className="flex gap-4">
         <div className="flex-1">
-          <PopoverContainer triggerFn={setOpen} classnames="">
-            <Button onClick={() => setOpen(!open)}>Add Block</Button>
-            {open && (
-              <Popover classnames="!bg-base-300 border border-base-100">
-                <div className="flex flex-col gap-2 items-center">
-                  <p className="text-center font-bold">Select a Block</p>
-                </div>
-                <div className="flex flex-col gap-2 items-center mt-4">
-                  {BLOCKS.map((block: any) => (
-                    <div
-                      key={block.id}
-                      onClick={() => {
-                        setBlockSelected(block.tag);
-                        setCreateLinkBlockActive(true);
-                        setOpen(false);
-                      }}
-                      className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer"
-                    >
-                      {block.name}
-                    </div>
-                  ))}
-                </div>
-              </Popover>
-            )}
-          </PopoverContainer>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button>Add Block</Button>
+            </PopoverTrigger>
+            <PopoverContent
+              side="bottom"
+              align="start"
+              className="!bg-base-300 border border-base-100 p-4"
+              showArrow={true}
+            >
+              <div className="flex flex-col gap-2 items-center">
+                <p className="text-center font-bold">Select a Block</p>
+              </div>
+              <div className="flex flex-col gap-2 items-center mt-4">
+                {BLOCKS.map((block: any) => (
+                  <div
+                    key={block.id}
+                    onClick={() => {
+                      setBlockSelected(block.tag);
+                      setCreateLinkBlockActive(true);
+                    }}
+                    className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
+                  >
+                    {block.name}
+                  </div>
+                ))}
+              </div>
+            </PopoverContent>
+          </Popover>
 
           {!isLoading && (
             <ul className="mt-2">

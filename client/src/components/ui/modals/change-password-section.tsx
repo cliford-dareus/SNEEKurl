@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import Switch from "../switch";
 import Input from "../Input";
-import {UseFormRegister} from "react-hook-form";
+import {Controller, UseFormRegister} from "react-hook-form";
 import {Profile} from "../../profile";
 
 type Props = {
     register: UseFormRegister<Profile | any>;
+    control: any;
     setvalue: any;
 }
 
-const ChangePasswordSection = ({register, setvalue}: Props) => {
+const ChangePasswordSection = ({register, control, setvalue}: Props) => {
     const [enable, setEnable] = useState(false);
 
     useEffect(() => {
@@ -37,22 +38,32 @@ const ChangePasswordSection = ({register, setvalue}: Props) => {
                         <div className='mt-4 flex flex-col gap-4'>
                             <div>
                                 <p className=''>Old Password</p>
-                                <Input
-                                    register={register}
-                                    label='oldpassword'
-                                    placeholder=''
-                                    hidden={false}
+                                <Controller
+                                    name="oldpassword"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            placeholder="Enter your old password"
+                                            hidden={false}
+                                        />
+                                    )}
                                 />
+
                             </div>
 
                             <div>
                                 <p className=''>New Password</p>
-                                <Input
-                                    register={register}
-                                    label='newpassword'
-                                    placeholder=''
-                                    hidden={false}
-                                    type='password'
+                                <Controller
+                                    name="newpassword"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            {...field}
+                                            placeholder="Enter your new password"
+                                            hidden={false}
+                                        />
+                                    )}
                                 />
                             </div>
                         </div>
