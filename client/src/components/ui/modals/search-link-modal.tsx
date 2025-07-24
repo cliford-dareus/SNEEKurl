@@ -8,7 +8,9 @@ import {getSiteUrl} from "../../../Utils/getSiteUrl";
 import {UseDebounce} from "../../../hooks/use-debounce";
 import {useSearchParams} from "react-router-dom";
 import {useGetUrlsQuery} from "../../../app/services/urlapi";
-import Dialog, {DialogContent} from "../dialog";
+import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../dialog";
+import {motion} from "framer-motion";
+import LinkCard from '../../link-card';
 
 type Props = {
     searchLinkActive: boolean;
@@ -20,15 +22,16 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
     const [searchTerm, setSearchTerm] = useState<string | null>('')
     const {control, handleSubmit,watch} = useForm<{ search: string }>();
     const debounceValue = UseDebounce<string>(watch('search') as unknown as string)
-    const {data, isLoading} = useGetUrlsQuery(searchTerm, {skip: searchTerm?.split('=')[1] == '', refetchOnMountOrArgChange: true})
+    const {data, isLoading} = useGetUrlsQuery(searchTerm, {skip: searchTerm?.split('=')[1] == null})
     const search = searchParams.get('search');
 
     const handleSearch = useCallback((newParams:  {[key: string]: string}) => {
+        const updatedParams = new URLSearchParams(searchParams);
         Object.entries(newParams).forEach(([key, value]) => {
-            searchParams.set(key, value);
+            updatedParams.set(key, value);
         });
-        setSearchParams(searchParams);
-    }, [])
+        setSearchParams(updatedParams);
+    }, [searchParams, setSearchParams])
 
     useEffect(() => {
         const createQueryParams = (s: { [key: string]: string | null }) => {
@@ -45,10 +48,9 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
         createQueryParams({ search });
     }, [debounceValue]);
 
-
     useEffect(() => {
-        if(!searchLinkActive) setSearchParams('');
-    }, [searchLinkActive]);
+        if(!searchLinkActive) setSearchParams({});
+    }, [searchLinkActive, setSearchParams]);
 
     return (
         <>
@@ -56,24 +58,28 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
                 <>
                     <Dialog open={searchLinkActive} onOpenChange={setSearchLinkActive}>
                     <DialogContent>
-                        <div className="relative h-full w-[500px]">
-                            <div
-                                className="fixed top-0 right-0 left-0 flex w-full flex-col items-center justify-center rounded-tl-lg rounded-tr-lg bg-base-300 p-4">
-                                <svg width="40"
-                                     height="40"
-                                     viewBox="0 0 200 250"
-                                     fill="none"
-                                     xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                          fill="currentColor"/>
-                                </svg>
-                                <p className="mb-2 font-medium">Searching for Links</p>
-                                <LuSearch size={24}/>
-                            </div>
-
+                            <DialogHeader>
+                    <div className="flex items-center gap-3">
+                                        <svg
+                                          width="40"
+                                          height="40"
+                                          viewBox="0 0 200 250"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                            fill="currentColor"
+                                          />
+                                        </svg>
+                                        <div>
+                                          <DialogTitle>Search Link</DialogTitle>
+                                          <DialogDescription>Search your link</DialogDescription>
+                                        </div>
+                                      </div>
+                </DialogHeader>
+                        <div className="px-6 py-4">
                             <form
-                                action=""
-                                className="h-full p-4 pt-24"
                                 onKeyUp={handleSubmit(handleSearch)}
                             >
                                 <div className="mt-8 flex flex-col gap-4">
@@ -92,17 +98,24 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
                                             )}
                                         />
                                     </div>
-                                    {/*<Button classnames="self-start">Search</Button>*/}
                                 </div>
                             </form>
                         </div>
 
                         {searchLinkActive &&
-                            <div className="absolute w-full rounded-md border border-base-300 bg-base-200 p-4">
-                                {searchTerm && !isLoading && data?.urls.map(url => (
-                                    <li className="cursor-pointer" key={url._id}>{url.longUrl}</li>
+                            <motion.div
+                                className="w-full rounded-md border border-base-300 bg-base-200 p-4 mt-4"
+                                // add animation for when the height grows and shrinks
+                                initial={{ height: 0 }}
+                                animate={{ height: 'auto' }}
+                                exit={{ height: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                {searchTerm?.split('=')[1] && !isLoading && data?.urls.map(url => (
+                                    <li className="cursor-pointer" key={url._id}>{url.longUrl} </li>
+                                    // <LinkCard key={url._id} url={url} plan={'free'} />
                                 ))}
-                            </div>}
+                            </motion.div>}
                     </DialogContent>
                     </Dialog>
                 </>

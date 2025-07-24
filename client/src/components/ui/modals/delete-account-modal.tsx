@@ -137,11 +137,12 @@ const DeleteAccountModal = ({ isOpen, setIsOpen }: Props) => {
                   <Controller
                     name="confirmText"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <Input
                         {...field}
                         placeholder="Type DELETE here"
                         className={`${isConfirmTextValid ? 'border-success' : 'border-error'}`}
+                        error={fieldState.error?.message}
                       />
                     )}
                   />
@@ -157,12 +158,13 @@ const DeleteAccountModal = ({ isOpen, setIsOpen }: Props) => {
                   <Controller
                     name="password"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <Input
                         {...field}
                         placeholder="Enter your password"
                         type="password"
                         className="border-base-300"
+                        error={fieldState.error?.message}
                       />
                     )}
                   />
@@ -210,9 +212,9 @@ const DeleteAccountModal = ({ isOpen, setIsOpen }: Props) => {
                 Back
               </Button>
               <Button
-                type="submit"
                 disabled={!isConfirmTextValid || isLoading}
                 classnames="bg-error text-white hover:bg-error-focus disabled:opacity-50"
+                onClick={handleSubmit(handleDeleteAccount)}
               >
                 {isLoading ? "Deleting Account..." : "Delete My Account"}
               </Button>

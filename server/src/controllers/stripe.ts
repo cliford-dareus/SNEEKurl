@@ -216,6 +216,7 @@ const updateSubscription = async (req: any, res: Response) => {
     }
 
     const currentSubscription = subscriptions.data[0];
+    console.log(currentSubscription);
 
     // Update subscription
     const updatedSubscription = await stripe.subscriptions.update(

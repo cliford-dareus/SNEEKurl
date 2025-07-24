@@ -46,8 +46,8 @@ const VisitLinkPassword = ({ status, url, setStatus }: Props) => {
                             />
                           </svg>
                           <div>
-                            <DialogTitle>Create New Link</DialogTitle>
-                            <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                            <DialogTitle>Visit Link</DialogTitle>
+                            <DialogDescription>Enter the password to visit the link</DialogDescription>
                           </div>
                         </div>
                       </DialogHeader>

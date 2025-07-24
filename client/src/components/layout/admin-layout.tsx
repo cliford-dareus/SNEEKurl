@@ -11,7 +11,7 @@ import { SIDEBAR_LINKS } from "../../Utils/common";
 import Header from "../Header";
 import DashboardTopInterface from "../dashboard-top-interface";
 import LinkLimitsDisplay from "../link-limits-display";
-
+import { useRetrieveSubscriptionQuery } from "../../app/services/stripe";
 
 type ContextType = {
   plan: string | null;
@@ -21,10 +21,14 @@ const AdminLayout = () => {
   const { pathname } = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
   const [sub_active, setSub_Active] = useState(0);
-  const user = useAppSelector(selectCurrentUser) as AuthState
-  // const { data } = useRetrieveSubscriptionQuery({username: user.username});
-  // const plan_name = data?.subscription?.data[0]?.plan.metadata.name;
-  const plan = "pro";
+  const user = useAppSelector(selectCurrentUser) as AuthState;
+  const { data } = useRetrieveSubscriptionQuery(
+    { username: user.user.username },
+    {
+      skip: !user.user.username,
+    },
+  );
+  const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
 
   useEffect(() => {
     SIDEBAR_LINKS.map((link, index) => {
@@ -36,7 +40,7 @@ const AdminLayout = () => {
 
   return (
     <div className="relative">
-      <Header isActive={true} plan={plan} user={user}/>
+      <Header isActive={true} plan={plan} user={user} />
       <main className="container mx-auto overflow-hidden px-4 pt-16">
         <DashboardTopInterface pathname={pathname} />
         <div className="flex gap-4 pt-4 h-[80vh]">

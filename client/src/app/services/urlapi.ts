@@ -21,7 +21,7 @@ export interface Url {
     creatorId: string;
     password?: string;
     expired_in?: Date;
-    clicks?: number;
+    totalClicks?: number;
     lastClick?: Date;
     metadata: Metadata[];
     _id: string;

@@ -299,32 +299,58 @@ const visitUrl = async (req: Request, res: Response) => {
     }
 };
 
-const deleteUrl = async (req: Request, res: Response) => {
+const deleteUrl = async (req: any, res: Response) => {
+    const user = req.user;
     const {short} = req.params;
+
+    const url = await Short.findOne({short});
+    if (!url) {
+        return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({message: "Link does not exist"});
+    }
+
+    const isUser = await User.findOne({_id: user?._id});
+    if (!isUser) {
+        return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({message: "User does not exist"});
+    }
+
+    // Check if the link belongs to the user
+    if (url.user?.toString() !== isUser._id.toString()) {
+        return res
+            .status(StatusCodes.FORBIDDEN)
+            .json({message: "You don't have permission to delete this link"});
+    }
 
     try {
         const deletedShort = await Short.findOneAndDelete({short});
 
-    //Check if it was in a page and update the page
-    const page = await Page.find({ user: deletedShort?.user }).populate(
-      "links",
-    );
+        if (!deletedShort) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({message: "Link could not be deleted"});
+        }
 
-    page.forEach(async (pag) => {
-      const filter = pag.links.filter((x) => {
-        console.log(x, deletedShort?._id);
-        return x.link !== deletedShort?._id;
-      });
-      console.log("FILTER", filter);
-      await Page.findOneAndUpdate({ _id: pag._id }, { links: filter });
-    });
+        // Remove the link from all pages using $pull with the correct field structure
+        const updateResult = await Page.updateMany(
+            { user: isUser._id },
+            { $pull: { links: { _id: deletedShort._id } } }
+        );
 
-    res.status(StatusCodes.OK).send({ message: "Short deleted!" });
-  } catch (err) {
-    res
-      .status(StatusCodes.BAD_REQUEST)
-      .send({ message: "Smothing went wrong!" });
-  }
+        console.log(`Updated ${updateResult.modifiedCount} pages, removed link references`);
+
+        // Also delete associated click records for cleanup
+        await Click.deleteMany({ link: deletedShort._id });
+
+        res.status(StatusCodes.OK).send({ message: "Short deleted!" });
+    } catch (err) {
+        console.error("Delete URL error:", err);
+        res
+            .status(StatusCodes.BAD_REQUEST)
+            .send({ message: "Something went wrong!" });
+    }
 };
 
 const getClicks = async (req: any, res: Response) => {

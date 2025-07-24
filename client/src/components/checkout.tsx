@@ -1,11 +1,12 @@
 import { FormEvent, useState } from "react";
-import { Sheet, SheetContent } from "./ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { useLocation, useNavigate } from "react-router-dom";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import Button from "./ui/button";
 import { PaymentIntent, StripeCardElement } from "@stripe/stripe-js";
 import { useAppSelector } from "../app/hook";
 import { toast } from "react-toastify";
+import { DialogDescription } from "./ui/dialog";
 
 type Props = {};
 
@@ -56,12 +57,37 @@ const Checkout = (props: Props) => {
 
   return (
     <>
-      <Sheet />
-      <SheetContent classnames="fixed top-0 right-0 bottom-0 w-[30%] bg-red-400 py-10 text-left px-8">
-        <h1 className="text-2xl font-bold">Checkout</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis.</p>
+      <Sheet>
+      <SheetContent
+        side="right"
+        size="lg"
+        className="bg-base-100"
+        closeOnOutsideClick={true}
+        closeOnEscape={true}
+      >
+        <SheetHeader>
+              <div className="flex items-center gap-3">
+                          <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 200 250"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <div>
+                            <SheetTitle>Checkout</SheetTitle>
+                            <DialogDescription>Enter the card details to checkout</DialogDescription>
+                          </div>
+                        </div>
+        </SheetHeader>
 
-        <form className="mt-8" onSubmit={handleCheckout}>
+        <div className="px-6 py-4">
+              <form className="mt-8" onSubmit={handleCheckout}>
           <div className="relative rounded-xl bg-blue-800 p-4 h-[200px] w-[70%]">
             <div className="absolute top-4 left-4 font-bold">Visa</div>
             <div className="absolute right-4 bottom-4 left-4">
@@ -86,7 +112,11 @@ const Checkout = (props: Props) => {
 
           <Button classnames="mt-8 bg-primary">Proceed</Button>
         </form>
+        </div>
+
+
       </SheetContent>
+      </Sheet>
     </>
   );
 };

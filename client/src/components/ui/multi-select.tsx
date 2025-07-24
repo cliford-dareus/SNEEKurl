@@ -3,18 +3,12 @@ import { LuChevronDown } from "react-icons/lu";
 import { UseFormSetValue } from "react-hook-form";
 import { CreateLinkInBioProp } from "./modals/create-link-in-bio-modal";
 import { useGetUrlsQuery } from "../../app/services/urlapi";
+import Input from "./Input";
 
 type Props = {
   setvalues: UseFormSetValue<CreateLinkInBioProp & { links: string[] }>;
 };
 
-/**
- * Renders a multi-select component.
- *
- * @param props - The component props.
- * @param props.setvalues - The function to set form values.
- * @returns The rendered multi-select component.
- */
 const MultiSelect = ({
   setvalues,
 }: {
@@ -25,11 +19,6 @@ const MultiSelect = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
 
-  /**
-   * Handles the select change event.
-   *
-   * @param item - The selected item.
-   */
   const handleSelectChange = (item: string): void => {
     const isNotSelected = selectedItems.indexOf(item) === -1;
     if (isNotSelected) {
@@ -37,16 +26,10 @@ const MultiSelect = ({
     }
   };
 
-  /**
-   * Sets form values when selected items change.
-   */
   useEffect(() => {
     setvalues("links", selectedItems);
   }, [selectedItems, setvalues]);
 
-  /**
-   * Filter URLs based on search term.
-   */
   const filterDate = useMemo(() => {
     if (data?.urls && searchTerm) {
       return data?.urls.filter((item) => item.longUrl.includes(searchTerm));
@@ -54,12 +37,6 @@ const MultiSelect = ({
     return data?.urls;
   }, [data?.urls, searchTerm]);
 
-  /**
-   * Handle search event.
-   *
-   * @param e - The event object.
-   * @returns void
-   */
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(e.target.value);
   };
@@ -89,20 +66,20 @@ const MultiSelect = ({
 
       <div className="relative bg-base-200">
         {open && (
-          <div className="absolute top-2 z-20 w-full h-[300px] overflow-y-scroll bg-base-200 no-scrollbar">
+          <div className="w-full h-[300px] overflow-y-scroll bg-base-200 no-scrollbar">
             <div className="relative mb-10">
-              <input
-                className="fixed left-4 right-4 rounded-full border border-base-300 px-4 py-1 text-black outline-none focus:ring-2 focus:ring-primary"
-                type="text"
-                placeholder="Search"
-                onChange={handleSearch}
-              />
+                <Input
+                    className=""
+                    type="text"
+                    placeholder="Search"
+                    onChange={handleSearch}
+                />
             </div>
             {!isLoading &&
-              filterDate?.map((item) => (
+              filterDate?.map((item, index) => (
                 <div
                   className=" flex cursor-pointer items-center rounded-md border border-base-300 px-4 text-sm py-0.5 hover: hover:ring-2 hover:ring-primary mt-1"
-                  key={item._id}
+                  key={index}
                   onClick={() => handleSelectChange(item._id)}
                 >
                   {item.longUrl}

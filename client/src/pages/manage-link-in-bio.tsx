@@ -133,7 +133,7 @@ const ManageLinkInBio = ({}: Props) => {
         <div className="flex-1">
           <Popover>
             <PopoverTrigger asChild>
-              <Button>Add Block</Button>
+              <div>Add Block</div>
             </PopoverTrigger>
             <PopoverContent
               side="bottom"
@@ -166,7 +166,7 @@ const ManageLinkInBio = ({}: Props) => {
               {!isLoading &&
                 data?.links.map((link: any, index: number) => (
                   <LinkItem
-                    key={link._id}
+                    key={index}
                     link={link}
                     index={index}
                     items={data?.links}

@@ -19,7 +19,7 @@ const Layout = (props: Props) => {
       skip: !user.user.username,
     },
   );
-  const plan = data?.subscription?.data[0].plan.metadata.name || "free";
+  const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
 
   return (
     <div className="">

@@ -17,7 +17,7 @@ import {
     LuMousePointer,
 } from "react-icons/lu";
 import {getSiteUrl} from "../Utils/getSiteUrl";
-import {Popover, PopoverContainer} from "../components/ui/popover";
+import {Popover, PopoverTrigger, PopoverContent} from "../components/ui/popover";
 import EditLinkModal from "../components/ui/modals/edit-link-modal";
 import EditQrModal from "../components/ui/modals/edit-qr-modal";
 import ShareLinkModal from "../components/ui/modals/share-link-modal";
@@ -40,7 +40,7 @@ const Dashboard = () => {
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     const [analyticsPeriod, setAnalyticsPeriod] = useState('30d');
     const user = useAppSelector(selectCurrentUser)
-    const {data, isLoading} = useGetUrlsQuery({search: query.get('search')}, {refetchOnMountOrArgChange: true});
+    const {data, isLoading} = useGetUrlsQuery({search: query.get('search')});
     const {data: userAnalytics, isLoading: analyticsLoading} = useGetUserAnalyticsQuery(analyticsPeriod);
 
     const totalClicks = useMemo(() => {
@@ -234,16 +234,14 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <LinkItems/>
+                <LinkItems />
 
-                <Portal>
-                    <FilterLinkModal
+                <FilterLinkModal
                         open={openFilter}
                         setOpen={setOpenFilter}
                         activeFilter={activeFilter}
                         setActiveFilter={setActiveFilter}
-                    />
-                </Portal>
+                />
             </section>
         </>
     );

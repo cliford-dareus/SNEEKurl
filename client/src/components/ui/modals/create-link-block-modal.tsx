@@ -70,8 +70,8 @@ const CreateLinkBlockModal = ({
                                     />
                                 </svg>
                                 <div>
-                                    <DialogTitle>Create New Link</DialogTitle>
-                                    <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                                    <DialogTitle>Add Links to Block</DialogTitle>
+                                    <DialogDescription>Add links to your block</DialogDescription>
                                 </div>
                                 </div>
                             </DialogHeader>
@@ -83,7 +83,7 @@ const CreateLinkBlockModal = ({
                                 <div className="flex flex-col gap-4 pt-8">
                                     <Label>Select Urls</Label>
                                     <MultiSelect setvalues={setValue}/>
-                                    <Button classnames="bg-primary">Add Blocks</Button>
+                                    <Button type="submit" classnames="bg-primary">Add Blocks</Button>
                                 </div>
                             </form>
                         </div>

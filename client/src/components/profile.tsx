@@ -24,10 +24,11 @@ export type Profile = {
 
 const Profile = () => {
   const user = useAppSelector(selectCurrentUser);
-  const { data } = useRetrieveSubscriptionQuery({
-    username: user.user.username,
-  });
-  const plan = data?.subscription?.data[0]?.plan.metadata.name || "free";
+  const { data } = useRetrieveSubscriptionQuery(
+    { username: user.user.username },
+    { skip: !user.user.username }
+  );
+  const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
   const [editProfileActive, setEditProfileActive] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -70,6 +71,8 @@ const Profile = () => {
         return 'bg-gradient-to-r from-gray-400 to-gray-600';
     }
   };
+
+  console.log(data);
 
   return (
     <>

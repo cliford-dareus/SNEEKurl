@@ -104,8 +104,8 @@ const ShareLinkModal = ({ shareActive, setShareActive, url }: Props) => {
                                           />
                                         </svg>
                                         <div>
-                                          <DialogTitle>Create New Link</DialogTitle>
-                                          <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                                          <DialogTitle>Share Link</DialogTitle>
+                                          <DialogDescription>Share your link with friends and family</DialogDescription>
                                         </div>
                                       </div>
                 </DialogHeader>
