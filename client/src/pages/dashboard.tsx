@@ -1,38 +1,21 @@
-import {useEffect, useMemo, useRef, useState} from "react";
-import {
-    Url,
-    useDeleteUrlMutation, useGetUrlClicksQuery, useGetUrlQuery,
-    useGetUrlsQuery, useGetUserAnalyticsQuery,
-} from "../app/services/urlapi";
-import {Link, useParams, useSearchParams} from "react-router-dom";
+import {useMemo, useState} from "react";
+import {useGetUrlsQuery, useGetUserAnalyticsQuery} from "../app/services/urlapi";
+import {Link} from "react-router-dom";
 import {
     LuArrowDown,
     LuArrowUp,
     LuBarChart,
     LuFilter,
     LuLink2,
-    LuMoreVertical,
     LuTrendingUp,
-    LuUsers,
     LuMousePointer,
 } from "react-icons/lu";
-import {getSiteUrl} from "../Utils/getSiteUrl";
-import {Popover, PopoverTrigger, PopoverContent} from "../components/ui/popover";
-import EditLinkModal from "../components/ui/modals/edit-link-modal";
-import EditQrModal from "../components/ui/modals/edit-qr-modal";
-import ShareLinkModal from "../components/ui/modals/share-link-modal";
-import Portal from "../components/portal";
-import VisitLinkButton from "../components/visit-link-button";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
-import {useUserPlan} from "../components/layout/admin-layout";
-import {toast} from "react-toastify";
 import LinkItems from "../components/link-items";
 import MyResponsiveLine from "../components/ui/responsive-line";
-import {CHART_DATA} from "../Utils/common";
 import {useAppSelector} from "../app/hook";
 import {selectCurrentUser} from "../features/auth/authslice";
 import useQuery from "../hooks/use-query";
-import {clickByMonth} from "../Utils/agregate-by-month";
 
 const Dashboard = () => {
     let query = useQuery();
@@ -49,7 +32,6 @@ const Dashboard = () => {
 
     const chartData = useMemo(() => {
         if (!userAnalytics?.analytics?.clicksOverTime) return [];
-
         return [
             {
                 "id": "Clicks",
@@ -69,8 +51,8 @@ const Dashboard = () => {
             <section className="relative">
                 <div className="mb-4 flex justify-between items-center">
                     <div className="">
-                        <h2 className="font-medium text-xl">Hey, {user.user.username}</h2>
-                        <p className="text-sm text-neutral-content">Track your links and customize your bio links</p>
+                        <h2 className="font-medium text-2xl uppercase">Hey, {user.user.username}</h2>
+                        <p className="text-sm">Track your links and customize your bio links</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <select
@@ -91,7 +73,7 @@ const Dashboard = () => {
                     <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
                         <div className="absolute top-4 left-4">
                             <div className="flex items-center gap-2 mb-1">
-                                <LuMousePointer className="text-primary" size={16} />
+                                <LuMousePointer className="text-primary" size={16}/>
                                 <span className="text-2xl font-bold">{totalClicks}</span>
                             </div>
                             <p className="text-sm leading-3 text-neutral">Total clicks</p>
@@ -104,7 +86,7 @@ const Dashboard = () => {
                     <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
                         <div className="absolute top-4 left-4">
                             <div className="flex items-center gap-2 mb-1">
-                                <LuLink2 className="text-secondary" size={16} />
+                                <LuLink2 className="text-secondary" size={16}/>
                                 <span className="text-2xl font-bold">
                                     {userAnalytics?.analytics?.overview?.totalLinks || 0}
                                 </span>
@@ -113,7 +95,7 @@ const Dashboard = () => {
                         </div>
                         <div className="h-[130px] w-full mt-auto flex items-end justify-center">
                             <div className="text-4xl opacity-20">
-                                <LuLink2 />
+                                <LuLink2/>
                             </div>
                         </div>
                     </div>
@@ -121,7 +103,7 @@ const Dashboard = () => {
                     <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
                         <div className="absolute top-4 left-4">
                             <div className="flex items-center gap-2 mb-1">
-                                <LuTrendingUp className="text-accent" size={16} />
+                                <LuTrendingUp className="text-accent" size={16}/>
                                 <span className="text-2xl font-bold">
                                     {userAnalytics?.analytics?.overview?.averageClicksPerLink || 0}
                                 </span>
@@ -130,7 +112,7 @@ const Dashboard = () => {
                         </div>
                         <div className="h-[130px] w-full mt-auto flex items-end justify-center">
                             <div className="text-4xl opacity-20">
-                                <LuTrendingUp />
+                                <LuTrendingUp/>
                             </div>
                         </div>
                     </div>
@@ -138,7 +120,7 @@ const Dashboard = () => {
                     <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
                         <div className="absolute top-4 left-4">
                             <div className="flex items-center gap-2 mb-1">
-                                <LuBarChart className="text-info" size={16} />
+                                <LuBarChart className="text-info" size={16}/>
                                 <span className="text-2xl font-bold">
                                     {userAnalytics?.analytics?.overview?.period?.days || 0}
                                 </span>
@@ -147,7 +129,7 @@ const Dashboard = () => {
                         </div>
                         <div className="h-[130px] w-full mt-auto flex items-end justify-center">
                             <div className="text-4xl opacity-20">
-                                <LuBarChart />
+                                <LuBarChart/>
                             </div>
                         </div>
                     </div>
@@ -157,7 +139,7 @@ const Dashboard = () => {
                 {topLinks.length > 0 && (
                     <div className="mb-6 bg-base-200 rounded-lg p-4">
                         <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <LuTrendingUp className="text-primary" />
+                            <LuTrendingUp className="text-primary"/>
                             Top Performing Links
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -234,13 +216,13 @@ const Dashboard = () => {
                     </div>
                 </div>
 
-                <LinkItems />
+                <LinkItems/>
 
                 <FilterLinkModal
-                        open={openFilter}
-                        setOpen={setOpenFilter}
-                        activeFilter={activeFilter}
-                        setActiveFilter={setActiveFilter}
+                    open={openFilter}
+                    setOpen={setOpenFilter}
+                    activeFilter={activeFilter}
+                    setActiveFilter={setActiveFilter}
                 />
             </section>
         </>

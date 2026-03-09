@@ -18,7 +18,7 @@ const LinkItems = () => {
         [queryParams],
     );
 
-    const { data, isLoading } = useGetUrlsQuery(queryParams, {
+    const {data, isLoading} = useGetUrlsQuery(queryParams, {
         refetchOnMountOrArgChange: true,
         refetchOnFocus: skip,
     });
@@ -36,13 +36,13 @@ const LinkItems = () => {
             setQueryParams(str.join("&"));
         };
 
-        createQueryParams({ page, sort, clicks });
+        createQueryParams({page, sort, clicks});
     }, [searchParams, page, sort, clicks]);
 
     return (
         <div className="flex flex-col gap-4 no-scrollbar">
             {!isLoading &&
-                data?.urls.map((url) => <LinkCard key={url._id} url={url}  plan={plan.plan!}/>)}
+                data?.urls.map((url) => <LinkCard key={url._id} url={url} plan={plan.plan!}/>)}
         </div>
     );
 };

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import {LuDot, LuSettings} from "react-icons/lu";
 import Button from "../components/ui/button";
 import EditPageModal from "../components/ui/modals/edit-page-modal";
-import Portal from "../components/portal";
 import {useGetPagesQuery} from "../app/services/page";
 import {Link} from "react-router-dom";
 
@@ -62,7 +61,7 @@ const LinkInBio = () => {
                                     </div>
                                 </div>
 
-                                <Portal>
+                                <>
                                     {page._id === editPageActive.id && (
                                         <EditPageModal
                                             editPageActive={editPageActive.state}
@@ -70,7 +69,7 @@ const LinkInBio = () => {
                                             page={page}
                                         />
                                     )}
-                                </Portal>
+                                </>
                             </div>
                         ))}
                 </div>

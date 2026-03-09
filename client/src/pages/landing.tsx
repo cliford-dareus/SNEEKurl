@@ -39,13 +39,18 @@ import {
     TooltipTrigger,
     TooltipContent,
 } from "../components/ui/tooltip";
-import Portal from "../components/portal";
 import {useUserPlan} from "../components/layout/layout";
 import {useInView} from "framer-motion";
 import ShareLinkModal from "../components/ui/modals/share-link-modal";
 import {motion} from "framer-motion";
 import Button from "../components/ui/button";
-import { features, pricingPlans, stats, testimonials, useCases } from "../Utils/common";
+import {features, pricingPlans, stats, testimonials, useCases} from "../Utils/common";
+
+const TIMELEFT = {
+    hours: 0,
+    minutes: 0,
+    expires: false,
+}
 
 const HomeLinkItem = ({
                           url,
@@ -61,11 +66,7 @@ const HomeLinkItem = ({
     const [active, setActive] = useState(false);
     const [open, setOpen] = useState(false);
     const [shareActive, setShareActive] = useState(false);
-    const [timeLeft, setTimeLeft] = useState({
-        hours: 0,
-        minutes: 0,
-        expires: false,
-    });
+    const [timeLeft, setTimeLeft] = useState(TIMELEFT);
 
     useEffect(() => {
         const updateTimeLeft = () => {
@@ -95,8 +96,8 @@ const HomeLinkItem = ({
                     <div className="flex items-center gap-2">
                         <VisitLinkButton url={url}>
                             <div className="flex items-center gap-2 text-accent">
-                                <LuLink2 size={18}/>
-                                sneek.co/{url.short}
+                                <LuLink2 size={16}/>
+                                <span className="text-sm">sneek.co/{url.short}</span>
                             </div>
                         </VisitLinkButton>
                         <div className="ml-auto flex items-center gap-4">
@@ -104,7 +105,7 @@ const HomeLinkItem = ({
                                 className="cursor-pointer hover:text-primary"
                                 onClick={() => setShareActive(true)}
                             >
-                                <LuShare2 size={18} />
+                                <LuShare2 size={18}/>
                             </div>
                             <div className="">
                                 <LuQrCode
@@ -131,7 +132,7 @@ const HomeLinkItem = ({
                     </div>
 
                     <div className="text-left">
-                        <p className="truncate text-xs">{url.longUrl}</p>
+                        <p className="truncate text-xs text-zinc-400">{url.longUrl}</p>
                     </div>
                 </div>
                 <div className="cursor-pointer flex items-center">
@@ -142,7 +143,7 @@ const HomeLinkItem = ({
                 </div>
             </div>
 
-            <Portal>
+            <>
                 <EditQrModal
                     url={url}
                     setQrActive={setOpen}
@@ -159,7 +160,7 @@ const HomeLinkItem = ({
                     setEditActive={setActive}
                     plan={plan}
                 />
-            </Portal>
+            </>
         </>
     );
 };
@@ -199,9 +200,9 @@ const Landing = () => {
     const featuresRef = useRef(null);
     const statsRef = useRef(null);
     const [activeFeature, setActiveFeature] = useState(0);
-    const isHeroInView = useInView(heroRef, { once: true });
-    const isFeaturesInView = useInView(featuresRef, { once: true });
-    const isStatsInView = useInView(statsRef, { once: true });
+    const isHeroInView = useInView(heroRef, {once: true});
+    const isFeaturesInView = useInView(featuresRef, {once: true});
+    const isStatsInView = useInView(statsRef, {once: true});
 
     return (
         <>
@@ -221,24 +222,24 @@ const Landing = () => {
                 <div className="mt-4">
                     <div className="mx-auto flex flex-col gap-4 max-w-[500px] w-full">
 
-                            <HomeCreateLinkManager
-                                isAuthenticated={isAuthenticated}
-                                isFreePlan={isFreePlan}
-                            />
+                        <HomeCreateLinkManager
+                            isAuthenticated={isAuthenticated}
+                            isFreePlan={isFreePlan}
+                        />
 
                         <div className="flex flex-col gap-2 max-w-[500px] mx-auto w-full">
                             {data?.urls
-                                    .slice(0, 3)
-                                    .map((url) => (
-                                        <HomeLinkItem
-                                            key={url._id}
-                                            url={url}
-                                            isAuthenticated={!!isAuthenticated}
-                                            isFreePlan={isFreePlan}
-                                            plan={plan!}
-                                        />
-                                    ))
-                               }
+                                .slice(0, 3)
+                                .map((url) => (
+                                    <HomeLinkItem
+                                        key={url._id}
+                                        url={url}
+                                        isAuthenticated={!!isAuthenticated}
+                                        isFreePlan={isFreePlan}
+                                        plan={plan!}
+                                    />
+                                ))
+                            }
                         </div>
                     </div>
                 </div>
@@ -248,307 +249,311 @@ const Landing = () => {
                 </div>
             </section>
 
-             <section ref={statsRef} className="py-20 bg-base-100">
+            <section ref={statsRef} className="py-20 bg-base-100">
                 <div className="container mx-auto px-4">
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.6 }}
-                    className="grid grid-cols-2 md:grid-cols-4 gap-8"
-                >
-                    {stats.map((stat, index) => (
                     <motion.div
-                        key={index}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={isStatsInView ? { opacity: 1, scale: 1 } : {}}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="text-center"
+                        initial={{opacity: 0, y: 30}}
+                        animate={isStatsInView ? {opacity: 1, y: 0} : {}}
+                        transition={{duration: 0.6}}
+                        className="grid grid-cols-2 md:grid-cols-4 gap-8"
                     >
-                        <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <stat.icon className="text-primary" size={24} />
-                        </div>
-                        <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
-                        <div className="text-base-content/70">{stat.label}</div>
+                        {stats.map((stat, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{opacity: 0, scale: 0.8}}
+                                animate={isStatsInView ? {opacity: 1, scale: 1} : {}}
+                                transition={{duration: 0.6, delay: index * 0.1}}
+                                className="text-center"
+                            >
+                                <div
+                                    className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <stat.icon className="text-primary" size={24}/>
+                                </div>
+                                <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
+                                <div className="text-base-content/70">{stat.label}</div>
+                            </motion.div>
+                        ))}
                     </motion.div>
-                    ))}
-                </motion.div>
                 </div>
             </section>
 
             <section ref={featuresRef} className="py-20 bg-base-200">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isFeaturesInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-5xl font-bold mb-6">Powerful Features</h2>
-            <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
-              Everything you need to create, manage, and track your links with professional-grade tools.
-            </p>
-          </motion.div>
+                <div className="container mx-auto px-4">
+                    <motion.div
+                        initial={{opacity: 0, y: 30}}
+                        animate={isFeaturesInView ? {opacity: 1, y: 0} : {}}
+                        transition={{duration: 0.6}}
+                        className="text-center mb-16"
+                    >
+                        <h2 className="text-5xl font-bold mb-6">Powerful Features</h2>
+                        <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
+                            Everything you need to create, manage, and track your links with professional-grade tools.
+                        </p>
+                    </motion.div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Feature Navigation */}
-            <div className="space-y-6">
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.id}
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={isFeaturesInView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className={classNames(
-                    "p-6 rounded-xl cursor-pointer transition-all duration-300",
-                    activeFeature === index
-                      ? "bg-primary text-white shadow-lg"
-                      : "bg-base-100 hover:bg-base-300"
-                  )}
-                  onClick={() => setActiveFeature(index)}
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={classNames(
-                      "w-12 h-12 rounded-lg flex items-center justify-center",
-                      activeFeature === index ? "bg-white/20" : "bg-primary/10"
-                    )}>
-                      <feature.icon
-                        size={24}
-                        className={activeFeature === index ? "text-white" : "text-primary"}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                      <p className={classNames(
-                        "mb-4",
-                        activeFeature === index ? "text-white/90" : "text-base-content/70"
-                      )}>
-                        {feature.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {feature.benefits.map((benefit, idx) => (
-                          <span
-                            key={idx}
-                            className={classNames(
-                              "px-3 py-1 rounded-full text-sm",
-                              activeFeature === index
-                                ? "bg-white/20 text-white"
-                                : "bg-primary/10 text-primary"
-                            )}
-                          >
+                    <div className="grid lg:grid-cols-2 gap-12 items-center">
+                        {/* Feature Navigation */}
+                        <div className="space-y-6">
+                            {features.map((feature, index) => (
+                                <motion.div
+                                    key={feature.id}
+                                    initial={{opacity: 0, x: -30}}
+                                    animate={isFeaturesInView ? {opacity: 1, x: 0} : {}}
+                                    transition={{duration: 0.6, delay: index * 0.1}}
+                                    className={classNames(
+                                        "p-6 rounded-xl cursor-pointer transition-all duration-300",
+                                        activeFeature === index
+                                            ? "bg-primary text-white shadow-lg"
+                                            : "bg-base-100 hover:bg-base-300"
+                                    )}
+                                    onClick={() => setActiveFeature(index)}
+                                >
+                                    <div className="flex items-start gap-4">
+                                        <div className={classNames(
+                                            "w-12 h-12 rounded-lg flex items-center justify-center",
+                                            activeFeature === index ? "bg-white/20" : "bg-primary/10"
+                                        )}>
+                                            <feature.icon
+                                                size={24}
+                                                className={activeFeature === index ? "text-white" : "text-primary"}
+                                            />
+                                        </div>
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                                            <p className={classNames(
+                                                "mb-4",
+                                                activeFeature === index ? "text-white/90" : "text-base-content/70"
+                                            )}>
+                                                {feature.description}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {feature.benefits.map((benefit, idx) => (
+                                                    <span
+                                                        key={idx}
+                                                        className={classNames(
+                                                            "px-3 py-1 rounded-full text-sm",
+                                                            activeFeature === index
+                                                                ? "bg-white/20 text-white"
+                                                                : "bg-primary/10 text-primary"
+                                                        )}
+                                                    >
                             {benefit}
                           </span>
-                        ))}
-                      </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </div>
+
+                        {/* Feature Preview */}
+                        <motion.div
+                            key={activeFeature}
+                            initial={{opacity: 0, scale: 0.9}}
+                            animate={{opacity: 1, scale: 1}}
+                            transition={{duration: 0.5}}
+                            className="relative"
+                        >
+                            <div className="bg-base-100 rounded-2xl p-8 shadow-xl">
+                                <div
+                                    className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center">
+                                    {/* <features[activeFeature].icon size={80} className="text-primary/50" /> */}
+                                </div>
+                                <div className="mt-6">
+                                    <h4 className="text-2xl font-bold mb-3">{features[activeFeature].title}</h4>
+                                    <p className="text-base-content/70 mb-4">{features[activeFeature].description}</p>
+                                    <Button classnames="bg-primary text-white">
+                                        Try {features[activeFeature].title}
+                                        <LuArrowRight className="ml-2" size={16}/>
+                                    </Button>
+                                </div>
+                            </div>
+                        </motion.div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Feature Preview */}
-            <motion.div
-              key={activeFeature}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <div className="bg-base-100 rounded-2xl p-8 shadow-xl">
-                <div className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center">
-                  {/* <features[activeFeature].icon size={80} className="text-primary/50" /> */}
                 </div>
-                <div className="mt-6">
-                  <h4 className="text-2xl font-bold mb-3">{features[activeFeature].title}</h4>
-                  <p className="text-base-content/70 mb-4">{features[activeFeature].description}</p>
-                  <Button classnames="bg-primary text-white">
-                    Try {features[activeFeature].title}
-                    <LuArrowRight className="ml-2" size={16} />
-                  </Button>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-               {/* Use Cases Section */}
-      <section className="py-20 bg-base-100">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">Perfect for Every Use Case</h2>
-            <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
-              From marketing campaigns to social media, Sneek adapts to your needs.
-            </p>
-          </div>
+            </section>
+            {/* Use Cases Section */}
+            <section className="py-20 bg-base-100">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-5xl font-bold mb-6">Perfect for Every Use Case</h2>
+                        <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
+                            From marketing campaigns to social media, Sneek adapts to your needs.
+                        </p>
+                    </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {useCases.map((useCase, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-base-200 rounded-xl p-8 hover:shadow-lg transition-shadow"
-              >
-                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                  <useCase.icon className="text-primary" size={28} />
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {useCases.map((useCase, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{opacity: 0, y: 30}}
+                                whileInView={{opacity: 1, y: 0}}
+                                transition={{duration: 0.6, delay: index * 0.1}}
+                                viewport={{once: true}}
+                                className="bg-base-200 rounded-xl p-8 hover:shadow-lg transition-shadow"
+                            >
+                                <div
+                                    className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                                    <useCase.icon className="text-primary" size={28}/>
+                                </div>
+                                <h3 className="text-2xl font-bold mb-4">{useCase.title}</h3>
+                                <p className="text-base-content/70 mb-6">{useCase.description}</p>
+                                <ul className="space-y-2">
+                                    {useCase.features.map((feature, idx) => (
+                                        <li key={idx} className="flex items-center gap-2">
+                                            <LuCheck className="text-success" size={16}/>
+                                            <span className="text-sm">{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{useCase.title}</h3>
-                <p className="text-base-content/70 mb-6">{useCase.description}</p>
-                <ul className="space-y-2">
-                  {useCase.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-2">
-                      <LuCheck className="text-success" size={16} />
-                      <span className="text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </section>
 
-      {/* Testimonials Section */}
-      <section className="py-20 bg-base-200">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">Loved by Thousands</h2>
-            <p className="text-xl text-base-content/80">See what our users say about Sneek</p>
-          </div>
+            {/* Testimonials Section */}
+            <section className="py-20 bg-base-200">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-5xl font-bold mb-6">Loved by Thousands</h2>
+                        <p className="text-xl text-base-content/80">See what our users say about Sneek</p>
+                    </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="bg-base-100 rounded-xl p-8 shadow-lg"
-              >
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <LuStar key={i} className="text-warning fill-current" size={16} />
-                  ))}
-                </div>
-                <p className="text-base-content/80 mb-6 italic">"{testimonial.text}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                    <div className="grid md:grid-cols-3 gap-8">
+                        {testimonials.map((testimonial, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{opacity: 0, y: 30}}
+                                whileInView={{opacity: 1, y: 0}}
+                                transition={{duration: 0.6, delay: index * 0.1}}
+                                viewport={{once: true}}
+                                className="bg-base-100 rounded-xl p-8 shadow-lg"
+                            >
+                                <div className="flex items-center gap-1 mb-4">
+                                    {[...Array(testimonial.rating)].map((_, i) => (
+                                        <LuStar key={i} className="text-warning fill-current" size={16}/>
+                                    ))}
+                                </div>
+                                <p className="text-base-content/80 mb-6 italic">"{testimonial.text}"</p>
+                                <div className="flex items-center gap-3">
+                                    <div
+                                        className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
                     <span className="text-primary font-semibold">
                       {testimonial.name.split(' ').map(n => n[0]).join('')}
                     </span>
-                  </div>
-                  <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-sm text-base-content/70">
-                      {testimonial.role} at {testimonial.company}
+                                    </div>
+                                    <div>
+                                        <div className="font-semibold">{testimonial.name}</div>
+                                        <div className="text-sm text-base-content/70">
+                                            {testimonial.role} at {testimonial.company}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
                     </div>
-                  </div>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </section>
 
-      {/* Pricing Section */}
-      <section className="py-20 bg-base-100">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-bold mb-6">Simple, Transparent Pricing</h2>
-            <p className="text-xl text-base-content/80">Choose the plan that fits your needs</p>
-          </div>
+            {/* Pricing Section */}
+            <section className="py-20 bg-base-100">
+                <div className="container mx-auto px-4">
+                    <div className="text-center mb-16">
+                        <h2 className="text-5xl font-bold mb-6">Simple, Transparent Pricing</h2>
+                        <p className="text-xl text-base-content/80">Choose the plan that fits your needs</p>
+                    </div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {pricingPlans.map((plan, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className={classNames(
-                  "relative rounded-xl p-8 border-2",
-                  plan.popular
-                    ? "border-primary bg-primary/5 scale-105"
-                    : "border-base-300 bg-base-100"
-                )}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                        {pricingPlans.map((plan, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{opacity: 0, y: 30}}
+                                whileInView={{opacity: 1, y: 0}}
+                                transition={{duration: 0.6, delay: index * 0.1}}
+                                viewport={{once: true}}
+                                className={classNames(
+                                    "relative rounded-xl p-8 border-2",
+                                    plan.popular
+                                        ? "border-primary bg-primary/5 scale-105"
+                                        : "border-base-300 bg-base-100"
+                                )}
+                            >
+                                {plan.popular && (
+                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
                       Most Popular
                     </span>
-                  </div>
-                )}
+                                    </div>
+                                )}
 
-                <div className="text-center mb-8">
-                  <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                  <p className="text-base-content/70 mb-4">{plan.description}</p>
-                  <div className="text-5xl font-bold mb-2">
-                    ${plan.price}
-                    <span className="text-lg font-normal text-base-content/70">/month</span>
-                  </div>
+                                <div className="text-center mb-8">
+                                    <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                                    <p className="text-base-content/70 mb-4">{plan.description}</p>
+                                    <div className="text-5xl font-bold mb-2">
+                                        ${plan.price}
+                                        <span className="text-lg font-normal text-base-content/70">/month</span>
+                                    </div>
+                                </div>
+
+                                <ul className="space-y-3 mb-8">
+                                    {plan.features.map((feature, idx) => (
+                                        <li key={idx} className="flex items-center gap-3">
+                                            <LuCheck className="text-success" size={16}/>
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <Button
+                                    classnames={classNames(
+                                        "w-full",
+                                        plan.popular
+                                            ? "bg-primary text-white"
+                                            : "bg-base-300 text-base-content"
+                                    )}
+                                >
+                                    {plan.cta}
+                                </Button>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
+            </section>
 
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-center gap-3">
-                      <LuCheck className="text-success" size={16} />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+            {/* CTA Section */}
+            <section className="py-20 bg-gradient-to-r from-primary to-accent">
+                <div className="container mx-auto px-4 text-center">
+                    <motion.div
+                        initial={{opacity: 0, y: 30}}
+                        whileInView={{opacity: 1, y: 0}}
+                        transition={{duration: 0.6}}
+                        viewport={{once: true}}
+                        className="max-w-3xl mx-auto"
+                    >
+                        <h2 className="text-5xl font-bold text-white mb-6">
+                            Ready to Transform Your Links?
+                        </h2>
+                        <p className="text-xl text-white/90 mb-8">
+                            Join thousands of users who trust Sneek for their link management needs.
+                        </p>
+                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                            <Button classnames="bg-white text-primary px-8 py-4 text-lg font-semibold">
+                                Start Free Trial
+                                <LuArrowRight className="ml-2" size={20}/>
+                            </Button>
+                            <Button classnames="bg-transparent border-2 border-white text-white px-8 py-4 text-lg">
+                                Contact Sales
+                            </Button>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
 
-                <Button
-                  classnames={classNames(
-                    "w-full",
-                    plan.popular
-                      ? "bg-primary text-white"
-                      : "bg-base-300 text-base-content"
-                  )}
-                >
-                  {plan.cta}
-                </Button>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-primary to-accent">
-        <div className="container mx-auto px-4 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto"
-          >
-            <h2 className="text-5xl font-bold text-white mb-6">
-              Ready to Transform Your Links?
-            </h2>
-            <p className="text-xl text-white/90 mb-8">
-              Join thousands of users who trust Sneek for their link management needs.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button classnames="bg-white text-primary px-8 py-4 text-lg font-semibold">
-                Start Free Trial
-                <LuArrowRight className="ml-2" size={20} />
-              </Button>
-              <Button classnames="bg-transparent border-2 border-white text-white px-8 py-4 text-lg">
-                Contact Sales
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-            <Portal>
+            <>
                 <Outlet/>
-            </Portal>
+            </>
         </>
     );
 };

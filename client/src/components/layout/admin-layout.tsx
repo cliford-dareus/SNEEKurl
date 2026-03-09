@@ -1,108 +1,109 @@
 import {
-  NavLink,
-  Outlet,
-  useLocation,
-  useOutletContext,
+    NavLink,
+    Outlet,
+    useLocation,
+    useOutletContext,
 } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { AuthState, selectCurrentUser } from "../../features/auth/authslice";
-import { useAppSelector } from "../../app/hook";
-import { SIDEBAR_LINKS } from "../../Utils/common";
+import {useEffect, useState} from "react";
+import {AuthState, selectCurrentUser} from "../../features/auth/authslice";
+import {useAppSelector} from "../../app/hook";
+import {SIDEBAR_LINKS} from "../../Utils/common";
 import Header from "../Header";
 import DashboardTopInterface from "../dashboard-top-interface";
 import LinkLimitsDisplay from "../link-limits-display";
-import { useRetrieveSubscriptionQuery } from "../../app/services/stripe";
+import {useRetrieveSubscriptionQuery} from "../../app/services/stripe";
 
 type ContextType = {
-  plan: string | null;
+    plan: string | null;
 };
 
 const AdminLayout = () => {
-  const { pathname } = useLocation();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [sub_active, setSub_Active] = useState(0);
-  const user = useAppSelector(selectCurrentUser) as AuthState;
-  const { data } = useRetrieveSubscriptionQuery(
-    { username: user.user.username },
-    {
-      skip: !user.user.username,
-    },
-  );
-  const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
+    const {pathname} = useLocation();
+    const [activeIndex, setActiveIndex] = useState(0);
+    const [sub_active, setSub_Active] = useState(0);
+    const user = useAppSelector(selectCurrentUser) as AuthState;
+    const {data} = useRetrieveSubscriptionQuery(
+        {username: user.user.username},
+        {
+            skip: !user.user.username,
+        },
+    );
+    const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
 
-  useEffect(() => {
-    SIDEBAR_LINKS.map((link, index) => {
-      if (link.slug === pathname) {
-        setActiveIndex(index);
-      }
-    });
-  }, [pathname]);
+    useEffect(() => {
+        SIDEBAR_LINKS.map((link, index) => {
+            if (link.slug === pathname) {
+                setActiveIndex(index);
+            }
+        });
+    }, [pathname]);
 
-  return (
-    <div className="relative">
-      <Header isActive={true} plan={plan} user={user} />
-      <main className="container mx-auto overflow-hidden px-4 pt-16">
-        <DashboardTopInterface pathname={pathname} />
-        <div className="flex gap-4 pt-4 h-[80vh]">
-          <div className="max-h-screen w-full max-w-[256px] flex flex-col gap-4">
-            <nav className="w-full">
-              <ul className="flex w-full flex-col gap-1">
-                {SIDEBAR_LINKS.map((link, index) => (
-                  <li
-                    key={link.id}
-                    className="relative flex w-full items-center justify-center"
-                  >
-                    <NavLink
-                      onClick={() => setActiveIndex(index)}
-                      className="w-full rounded-md bg-base-200 px-4 py-2 hover:bg-base-300"
-                      to={link.slug}
-                    >
-                      {link.name}
-                    </NavLink>
+    return (
+        <div className="relative">
+            <Header isActive={true} plan={plan} />
+            <main className="container mx-auto overflow-hidden px-4 pt-16">
+                <DashboardTopInterface pathname={pathname}/>
+                <div className="flex gap-4 pt-4 h-[80vh]">
+                    <div className="max-h-screen w-full max-w-[256px] flex flex-col gap-4">
+                        <nav className="w-full">
+                            <ul className="flex w-full flex-col gap-1">
+                                {SIDEBAR_LINKS.map((link, index) => (
+                                    <li
+                                        key={link.id}
+                                        className="relative flex w-full items-center justify-center"
+                                    >
+                                        <NavLink
+                                            onClick={() => setActiveIndex(index)}
+                                            className="w-full rounded-md bg-base-200 px-4 py-2 hover:bg-base-300"
+                                            to={link.slug}
+                                        >
+                                            {link.name}
+                                        </NavLink>
 
-                    {activeIndex === index && (
-                      <div className="absolute left-0 h-full bg-primary w-[2px]" />
-                    )}
+                                        {activeIndex === index && (
+                                            <div className="absolute left-0 h-full bg-primary w-[2px]"/>
+                                        )}
 
-                    {activeIndex === index && pathname.includes("setting") && (
-                      <div className="absolute top-12 right-0 left-8 flex flex-col gap-1 rounded-lg bg-base-200 p-2">
-                        {link.children?.map((sub_link, i) => (
-                          <li
-                            key={i}
-                            className="relative flex w-full items-center"
-                          >
-                            <NavLink
-                              className="w-full rounded-md bg-base-200 px-4 py-2 hover:bg-base-300"
-                              onClick={() => setSub_Active(i)}
-                              to={sub_link.slug}
-                            >
-                              {sub_link.name}
-                            </NavLink>
+                                        {activeIndex === index && pathname.includes("setting") && (
+                                            <div
+                                                className="absolute top-12 right-0 left-8 flex flex-col gap-1 rounded-lg bg-base-200 p-2">
+                                                {link.children?.map((sub_link, i) => (
+                                                    <li
+                                                        key={i}
+                                                        className="relative flex w-full items-center"
+                                                    >
+                                                        <NavLink
+                                                            className="w-full rounded-md bg-base-200 px-4 py-2 hover:bg-base-300"
+                                                            onClick={() => setSub_Active(i)}
+                                                            to={sub_link.slug}
+                                                        >
+                                                            {sub_link.name}
+                                                        </NavLink>
 
-                            {sub_active === i && (
-                              <div className="absolute left-0 h-full bg-primary w-[2px]" />
-                            )}
-                          </li>
-                        ))}
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            <LinkLimitsDisplay />
-          </div>
-          <div className="flex-1 overflow-y-scroll no-scrollbar">
-            <Outlet context={{ plan } as ContextType} />
-          </div>
+                                                        {sub_active === i && (
+                                                            <div className="absolute left-0 h-full bg-primary w-[2px]"/>
+                                                        )}
+                                                    </li>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
+                        <LinkLimitsDisplay/>
+                    </div>
+                    <div className="flex-1 overflow-y-scroll no-scrollbar">
+                        <Outlet context={{plan} as ContextType}/>
+                    </div>
+                </div>
+            </main>
         </div>
-      </main>
-    </div>
-  );
+    );
 };
 
 export function useUserPlan() {
-  return useOutletContext<ContextType>();
+    return useOutletContext<ContextType>();
 }
 
 export default AdminLayout;

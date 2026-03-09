@@ -2,7 +2,16 @@ import React, {useState} from 'react';
 import {Url, useDeleteUrlMutation} from "../app/services/urlapi";
 import {getSiteUrl} from "../Utils/getSiteUrl";
 import VisitLinkButton from "./visit-link-button";
-import {LuBarChart, LuFileEdit, LuLink2, LuMoreVertical, LuMousePointer, LuQrCode, LuTextCursor, LuTrash2} from "react-icons/lu";
+import {
+    LuBarChart,
+    LuFileEdit,
+    LuLink2,
+    LuMoreVertical,
+    LuMousePointer,
+    LuQrCode,
+    LuTextCursor,
+    LuTrash2
+} from "react-icons/lu";
 import {Link} from "react-router-dom";
 import EditLinkModal from "./ui/modals/edit-link-modal";
 import EditQrModal from "./ui/modals/edit-qr-modal";
@@ -44,7 +53,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                 <div
                     className="flex ml-auto cursor-pointer items-center rounded-lg bg-base-200 px-2 py-1 hover:bg-base-300 text-xs text-base-content relative">
                     <span className="absolute top-0 left-0">{url.totalClicks}</span>
-                    <LuMousePointer className="text-primary" size={16} />
+                    <LuMousePointer className="text-primary" size={16}/>
                 </div>
                 <div className="rounded-lg bg-base-200 px-2 py-1 ml-1 hover:bg-base-300">
                     <Link to={`/analytics/${url.short}`}>
@@ -62,7 +71,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                 <Popover>
                     <PopoverTrigger asChild>
                         <div className="cursor-pointer ml-4">
-                            <LuMoreVertical size={18} />
+                            <LuMoreVertical size={18}/>
                         </div>
                     </PopoverTrigger>
 
@@ -79,7 +88,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                                 setEditActive(true);
                             }}
                         >
-                            <LuFileEdit className="mr-2" size={16} />
+                            <LuFileEdit className="mr-2" size={16}/>
                             Edit
                         </div>
 
@@ -89,31 +98,31 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                                 deleteUrl(url.short);
                             }}
                         >
-                            <LuTrash2 className="mr-2" size={16} />
+                            <LuTrash2 className="mr-2" size={16}/>
                             Delete
                         </div>
                     </PopoverContent>
                 </Popover>
             </div>
 
-                <EditLinkModal
-                    url={url}
-                    editActive={editActive}
-                    setEditActive={setEditActive}
-                    plan={plan}
-                />
+            <EditLinkModal
+                url={url}
+                editActive={editActive}
+                setEditActive={setEditActive}
+                plan={plan}
+            />
 
-                <EditQrModal
-                    url={url}
-                    setQrActive={setQrActive}
-                    editQrActive={qrActive}
-                />
+            <EditQrModal
+                url={url}
+                setQrActive={setQrActive}
+                editQrActive={qrActive}
+            />
 
-                <ShareLinkModal
-                    shareActive={shareActive}
-                    setShareActive={setShareActive}
-                    url={url}
-                />
+            <ShareLinkModal
+                shareActive={shareActive}
+                setShareActive={setShareActive}
+                url={url}
+            />
 
         </>
     );

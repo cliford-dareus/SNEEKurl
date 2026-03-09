@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {useGetUrlsQuery} from "../app/services/urlapi";
 import {LuArrowDown, LuArrowUp, LuFilter} from "react-icons/lu";
 import LinkItems from "../components/link-items";
-import Portal from "../components/portal";
 import FilterLinkModal from "../components/ui/modals/filter-link-modal";
 import {useUserPlan} from "../components/layout/admin-layout";
 
@@ -54,14 +53,12 @@ const Links = () => {
 
                 <LinkItems/>
 
-                <Portal>
-                    <FilterLinkModal
-                        open={openFilter}
-                        setOpen={setOpenFilter}
-                        activeFilter={activeFilter}
-                        setActiveFilter={setActiveFilter}
-                    />
-                </Portal>
+                <FilterLinkModal
+                    open={openFilter}
+                    setOpen={setOpenFilter}
+                    activeFilter={activeFilter}
+                    setActiveFilter={setActiveFilter}
+                />
             </section>
         </div>
     );

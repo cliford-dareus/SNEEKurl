@@ -62,8 +62,8 @@ const ChangeProfileImageModal = ({
                 <>
                     <Dialog open={editProfileActive} onOpenChange={setEditProfileActive}/>
                     <DialogContent>
-                           <DialogHeader>
-                                <div className="flex items-center gap-3">
+                        <DialogHeader>
+                            <div className="flex items-center gap-3">
                                 <svg
                                     width="40"
                                     height="40"
@@ -72,16 +72,16 @@ const ChangeProfileImageModal = ({
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
                                     <path
-                                    d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                    fill="currentColor"
+                                        d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                        fill="currentColor"
                                     />
                                 </svg>
                                 <div>
-                                    <DialogTitle>Create New Link</DialogTitle>
+                                    <DialogTitle>Change Profile Picture</DialogTitle>
                                     <DialogDescription>Shorten your URL and customize it</DialogDescription>
                                 </div>
-                                </div>
-                            </DialogHeader>
+                            </div>
+                        </DialogHeader>
 
                         <div className="px-6 py-4">
                             <form

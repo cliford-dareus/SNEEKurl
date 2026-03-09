@@ -1,5 +1,4 @@
 import Button from "./ui/button";
-import Portal from "./portal";
 import CreateLinkModal from "./ui/modals/create-link-modal";
 import {useState} from "react";
 import {LuSearch} from "react-icons/lu";
@@ -51,7 +50,6 @@ const DashboardTopInterface = ({pathname}: Props) => {
                 </div>
             </div>
 
-            <Portal>
                 <CreateLinkModal
                     setAddLinkActive={setAddLinkActive}
                     addLinkActive={addLinkActive}
@@ -66,7 +64,6 @@ const DashboardTopInterface = ({pathname}: Props) => {
                     createLinkInBioActive={createLinkInBioActive}
                     setCreateLinkInBioActive={setCreateLinkInBioActive}
                 />
-            </Portal>
         </>
     );
 };
