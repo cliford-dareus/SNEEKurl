@@ -9,9 +9,12 @@ const redisClient = process.env.NODE_ENV === 'production'
 
 // Advanced rate limiter with Redis store
 export const advancedRateLimiter = rateLimit({
-  store: redisClient ? new RedisStore({
-    sendCommand: (...args: any[]) => redisClient.call(...args) as Promise<any>,
-  }) : undefined, // Use memory store in development
+  store:
+    redisClient
+      ? new RedisStore({
+        sendCommand: (command: string, ...args: (string | number | Buffer)[]) =>
+          redisClient.call(command, ...args) as Promise<any>,
+      }) : undefined, // Use memory store in development
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: async (req: any) => {
     // Dynamic limits based on user type
