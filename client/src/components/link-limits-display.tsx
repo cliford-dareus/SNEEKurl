@@ -8,7 +8,7 @@ const LinkLimitsDisplay = () => {
     const {data: limits, isLoading} = useGetUserLimitsQuery(undefined, {
         skip: !user?.user?.username || user.user.username === "Guest"
     });
-    console.log(limits);
+    console.log(!user?.user?.username);
 
     if (isLoading || !limits) return null;
 

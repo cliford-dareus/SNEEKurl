@@ -1,5 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {RootState} from "../store";
+import {API_URL} from "../../Utils/common";
 
 export interface User {
     username: string;
@@ -24,7 +25,7 @@ export interface RegisterRequest {
     password: string;
 }
 
-const URL = "https://sneekurl-server.onrender.com" || "http://localhost:4080";
+const URL = API_URL || "http://localhost:4080";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: URL,

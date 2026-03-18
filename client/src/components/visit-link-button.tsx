@@ -1,6 +1,7 @@
 import {ReactNode, useState} from "react";
 import {Url} from "../app/services/urlapi";
 import VisitLinkPassword from "./ui/modals/visit-link-password";
+import {API_URL} from "../Utils/common";
 
 type Props = {
     url: Url;
@@ -19,18 +20,18 @@ const VisitLinkButton = ({url, children}: Props) => {
                 className="cursor-pointer"
                 onClick={async () => {
                     try {
-                        await fetch(`http://localhost:4080/short/${url.short}`).then(
+                        await fetch(`${API_URL}/short/${url.short}`).then(
                             (res) => {
                                 if (res.status === 403) {
                                     setActive({status: true, url: url});
                                 }
 
                                 if (res.status === 200)
-                                    [window.open(`http://localhost:4080/short/${url.short}`)];
+                                    [window.open(`${API_URL}/short/${url.short}`)];
                             }
                         );
                     } catch (error) {
-                        window.open(`http://localhost:4080/short/${url.short}`);
+                        window.open(`${API_URL}/short/${url.short}`);
                     }
                 }}
             >

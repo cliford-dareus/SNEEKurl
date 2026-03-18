@@ -7,6 +7,7 @@ import User from "../models/user";
 import jwt from "jsonwebtoken";
 import Page from "../models/page";
 import Click from "../models/clicks";
+import stripe from "../config/stripe";
 
 const create = async (req: any, res: Response) => {
     try {
@@ -366,7 +367,81 @@ const getClicks = async (req: any, res: Response) => {
     }
 };
 
-export {create, getUrls, editUrl, visitUrl, getUrl, deleteUrl, getClicks};
+const getUserLimits = async (req: any, res: Response) => {
+    try {
+        const user = req.user;
+        console.log("user", user)
+
+        if (!user) {
+            return res.status(StatusCodes.UNAUTHORIZED).json({
+                message: "User not authenticated"
+            });
+        }
+
+        // Get current link count
+        const linkCount = await Short.countDocuments({user: user._id});
+
+        let maxLinks = user.max_link || 5;
+        let planName = "Free";
+        let subscriptionStatus = "inactive";
+
+        // Check Stripe subscription if user has stripe_account_id
+        if (user.stripe_account_id) {
+            try {
+                const subscriptions = await stripe.subscriptions.list({
+                    customer: user.stripe_account_id,
+                    status: "active",
+                    limit: 1,
+                });
+
+                if (subscriptions.data.length > 0) {
+                    const subscription = subscriptions.data[0];
+                    subscriptionStatus = subscription.status;
+
+                    const priceAmount = subscription.items.data[0]?.price?.unit_amount || 0;
+                    const priceInDollars = priceAmount / 100;
+
+                    // Determine plan based on price
+                    if (priceInDollars === 10) {
+                        maxLinks = 100;
+                        planName = "Pro";
+                    } else if (priceInDollars === 20) {
+                        maxLinks = 1000;
+                        planName = "Premium";
+                    }
+
+                    // Update user's cached limit if different
+                    if (user.max_link !== maxLinks) {
+                        await User.findByIdAndUpdate(user._id, {max_link: maxLinks});
+                    }
+                }
+            } catch (stripeError) {
+                console.error("Stripe error in getUserLimits:", stripeError);
+            }
+        }
+
+        res.status(StatusCodes.OK).json({
+            limits: {
+                links: {
+                    current: linkCount,
+                    limit: maxLinks,
+                    remaining: Math.max(0, maxLinks - linkCount)
+                }
+            },
+            plan: {
+                name: planName,
+                subscriptionStatus
+            }
+        });
+
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Failed to get user limits"
+        });
+    }
+};
+
+export {create, getUrls, editUrl, visitUrl, getUrl, deleteUrl, getClicks, getUserLimits};
 
 // Helper functions for better data extraction
 const extractBrowser = (userAgent: string): string => {

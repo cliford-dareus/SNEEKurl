@@ -1,8 +1,9 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {EndpointBuilder} from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
+import {API_URL} from "../../Utils/common";
 
-const URL = "https://sneekurl-server.onrender.com/user"  || "http://localhost:4080/user";
+const URL = `${API_URL}/user`  || "http://localhost:4080/user";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: URL,

@@ -5,14 +5,13 @@ import {
     editUrl,
     getClicks,
     getUrl,
-    getUrls,
+    getUrls, getUserLimits,
     visitUrl,
 } from "../controllers/shortener";
 import authorize from "../middlewares/authorization";
 import guestOrAuth from "../middlewares/guestOrAuth";
 import check_links_limiter_status from "../middlewares/check-links-limiter";
 import {urlCreationRateLimiter, guestRateLimiter} from "../middlewares/rate-limiter";
-import {getUserLimits} from "../controllers/user";
 
 const router = express.Router();
 
@@ -40,8 +39,8 @@ router.route("/url/:short").get(getUrl);
 
 // Authenticated only routes
 router.route("/clicks").get(authorize, getClicks);
+router.route("/short/limits").get(authorize, getUserLimits);
 router.route("/edit").put(authorize, editUrl);
 router.route("/delete/:short").delete(authorize, deleteUrl);
-router.route("/get-limits").get(authorize, getUserLimits);
 
 export default router;

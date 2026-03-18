@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Link, useParams} from "react-router-dom";
 import {useGetPageQuery} from "../app/services/page";
 import {getSiteUrl} from "../Utils/getSiteUrl";

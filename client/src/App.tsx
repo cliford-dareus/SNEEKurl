@@ -24,8 +24,8 @@ import Links from "./pages/links";
 import CustomizeQr from "./pages/customize-qr";
 import {useTokenRefresh} from "./hooks/useTokenRefresh";
 import Landing from "./pages/landing";
+import {API_URL} from "./Utils/common";
 
-const URL = "https://sneekurl-server.onrender.com" || "http://localhost:4080";
 
 function App() {
     const {pathname} = useLocation();
@@ -41,7 +41,7 @@ function App() {
     useEffect(() => {
         const getCsrfToken = async () => {
             try {
-                const response = await fetch(`${URL}/csrf-token`, {
+                const response = await fetch(`${API_URL}/csrf-token`, {
                     credentials: "include"
                 });
                 const data = await response.json();

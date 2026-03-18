@@ -1,6 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {API_URL} from "../../Utils/common";
 
-const URL = "https://sneekurl-server.onrender.com/page"  || "http://localhost:4080/page";
+const URL = `${API_URL}/page` || "http://localhost:4080/page";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: URL,

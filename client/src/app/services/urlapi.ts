@@ -1,7 +1,8 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {RootState} from "../store";
+import {API_URL} from "../../Utils/common";
 
-const URL = "https://sneekurl-server.onrender.com/short" || "http://localhost:4080/short";
+const URL = `${API_URL}/short`;
 
 export interface Metadata {
     time: Date;
@@ -152,7 +153,8 @@ export const urlapi = createApi({
         }),
         getUserLimits: builder.query({
             query: () => ({
-                url: "/get-limits",
+                url: "/short/limits",
+                method: "GET"
             }),
             providesTags: ["USER", "SHORT"],
         }),
