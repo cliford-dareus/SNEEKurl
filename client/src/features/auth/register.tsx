@@ -44,12 +44,14 @@ const Register = () => {
 
     if (isSuccess) {
         return (
-            <div className="mt-4 p-4 text-center">
-                <h2 className="text-2xl text-success mb-4">Registration Successful!</h2>
-                <p className="mb-4">Please check your email to verify your account.</p>
-                <Link to="/login" className="text-primary underline">
-                    Go to Login
-                </Link>
+            <div className="flex container h-screen p-4 items-center justify-center">
+                <div className="">
+                    <h2 className="text-2xl text-success mb-4">Registration Successful!</h2>
+                    <p className="mb-4">Please check your email to verify your account.</p>
+                    <Link to="/login" className="text-primary underline">
+                        Go to Login
+                    </Link>
+                </div>
             </div>
         );
     }
@@ -180,7 +182,6 @@ const Register = () => {
                                 />
                             )}
                         />
-
 
                         <button
                             type="submit"

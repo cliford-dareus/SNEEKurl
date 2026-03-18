@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {RootState} from "../store";
 
-const URL = "http://localhost:4080/short";
+const URL = "https://sneekurl-server.onrender.com/short" || "http://localhost:4080/short";
 
 export interface Metadata {
     time: Date;
@@ -49,7 +49,7 @@ const baseQuery = fetchBaseQuery({
     headers: {
         Accept: "application/json",
     },
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers, {getState}) => {
         const csrfToken = sessionStorage.getItem("csrfToken");
         if (csrfToken) {
             headers.set("X-CSRF-Token", csrfToken);
@@ -58,9 +58,37 @@ const baseQuery = fetchBaseQuery({
     },
 });
 
+// Enhanced base query with automatic token refresh
+const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
+    let result = await baseQuery(args, api, extraOptions);
+
+    // If we get a 401 and it's a token expired error, try to refresh
+    if (result.error && result.error.status === 401) {
+        const errorData = result.error.data as any;
+        if (errorData?.code === 'TOKEN_EXPIRED') {
+            // Try to refresh the token
+            const refreshResult = await baseQuery(
+                {url: '/auth/refresh', method: 'POST'},
+                api,
+                extraOptions
+            );
+
+            if (refreshResult.data) {
+                // Retry the original request
+                result = await baseQuery(args, api, extraOptions);
+            } else {
+                // Refresh failed, redirect to login
+                window.location.href = '/login';
+            }
+        }
+    }
+
+    return result;
+}
+
 export const urlapi = createApi({
     reducerPath: "urlapi",
-    baseQuery,
+    baseQuery: baseQueryWithReauth,
     tagTypes: ["SHORT", "GUEST_SHORT", "SHORT_CLICKS", "USER"],
     endpoints: (builder) => ({
         shortenUrl: builder.mutation<UrlResponse, UrlRequest>({
@@ -85,7 +113,7 @@ export const urlapi = createApi({
         }),
         getUrls: builder.query<UrlsResponse, any>({
             query: (query) => ({
-                url: `/urls?${query?query : ""}`,
+                url: `/urls?${query ? query : ""}`,
             }),
             providesTags: ["SHORT"],
         }),
@@ -122,6 +150,12 @@ export const urlapi = createApi({
             }),
             providesTags: ["SHORT"],
         }),
+        getUserLimits: builder.query({
+            query: () => ({
+                url: "/get-limits",
+            }),
+            providesTags: ["USER", "SHORT"],
+        }),
     }),
 });
 
@@ -130,6 +164,7 @@ export const {
     useGetUrlsQuery,
     useGetUrlQuery,
     useGetUrlClicksQuery,
+    useGetUserLimitsQuery,
     useEditUrlMutation,
     useGetGuestUrlQuery,
     useDeleteUrlMutation,

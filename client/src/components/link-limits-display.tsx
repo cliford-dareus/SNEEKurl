@@ -1,13 +1,14 @@
 import React from "react";
-import {useGetUserLimitsQuery} from "../app/services/user";
 import {useAppSelector} from "../app/hook";
 import {selectCurrentUser} from "../features/auth/authslice";
+import {useGetUserLimitsQuery} from "../app/services/urlapi";
 
 const LinkLimitsDisplay = () => {
     const user = useAppSelector(selectCurrentUser);
     const {data: limits, isLoading} = useGetUserLimitsQuery(undefined, {
         skip: !user?.user?.username || user.user.username === "Guest"
     });
+    console.log(limits);
 
     if (isLoading || !limits) return null;
 

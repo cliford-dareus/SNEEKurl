@@ -15,7 +15,6 @@ import useScroll from "../hooks/use-scroll";
 import classNames from "classnames";
 import {useAuth} from "../hooks/useAuth";
 import {useTheme} from "../contexts/ThemeContext";
-import LinkLimitsDisplay from "./link-limits-display";
 
 type Props = {
     isActive: boolean;

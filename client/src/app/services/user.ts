@@ -2,7 +2,7 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {EndpointBuilder} from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
-const URL = "http://localhost:4080/user";
+const URL = "https://sneekurl-server.onrender.com/user"  || "http://localhost:4080/user";
 
 const baseQuery = fetchBaseQuery({
     baseUrl: URL,
@@ -43,12 +43,6 @@ export const userapi = createApi({
                 method: "DELETE",
             }),
         }),
-        getUserLimits: builder.query({
-            query: () => ({
-                url: "/get-limits",
-            }),
-            providesTags: ["USER"],
-        }),
     }),
 });
 
@@ -56,5 +50,4 @@ export const {
     useUpdateUserProfileImageMutation,
     useUpdateUserDetailsMutation,
     useDeleteUserAccountMutation,
-    useGetUserLimitsQuery,
 } = userapi;

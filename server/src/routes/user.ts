@@ -5,7 +5,6 @@ import {
   updateProfileDetails,
   deleteAccount,
   resetPassword,
-  getUserLimits
 } from "../controllers/user";
 import authorize from "../middlewares/authorization";
 
@@ -16,6 +15,5 @@ router.route("/delete-image").delete(authorize, deleteProfileImage);
 router.route("/update-info").put(authorize, updateProfileDetails);
 router.route("/delete-account").delete(authorize, deleteAccount);
 router.route("/reset-password").get(resetPassword);
-router.route("/get-limits").get(authorize, getUserLimits);
 
 export default router;

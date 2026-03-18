@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {useAppSelector} from "../app/hook";
 import {RootState} from "../app/store";
 import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
@@ -13,6 +13,7 @@ import {selectCurrentUser} from "../features/auth/authslice";
 import {LuUser, LuMail, LuShield, LuCamera, LuTrash2, LuSave, LuCalendar, LuCrown, LuSettings} from "react-icons/lu";
 import {toast} from "react-toastify";
 import DeleteAccountModal from "./ui/modals/delete-account-modal";
+import {useGetLinkAnalyticsQuery, useGetUserAnalyticsQuery} from "../app/services/urlapi";
 
 export type Profile = {
     username: string;
@@ -28,10 +29,15 @@ const Profile = () => {
         {skip: !user.user.username}
     );
     const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
+    const {data: userAnalytics, isLoading: analyticsLoading} = useGetUserAnalyticsQuery("30d");
     const [editProfileActive, setEditProfileActive] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [updateUserDetails, {isLoading}] = useUpdateUserDetailsMutation();
+
+    const totalClicks = useMemo(() => {
+        return userAnalytics?.analytics?.overview?.totalClicks || 0;
+    }, [userAnalytics]);
 
     const {register, handleSubmit, setValue, control, formState: {errors, isDirty}} = useForm<Profile>({
         defaultValues: {
@@ -232,7 +238,7 @@ const Profile = () => {
                                 <LuUser className="text-primary" size={20}/>
                             </div>
                             <div>
-                                <p className="text-2xl font-bold">0</p>
+                                <p className="text-2xl font-bold">{userAnalytics?.analytics?.overview?.totalLinks || 0}</p>
                                 <p className="text-sm text-base-content/70">Links Created</p>
                             </div>
                         </div>
@@ -244,7 +250,7 @@ const Profile = () => {
                                 <LuCalendar className="text-secondary" size={20}/>
                             </div>
                             <div>
-                                <p className="text-2xl font-bold">0</p>
+                                <p className="text-2xl font-bold">{totalClicks}</p>
                                 <p className="text-sm text-base-content/70">Total Clicks</p>
                             </div>
                         </div>

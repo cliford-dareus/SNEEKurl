@@ -91,7 +91,8 @@ const AdminLayout = () => {
                                 ))}
                             </ul>
                         </nav>
-                        <LinkLimitsDisplay/>
+
+                        <LinkLimitsDisplay />
                     </div>
                     <div className="flex-1 overflow-y-scroll no-scrollbar">
                         <Outlet context={{plan} as ContextType}/>

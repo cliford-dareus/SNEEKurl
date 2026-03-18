@@ -1,78 +1,78 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 
-const URL = "http://localhost:4080/page";
+const URL = "https://sneekurl-server.onrender.com/page"  || "http://localhost:4080/page";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: URL,
-  credentials: "include", // Set credentials to "include"
-  headers: {
-    Accept: "application/json",
-  },
-  prepareHeaders: (headers, { getState }) => {
-    const csrfToken = sessionStorage.getItem("csrfToken");
-    if (csrfToken) {
-      headers.set("X-CSRF-Token", csrfToken);
-    }
-    return headers;
-  },
+    baseUrl: URL,
+    credentials: "include", // Set credentials to "include"
+    headers: {
+        Accept: "application/json",
+    },
+    prepareHeaders: (headers, {getState}) => {
+        const csrfToken = sessionStorage.getItem("csrfToken");
+        if (csrfToken) {
+            headers.set("X-CSRF-Token", csrfToken);
+        }
+        return headers;
+    },
 });
 
 export const pageapi = createApi({
-  reducerPath: "pageapi",
-  baseQuery,
-  tagTypes: ["PAGE"],
-  endpoints: (builder) => ({
-    getPages: builder.query<any, void>({
-      query: (query) => ({
-        url: "",
-      }),
-      providesTags: ["PAGE"],
+    reducerPath: "pageapi",
+    baseQuery,
+    tagTypes: ["PAGE"],
+    endpoints: (builder) => ({
+        getPages: builder.query<any, void>({
+            query: (query) => ({
+                url: "",
+            }),
+            providesTags: ["PAGE"],
+        }),
+        getPage: builder.query<any, { id: string | undefined }>({
+            query: (id) => ({
+                url: `/${id.id}`,
+            }),
+            providesTags: ["PAGE"],
+        }),
+        createPage: builder.mutation({
+            query: (payload) => ({
+                url: "/create",
+                method: "POST",
+                body: payload,
+            }),
+            invalidatesTags: ["PAGE"],
+        }),
+        updatePage: builder.mutation({
+            query: (payload) => ({
+                url: "/update",
+                method: "PUT",
+                body: payload,
+            }),
+            invalidatesTags: ["PAGE"],
+        }),
+        deletePage: builder.mutation({
+            query: (payload) => ({
+                url: "/delete",
+                method: "DELETE",
+            }),
+            invalidatesTags: ["PAGE"],
+        }),
+        reorderPageLinks: builder.mutation({
+            query: (payload) => ({
+                url: `/manage/${payload.id}`,
+                method: "PUT",
+                body: payload.links,
+            }),
+            invalidatesTags: ["PAGE"],
+        })
     }),
-    getPage: builder.query<any, { id: string | undefined }>({
-      query: (id) => ({
-        url: `/${id.id}`,
-      }),
-      providesTags: ["PAGE"],
-    }),
-    createPage: builder.mutation({
-      query: (payload) => ({
-        url: "/create",
-        method: "POST",
-        body: payload,
-      }),
-      invalidatesTags: ["PAGE"],
-    }),
-    updatePage: builder.mutation({
-      query: (payload) => ({
-        url: "/update",
-        method: "PUT",
-        body: payload,
-      }),
-      invalidatesTags: ["PAGE"],
-    }),
-    deletePage: builder.mutation({
-      query: (payload) => ({
-        url: "/delete",
-        method: "DELETE",
-      }),
-      invalidatesTags: ["PAGE"],
-    }),
-    reorderPageLinks : builder.mutation({
-      query: (payload) => ({
-        url: `/manage/${payload.id}`,
-        method: "PUT",
-        body: payload.links,
-      }),
-      invalidatesTags: ["PAGE"],
-    })
-  }),
 });
 
 export const {
-  useCreatePageMutation,
-  useUpdatePageMutation,
-  useGetPagesQuery,
-  useDeletePageMutation,
-  useGetPageQuery,
-  useReorderPageLinksMutation
+    useCreatePageMutation,
+    useUpdatePageMutation,
+    useGetPagesQuery,
+    useDeletePageMutation,
+    useGetPageQuery,
+    useReorderPageLinksMutation
 } = pageapi;

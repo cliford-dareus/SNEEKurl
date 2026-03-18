@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { RootState } from "../store";
 import { IsAny } from "@reduxjs/toolkit/dist/tsHelpers";
 
-const URL = "http://localhost:4080/stripe";
+const URL = "https://sneekurl-server.onrender.com/stripe" || "http://localhost:4080/stripe";
 
 type Payload = {
   plan_price: number;

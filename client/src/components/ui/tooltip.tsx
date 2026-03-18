@@ -81,7 +81,6 @@ const TooltipProvider = React.memo<TooltipProviderProps>(
         };
 
         // No imperative handle needed for HTMLElement ref
-
         useEffect(() => {
             return () => {
                 if (timeoutRef.current) {
