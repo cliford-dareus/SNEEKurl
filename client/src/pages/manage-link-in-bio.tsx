@@ -130,35 +130,41 @@ const ManageLinkInBio = ({}: Props) => {
 
             <div className="flex gap-4">
                 <div className="flex-1">
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <div>Add Block</div>
-                        </PopoverTrigger>
-                        <PopoverContent
-                            side="bottom"
-                            align="start"
-                            className="!bg-base-300 border border-base-100 p-4"
-                            showArrow={true}
-                        >
-                            <div className="flex flex-col gap-2 items-center">
-                                <p className="text-center font-bold">Select a Block</p>
-                            </div>
-                            <div className="flex flex-col gap-2 items-center mt-4">
-                                {BLOCKS.map((block: any) => (
-                                    <div
-                                        key={block.id}
-                                        onClick={() => {
-                                            setBlockSelected(block.tag);
-                                            setCreateLinkBlockActive(true);
-                                        }}
-                                        className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
-                                    >
-                                        {block.name}
-                                    </div>
-                                ))}
-                            </div>
-                        </PopoverContent>
-                    </Popover>
+                    <div className="flex items-center justify-between">
+                        <h1 className="text-2xl font-bold">Manage Links</h1>
+                        <div className="flex items-center gap-2">
+                        <Button classnames="border text-accent-content">Customize</Button>
+                        <Popover>
+                            <PopoverTrigger>
+                                <Button classnames="bg-primary flex items-center py-1.5 px-3 rounded-md justify-center text-white">Add Block</Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                                side="bottom"
+                                align="start"
+                                className="!bg-base-300 border border-base-100 p-4"
+                                showArrow={true}
+                            >
+                                <div className="flex flex-col gap-2 items-center">
+                                    <p className="text-center font-bold">Select a Block</p>
+                                </div>
+                                <div className="flex flex-col gap-2 items-center mt-4">
+                                    {BLOCKS.map((block: any) => (
+                                        <div
+                                            key={block.id}
+                                            onClick={() => {
+                                                setBlockSelected(block.tag);
+                                                setCreateLinkBlockActive(true);
+                                            }}
+                                            className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
+                                        >
+                                            {block.name}
+                                        </div>
+                                    ))}
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                        </div>
+                    </div>
 
                     {!isLoading && (
                         <ul className="mt-2">
@@ -200,7 +206,6 @@ const ManageLinkInBio = ({}: Props) => {
             />
 
             {/* <EditLinkBlockModal /> */}
-
         </section>
     );
 };

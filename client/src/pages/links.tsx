@@ -19,8 +19,8 @@ const Links = () => {
                     className="sticky top-0 z-20 mb-4 flex items-center gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
                     <div className="flex gap-4 items-center">
                         <div className="">
-                            <span>My Links</span>
-                            <p className="text-xs text-base-content">{data?.urls.length} total links</p>
+                            <span className="text-xl font-medium uppercase">My Links</span>
+                            <p className="text-xs text-base-content text-zinc-400">{data?.urls.length} total links</p>
                         </div>
                         {activeFilter.length !== 0 &&
                             activeFilter?.map((filter) => (

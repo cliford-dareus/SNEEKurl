@@ -1,14 +1,9 @@
-import {useWindowSize, Size} from "../hooks/windowSize";
+import {useWindowSize} from "../hooks/windowSize";
 import {Link, useNavigate} from "react-router-dom";
-import {IoMoon, IoMoonOutline, IoPowerOutline} from "react-icons/io5";
-import {useAppDispatch, useAppSelector} from "../app/hook";
+import {useAppDispatch} from "../app/hook";
 import {useEffect, useState} from "react";
 import Button from "./ui/button";
-import {
-    AuthState,
-    removeCredentials,
-    selectCurrentUser,
-} from "../features/auth/authslice";
+import {removeCredentials} from "../features/auth/authslice";
 import {LuMoon, LuSunDim, LuUserCircle2, LuMenu, LuX} from "react-icons/lu";
 import {useLogoutUserMutation} from "../app/services/auth";
 import useScroll from "../hooks/use-scroll";
@@ -68,12 +63,12 @@ const Header = ({isActive, plan}: Props) => {
     }, [isMobileMenuOpen]);
 
     const navigationItems = !isActive ? [
-        {name: "Your Urls", href: "/yoururl"},
-        {name: "Product", href: "/product"},
+        {name: "Product", href: "#product"},
         {name: "Pricing", href: "/pricing"},
         {name: "Docs", href: "/docs"},
     ] : [
         {name: "Product", href: "/product"},
+        {name: "help", href: "/help"},
     ];
 
     return (

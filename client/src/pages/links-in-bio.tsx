@@ -4,6 +4,8 @@ import {useGetPageQuery} from "../app/services/page";
 import {getSiteUrl} from "../Utils/getSiteUrl";
 import classNames from "classnames";
 import VisitLinkButton from "../components/visit-link-button";
+import {motion} from "framer-motion";
+import {BiChevronRight} from "react-icons/bi";
 
 
 const LinksInBio = () => {
@@ -11,74 +13,115 @@ const LinksInBio = () => {
     const {data, isLoading} = useGetPageQuery({id: slug});
 
     return (
-        <main className="">
-            <div className="container mx-auto p-4">
-                <div className="flex flex-col gap-4 items-center">
-                    <div className="mt-12 flex flex-col items-center text-center">
-                        <div className="w-[90px] h-[90px] rounded-full bg-primary border overflow-hidden">
+        <main className="bg-black">
+            <div
+                className="min-h-screen flex flex-col items-center justify-start px-6 py-16 md:py-24 max-w-2xl mx-auto">
+                <motion.div
+                    initial={{opacity: 0, y: 20}}
+                    animate={{opacity: 1, y: 0}}
+                    transition={{duration: 0.6}}
+                    className="flex flex-col items-center text-center mb-12"
+                >
+                    <div className="relative mb-6">
+                        <div
+                            className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-2 border-white/10 p-1">
                             <img
-                                src={
-                                    "https://utfs.io/f/ffcca2f3-d293-4543-824a-aa752d3fd536_th.jpg"
-                                }
+                                src="https://picsum.photos/seed/profile/400/400"
+                                alt="Profile"
+                                className="w-full h-full rounded-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                referrerPolicy="no-referrer"
                             />
                         </div>
-                        <div className="mt-4">
-                            <p className="text-xl font-medium">@{data?.user.username}</p>
-                            <p className="my-2">{data?.description}</p>
-                        </div>
-                        <div className="mt-2 flex gap-2">
-                            {data?.links?.map(({_id: link, category}: any) => {
-                                if (category === "social")
-                                    return (
-                                        <div
-                                            key={link._id}
-                                            className="w-[30px] h-[30px] rounded-full border overflow-hidden"
-                                        >
-                                            <Link to={link.short} target="_blank">
-                                                <img
-                                                    className="w-full h-full object-cover"
-                                                    src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-                                                        link.longUrl
-                                                    )}`}
-                                                />
-                                            </Link>
-                                        </div>
-                                    );
-                            })}
-                        </div>
+                        <motion.div
+                            initial={{scale: 0}}
+                            animate={{scale: 1}}
+                            transition={{delay: 0.5, type: "spring"}}
+                            className="absolute bottom-1 right-1 w-6 h-6 bg-green-500 rounded-full border-4 border-black"
+                        />
                     </div>
 
-                    <div className="w-full">
-                        {!isLoading &&
-                            data?.links?.map(({_id: link, category}: any) => {
-                                if (category === "website" || category === "marketing") {
-                                    return (
-                                        <div
-                                            className={classNames(
-                                                category === "website"
-                                                    ? "bg-indigo-300"
-                                                    : "bg-green-300",
-                                                "w-full flex items-center gap-4 mt-2 rounded-full border border-base-300 bg-base-200 px-2 py-2"
-                                            )}
-                                            key={link._id}
-                                        >
-                                            <div className="w-[30px] h-[30px] rounded-full  overflow-hidden">
-                                                <img
-                                                    className="w-full h-full"
-                                                    src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-                                                        link.longUrl
-                                                    )}`}
-                                                />
-                                            </div>
-                                            <VisitLinkButton url={link}>
-                                                <p>{getSiteUrl(link.longUrl)}</p>
-                                            </VisitLinkButton>
-                                        </div>
-                                    );
-                                }
-                            })}
+                    <h1 className="text-4xl text-white md:text-5xl font-serif font-bold tracking-tight mb-2">
+                        @{data?.user.username}
+                    </h1>
+                    <p className="text-white/60 text-sm md:text-base font-light tracking-wide max-w-xs md:max-w-md">
+                        {data?.description}
+                    </p>
+
+                    <div className="mt-2 flex gap-2">
+                        {data?.links?.map(({_id: link, category}: any) => {
+                            if (category === "social")
+                                return (
+                                    <div
+                                        key={link._id}
+                                        className="w-[50px] h-[50px] rounded-full border overflow-hidden group block  bg-white/5  border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                    >
+                                        <Link to={link.short} target="_blank">
+                                            <img
+                                                className="w-full h-full object-cover"
+                                                src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
+                                                    link.longUrl
+                                                )}`}
+                                            />
+                                        </Link>
+                                    </div>
+                                );
+                        })}
                     </div>
+                </motion.div>
+
+                <div className="w-full space-y-4 mb-12">
+                    {!isLoading && data?.links?.map(({_id: link, category}: {_id: any, category: string}, index: number) => {
+                        if (category === "website" || category === "marketing") {
+                            return (
+                                <VisitLinkButton url={link}>
+                                    <motion.a
+                                        key={link.name}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        initial={{opacity: 0, x: -20}}
+                                        animate={{opacity: 1, x: 0}}
+                                        transition={{delay: 0.1 * index + 0.3}}
+                                        className="group block w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                    >
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-4">
+                                                <div className="p-2 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors">
+                                                    <img
+                                                        className="w-full h-full"
+                                                        src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(link.longUrl)}`}
+                                                        alt="Favicon"
+                                                    />
+                                                </div>
+                                                <div className="text-left">
+                                                    <h3 className="font-medium text-white group-hover:text-white transition-colors">
+                                                        Redux
+                                                    </h3>
+                                                    <p className="text-xs text-white/40 group-hover:text-white/60 transition-colors">
+                                                        Redux toolkit for managing state in React applications.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <BiChevronRight
+                                                className="w-5 h-5 text-white/20 group-hover:text-white/60 transition-transform group-hover:translate-x-1"/>
+                                        </div>
+                                    </motion.a>
+                                </VisitLinkButton>
+                            )
+                        }
+                    })}
                 </div>
+
+                <motion.footer
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="mt-auto pt-8 border-t border-white/5 w-full text-center"
+                >
+                    <p className="text-white/20 text-[10px] uppercase tracking-[0.2em] font-medium">
+                        © 2026 {data.user.username} — Built with SneekInk
+                    </p>
+                </motion.footer>
             </div>
         </main>
     );

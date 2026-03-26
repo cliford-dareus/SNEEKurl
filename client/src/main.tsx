@@ -11,7 +11,6 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// Use environment variable for publishable key
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "",
   { apiVersion: "2023-10-16" }

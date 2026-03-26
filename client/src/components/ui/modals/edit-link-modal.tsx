@@ -73,7 +73,7 @@ const EditLinkModal = ({ url, editActive, setEditActive, plan }: Props) => {
             />
             <div>
               <DialogTitle>Edit Link</DialogTitle>
-              <DialogDescription>
+              <DialogDescription className="text-zinc-400">
                 Editing sneek.co/{url.short}
               </DialogDescription>
             </div>

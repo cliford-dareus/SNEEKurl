@@ -88,53 +88,52 @@ const FilterLinkModal = ({open, setOpen, activeFilter, setActiveFilter}: Props) 
             {open && (
                 <>
                     <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogContent>
-                             <DialogHeader>
+                        <DialogContent>
+                            <DialogHeader>
                                 <div className="flex items-center gap-3">
-                                <svg
-                                    width="40"
-                                    height="40"
-                                    viewBox="0 0 200 250"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                    d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                    fill="currentColor"
-                                    />
-                                </svg>
-                                <div>
-                                    <DialogTitle>Create New Link</DialogTitle>
-                                    <DialogDescription>Shorten your URL and customize it</DialogDescription>
-                                </div>
+                                    <svg
+                                        width="40"
+                                        height="40"
+                                        viewBox="0 0 200 250"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    <div>
+                                        <DialogTitle>Filter Links</DialogTitle>
+                                        <DialogDescription className="text-zinc-400">Filter links by...</DialogDescription>
+                                    </div>
                                 </div>
                             </DialogHeader>
-                        <div className="relative h-full w-[400px]">
-                        </div>
+                            {/*<div className="relative h-full w-[400px]"></div>*/}
 
-                        <div className="mt-24 p-4">
-                            <Select
-                                classnames=""
-                                onChange={(e) => updateSearchParams({sort: e.target.value})}
-                            >
-                            <Option>Sort by date</Option>
-                                <Option value="asc">Old to New</Option>
-                                <Option classnames="mt-2"
-                                        value="desc">
-                                    New to Old
-                                </Option>
-                            </Select>
+                            <div className="p-4">
+                                <Select
+                                    classnames=""
+                                    onChange={(e) => updateSearchParams({sort: e.target.value})}
+                                >
+                                    <Option>Sort by date</Option>
+                                    <Option value="asc">Old to New</Option>
+                                    <Option classnames="mt-2"
+                                            value="desc">
+                                        New to Old
+                                    </Option>
+                                </Select>
 
-                            <Select
-                                classnames="mt-2"
-                                onChange={(e) => updateSearchParams({clicks: e.target.value})}
-                            >
-                                <Option>Sort by clicks</Option>
-                                <Option value="most_click">Most Click</Option>
-                                <Option value="less_click">Less Click</Option>
-                            </Select>
-                        </div>
-                    </DialogContent>
+                                <Select
+                                    classnames="mt-2"
+                                    onChange={(e) => updateSearchParams({clicks: e.target.value})}
+                                >
+                                    <Option>Sort by clicks</Option>
+                                    <Option value="most_click">Most Click</Option>
+                                    <Option value="less_click">Less Click</Option>
+                                </Select>
+                            </div>
+                        </DialogContent>
                     </Dialog>
                 </>
             )}

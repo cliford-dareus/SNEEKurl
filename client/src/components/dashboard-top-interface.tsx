@@ -19,21 +19,21 @@ const DashboardTopInterface = ({pathname}: Props) => {
             <div className="flex items-center gap-4 py-4 h-[10vh]">
                 {pathname !== "/link-in-bio" ? (
                     <div
-                        className="rounded-md border border-base-300 p-4 min-w-[256px]"
+                        className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
                         onClick={() => setAddLinkActive(true)}
                     >
                         <Button classnames="bg-primary">Add New Link</Button>
                     </div>
                 ) : (
                     <div
-                        className="rounded-md border border-base-300 p-4 min-w-[256px]"
+                        className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
                         onClick={() => setCreateLinkInBioActive(true)}
                     >
                         <Button classnames="bg-primary">Add New Page</Button>
                     </div>
                 )}
 
-                <div className="flex-1 rounded-md border border-base-300 p-3.5">
+                <div className="flex-1 rounded-md border border-base-300 p-2.5">
                     <div
                         className="ml-auto flex w-full justify-between gap-4 rounded-full border border-base-300 px-4 py-1"
                         onClick={() => setSearchLinkActive(true)}
