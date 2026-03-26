@@ -11,10 +11,11 @@ import {
     PopoverContent,
 } from "../components/ui/popover";
 import Button from "../components/ui/button";
-import CreateLinkBlockModal from "../components/ui/modals/create-link-block-modal";
+import CreateLinkBlockModal from "../components/modals/create-link-block-modal";
 import classNames from "classnames";
 import {getSiteUrl} from "../Utils/getSiteUrl";
 import {BLOCKS} from "../Utils/common";
+import CustomizeLinksInBioModal from "../components/modals/customize-links-in-bio-modal";
 
 type Props = {};
 
@@ -62,7 +63,7 @@ const LinkItem = ({items, link, index, manageLinksOrder}: any) => {
 
     return (
         <li
-            key={link._id._id}
+            key={link?._id?._id}
             draggable
             onDragStart={(e) => handleDragStart(index, e)}
             onDragOver={(e) => handleDragOver(index, e)}
@@ -97,9 +98,9 @@ const ManagePage = ({}: Props) => {
     const Navigate = useNavigate();
     const {id} = useParams();
     const {data, isLoading} = useGetPageQuery({id});
-    const [open, setOpen] = useState(false);
     const [blockSelected, setBlockSelected] = useState("");
     const [createLinkBlockActive, setCreateLinkBlockActive] = useState(false);
+    const [customizePageOpen, setCustomizePageOpen] = useState(false);
     const [reorderLinks, {isLoading: reorderLoading}] = useReorderPageLinksMutation();
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -114,7 +115,17 @@ const ManagePage = ({}: Props) => {
 
     useEffect(() => {
         iframeRef.current?.contentWindow?.location.reload();
-    }, [reorderLoading, createLinkBlockActive])
+    }, [reorderLoading, createLinkBlockActive, customizePageOpen]);
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900">
+
+                </div>
+            </div>
+        );
+    }
 
     return (
         <section className="relative">
@@ -133,7 +144,7 @@ const ManagePage = ({}: Props) => {
                     <div className="flex items-center justify-between">
                         <h1 className="text-2xl font-bold">Manage Links</h1>
                         <div className="flex items-center gap-2">
-                        <Button classnames="border text-accent-content">Customize</Button>
+                        <Button onClick={() => setCustomizePageOpen(true)} classnames="border text-accent-content">Customize</Button>
                         <Popover>
                             <PopoverTrigger>
                                 <Button classnames="bg-primary flex items-center py-1.5 px-3 rounded-md justify-center text-white">Add Block</Button>
@@ -202,10 +213,14 @@ const ManagePage = ({}: Props) => {
                 setBlockSelected={setBlockSelected}
                 createLinkBlockActive={createLinkBlockActive}
                 setCreateLinkBlockActive={setCreateLinkBlockActive}
-                pageId={data?._id}
+                pageId={data?._id as string}
             />
 
-            {/* <EditLinkBlockModal /> */}
+            <CustomizeLinksInBioModal
+                customizePageOpen={customizePageOpen}
+                setCustomizePageOpen={setCustomizePageOpen}
+                data={data!}
+            />
         </section>
     );
 };

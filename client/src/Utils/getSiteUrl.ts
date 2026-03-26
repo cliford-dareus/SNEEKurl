@@ -5,4 +5,25 @@ export const getSiteUrl = (site: string | undefined): string => {
     return domain!;
 };
 
+export const getWebsiteName =(url: string) => {
+    try {
+        const parsedUrl = new URL(url);
+
+        // Get the hostname (e.g., "www.example.com")
+        let hostname = parsedUrl.hostname;
+
+        // Remove "www." if it exists
+        hostname = hostname.replace(/^www\./i, '');
+
+        hostname = hostname.split(".")[0]
+
+        // Return the main domain (e.g., "example.com")
+        return hostname;
+
+    } catch (e) {
+        console.error("Invalid URL:", e);
+        return null;
+    }
+};
+
 

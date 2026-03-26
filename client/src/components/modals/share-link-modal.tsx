@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import Input from "../Input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog";
+import Input from "../ui/Input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
 import { Dispatch, SetStateAction } from "react";
-import { Url } from "../../../app/services/urlapi";
-import { getSiteUrl } from "../../../Utils/getSiteUrl";
-import Button from "../button";
+import { Url } from "../../app/services/urlapi";
+import { getSiteUrl } from "../../Utils/getSiteUrl";
+import Button from "../ui/button";
 import { LuFacebook, LuTwitter, LuLinkedin, LuInstagram, LuCopy, LuMail } from "react-icons/lu";
 import { toast } from "react-toastify";
 

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {LuArrowDown, LuArrowUp, LuFilter, LuSettings, LuView} from "react-icons/lu";
 import Button from "../components/ui/button";
-import EditPageModal from "../components/ui/modals/edit-page-modal";
+import EditPageModal from "../components/modals/edit-page-modal";
 import {useGetPagesQuery} from "../app/services/page";
 import {Link} from "react-router-dom";
 import classNames from "classnames";

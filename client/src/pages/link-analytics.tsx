@@ -49,12 +49,12 @@ const LinkAnalytics = () => {
             {/* Header */}
             <div className="bg-base-200 rounded-lg p-6">
                 <h1 className="text-2xl font-bold mb-2">Link Analytics</h1>
-                <div className="flex items-center gap-4 text-sm text-base-content">
+                <div className="flex items-center gap-4 text-sm text-zinc-400">
                     <span className="font-medium">sneek.co/{link.short}</span>
                     <span>→</span>
                     <span className="truncate max-w-md">{link.longUrl}</span>
                 </div>
-                <div className="mt-2 text-sm text-base-content/70">
+                <div className="mt-2 text-sm text-zinc-400">
                     Created: {new Date(link.createdAt).toLocaleDateString()}
                     {link.lastClick && (
                         <span className="ml-4">
@@ -74,13 +74,13 @@ const LinkAnalytics = () => {
                 <div className="bg-base-200 rounded-lg p-6">
                     <h3 className="text-sm font-medium text-base-content mb-2">Period Clicks</h3>
                     <p className="text-3xl font-bold text-secondary">{period.clicks}</p>
-                    <p className="text-xs text-base-content/70">Last {period.days} days</p>
+                    <p className="text-xs text-zinc-400">Last {period.days} days</p>
                 </div>
 
                 <div className="bg-base-200 rounded-lg p-6">
                     <h3 className="text-sm font-medium text-base-content mb-2">Unique Visitors</h3>
                     <p className="text-3xl font-bold text-accent">{uniqueVisitors.total}</p>
-                    <p className="text-xs text-base-content/70">{uniqueVisitors.percentage}% of clicks</p>
+                    <p className="text-xs text-zinc-400">{uniqueVisitors.percentage}% of clicks</p>
                 </div>
 
                 <div className="bg-base-200 rounded-lg p-6">
@@ -97,34 +97,34 @@ const LinkAnalytics = () => {
                 <div className="bg-base-200 rounded-lg p-6">
                     <h3 className="text-lg font-semibold mb-4">Clicks Over Time</h3>
                     <div className="h-64">
-                        {/* {clicksByDay?.length > 0 ? (
-              <ResponsiveBar
-                data={clicksByDay}
-                keys={['clicks']}
-                indexBy="date"
-                margin={{ top: 20, right: 20, bottom: 50, left: 40 }}
-                padding={0.3}
-                colors={['#6366f1']}
-                axisBottom={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                  tickRotation: -45,
-                }}
-                axisLeft={{
-                  tickSize: 5,
-                  tickPadding: 5,
-                }}
-                enableLabel={false}
-                theme={{
-                  text: { fill: 'oklch(var(--bc))' },
-                  axis: { ticks: { text: { fill: 'oklch(var(--bc))' } } }
-                }}
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-base-content">
-                No data available
-              </div>
-            )} */}
+                        {/*{clicksByDay?.length > 0 ? (*/}
+                        {/*  <ResponsiveBar*/}
+                        {/*    data={clicksByDay}*/}
+                        {/*    keys={['clicks']}*/}
+                        {/*    indexBy="date"*/}
+                        {/*    margin={{ top: 20, right: 20, bottom: 50, left: 40 }}*/}
+                        {/*    padding={0.3}*/}
+                        {/*    colors={['#6366f1']}*/}
+                        {/*    axisBottom={{*/}
+                        {/*      tickSize: 5,*/}
+                        {/*      tickPadding: 5,*/}
+                        {/*      tickRotation: -45,*/}
+                        {/*    }}*/}
+                        {/*    axisLeft={{*/}
+                        {/*      tickSize: 5,*/}
+                        {/*      tickPadding: 5,*/}
+                        {/*    }}*/}
+                        {/*    enableLabel={false}*/}
+                        {/*    theme={{*/}
+                        {/*      text: { fill: 'oklch(var(--bc))' },*/}
+                        {/*      axis: { ticks: { text: { fill: 'oklch(var(--bc))' } } }*/}
+                        {/*    }}*/}
+                        {/*  />*/}
+                        {/*) : (*/}
+                        {/*  <div className="flex items-center justify-center h-full text-base-content">*/}
+                        {/*    No data available*/}
+                        {/*  </div>*/}
+                        {/*)}*/}
                     </div>
                 </div>
 
@@ -321,22 +321,22 @@ const LinkAnalytics = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {/* {recentClicks?.slice(0, 10)?.map((click, index) => (
-                  <tr key={index}>
-                    <td className="text-sm">
-                      {new Date(click.time).toLocaleString()}
-                    </td>
-                    <td>{click.country}</td>
-                    <td>
-                      <span className={`badge ${click.isMobile ? 'badge-secondary' : 'badge-primary'}`}>
-                        {click.isMobile ? 'Mobile' : 'Desktop'}
-                      </span>
-                    </td>
-                    <td>{click.browser}</td>
-                    <td>{click.os}</td>
-                    <td className="truncate max-w-32">{click.referrer}</td>
-                  </tr>
-                ))} */}
+                                {/*{recentClicks?.slice(0, 10)?.map((click, index) => (*/}
+                                {/*  <tr key={index}>*/}
+                                {/*    <td className="text-sm">*/}
+                                {/*      {new Date(click.time).toLocaleString()}*/}
+                                {/*    </td>*/}
+                                {/*    <td>{click.country}</td>*/}
+                                {/*    <td>*/}
+                                {/*      <span className={`badge ${click.isMobile ? 'badge-secondary' : 'badge-primary'}`}>*/}
+                                {/*        {click.isMobile ? 'Mobile' : 'Desktop'}*/}
+                                {/*      </span>*/}
+                                {/*    </td>*/}
+                                {/*    <td>{click.browser}</td>*/}
+                                {/*    <td>{click.os}</td>*/}
+                                {/*    <td className="truncate max-w-32">{click.referrer}</td>*/}
+                                {/*  </tr>*/}
+                                {/*))}*/}
                             </tbody>
                         </table>
                     </div>

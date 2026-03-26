@@ -13,9 +13,9 @@ import {
     LuTrash2
 } from "react-icons/lu";
 import {Link} from "react-router-dom";
-import EditLinkModal from "./ui/modals/edit-link-modal";
-import EditQrModal from "./ui/modals/edit-qr-modal";
-import ShareLinkModal from "./ui/modals/share-link-modal";
+import EditLinkModal from "./modals/edit-link-modal";
+import EditQrModal from "./modals/edit-qr-modal";
+import ShareLinkModal from "./modals/share-link-modal";
 import {Popover, PopoverTrigger, PopoverContent} from "./ui/popover";
 import Button from "./ui/button";
 import {CgLink} from "react-icons/cg";

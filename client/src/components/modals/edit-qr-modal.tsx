@@ -1,11 +1,11 @@
 import {Dispatch, SetStateAction, useState} from "react";
-import {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../dialog";
-import {Url} from "../../../app/services/urlapi";
-import {getSiteUrl} from "../../../Utils/getSiteUrl";
+import {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
+import {Url} from "../../app/services/urlapi";
+import {getSiteUrl} from "../../Utils/getSiteUrl";
 import {QRCodeSVG} from "qrcode.react";
-import Button from "../button";
+import Button from "../ui/button";
 import {useNavigate} from "react-router-dom";
-import Dialog from "../dialog";
+import Dialog from "../ui/dialog";
 
 const URLs = "http://localhost:4080";
 

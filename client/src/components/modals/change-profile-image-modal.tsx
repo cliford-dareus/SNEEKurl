@@ -1,12 +1,12 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../dialog";
-import {getSiteUrl} from "../../../Utils/getSiteUrl";
-import Button from "../button";
-import Separator from "../separator";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
+import {getSiteUrl} from "../../Utils/getSiteUrl";
+import Button from "../ui/button";
+import Separator from "../ui/separator";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {generateReactHelpers} from "@uploadthing/react/hooks";
-import CustomDropzone from "../../custom-dropzone";
-import {useUpdateUserProfileImageMutation} from "../../../app/services/user";
+import CustomDropzone from "../custom-dropzone";
+import {useUpdateUserProfileImageMutation} from "../../app/services/user";
 
 type Props = {
     editProfileActive: boolean;

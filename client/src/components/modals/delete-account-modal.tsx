@@ -6,14 +6,14 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "../dialog";
-import Button from "../button";
-import Input from "../Input";
+} from "../ui/dialog";
+import Button from "../ui/button";
+import Input from "../ui/Input";
 import { Controller, useForm } from "react-hook-form";
 import { LuTrash2, LuAlertTriangle, LuX } from "react-icons/lu";
-import { useDeleteUserAccountMutation } from "../../../app/services/user";
-import { useAppDispatch, useAppSelector } from "../../../app/hook";
-import { removeCredentials, selectCurrentUser } from "../../../features/auth/authslice";
+import { useDeleteUserAccountMutation } from "../../app/services/user";
+import { useAppDispatch, useAppSelector } from "../../app/hook";
+import { removeCredentials, selectCurrentUser } from "../../features/auth/authslice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 

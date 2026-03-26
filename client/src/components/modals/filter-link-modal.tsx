@@ -1,10 +1,10 @@
-import {Sheet, SheetContent} from "../sheet";
-import {getSiteUrl} from "../../../Utils/getSiteUrl";
+import {Sheet, SheetContent} from "../ui/sheet";
+import {getSiteUrl} from "../../Utils/getSiteUrl";
 import {Dispatch, SetStateAction, useCallback, useEffect} from "react";
-import {Option, Select} from "../select";
+import {Option, Select} from "../ui/select";
 import {useSearchParams} from "react-router-dom";
 import {set} from "react-hook-form";
-import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../dialog";
+import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
 
 type Props = {
     open: boolean;

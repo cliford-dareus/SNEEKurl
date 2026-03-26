@@ -1,9 +1,9 @@
 import Button from "./ui/button";
-import CreateLinkModal from "./ui/modals/create-link-modal";
+import CreateLinkModal from "./modals/create-link-modal";
 import {useState} from "react";
 import {LuSearch} from "react-icons/lu";
-import SearchLinkModal from "./ui/modals/search-link-modal";
-import CreateLinkInBioModal from "./ui/modals/create-link-in-bio-modal";
+import SearchLinkModal from "./modals/search-link-modal";
+import CreateLinkInBioModal from "./modals/create-link-in-bio-modal";
 
 type Props = {
     pathname: string;
@@ -17,7 +17,7 @@ const DashboardTopInterface = ({pathname}: Props) => {
     return (
         <>
             <div className="flex items-center gap-4 py-4 h-[10vh]">
-                {pathname !== "/link-in-bio" ? (
+                {pathname !== "/pages" ? (
                     <div
                         className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
                         onClick={() => setAddLinkActive(true)}

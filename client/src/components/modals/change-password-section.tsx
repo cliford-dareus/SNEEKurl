@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Switch from "../switch";
-import Input from "../Input";
+import Switch from "../ui/switch";
+import Input from "../ui/Input";
 import {Controller, UseFormRegister} from "react-hook-form";
-import {Profile} from "../../profile";
+import {Profile} from "../profile";
 
 type Props = {
     register: UseFormRegister<Profile | any>;

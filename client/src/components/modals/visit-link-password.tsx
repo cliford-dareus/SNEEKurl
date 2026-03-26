@@ -1,9 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Url } from "../../../app/services/urlapi";
+import { Url } from "../../app/services/urlapi";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog";
-import { getSiteUrl } from "../../../Utils/getSiteUrl";
-import Button from "../button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import { getSiteUrl } from "../../Utils/getSiteUrl";
+import Button from "../ui/button";
 
 type Props = {
   status: boolean;

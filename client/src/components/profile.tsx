@@ -5,14 +5,14 @@ import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import Input from "./ui/Input";
 import Button from "./ui/button";
-import ChangePasswordSection from "./ui/modals/change-password-section";
+import ChangePasswordSection from "./modals/change-password-section";
 import Separator from "./ui/separator";
-import ChangeProfileImageModal from "./ui/modals/change-profile-image-modal";
+import ChangeProfileImageModal from "./modals/change-profile-image-modal";
 import {useUpdateUserDetailsMutation} from "../app/services/user";
 import {selectCurrentUser} from "../features/auth/authslice";
 import {LuUser, LuMail, LuShield, LuCamera, LuTrash2, LuSave, LuCalendar, LuCrown, LuSettings} from "react-icons/lu";
 import {toast} from "react-toastify";
-import DeleteAccountModal from "./ui/modals/delete-account-modal";
+import DeleteAccountModal from "./modals/delete-account-modal";
 import {useGetLinkAnalyticsQuery, useGetUserAnalyticsQuery} from "../app/services/urlapi";
 
 export type Profile = {

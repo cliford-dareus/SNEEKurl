@@ -1,5 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {API_URL} from "../../Utils/common";
+import {PageProps} from "../../components/modals/customize-links-in-bio-modal";
+import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 const URL = `${API_URL}/page` || "http://localhost:4080/page";
 
@@ -29,7 +31,7 @@ export const pageapi = createApi({
             }),
             providesTags: ["PAGE"],
         }),
-        getPage: builder.query<any, { id: string | undefined }>({
+        getPage: builder.query<PageProps , { id: string | undefined }>({
             query: (id) => ({
                 url: `/${id.id}`,
             }),
@@ -50,6 +52,14 @@ export const pageapi = createApi({
                 body: payload,
             }),
             invalidatesTags: ["PAGE"],
+        }),
+        customizePage: builder.mutation({
+            query: (paylaod) => ({
+                url: "/customize",
+                method: "PUT",
+                body: paylaod
+            }),
+            invalidatesTags: ["PAGE"]
         }),
         deletePage: builder.mutation({
             query: (payload) => ({
@@ -74,6 +84,7 @@ export const {
     useUpdatePageMutation,
     useGetPagesQuery,
     useDeletePageMutation,
+    useCustomizePageMutation,
     useGetPageQuery,
     useReorderPageLinksMutation
 } = pageapi;

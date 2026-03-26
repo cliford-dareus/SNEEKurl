@@ -1,6 +1,6 @@
 import React, {SetStateAction, useEffect} from 'react';
 import {UseFormSetValue} from "react-hook-form";
-import {FileProps, FileWithPreview} from "./ui/modals/change-profile-image-modal";
+import {FileProps, FileWithPreview} from "./modals/change-profile-image-modal";
 
 type Props = {
     fileData: FileWithPreview[] | null;

@@ -6,12 +6,12 @@ import {
     DialogTitle,
     DialogDescription,
     DialogFooter,
-} from "../dialog";
-import Label from "../label";
-import Input from "../Input";
+} from "../ui/dialog";
+import Label from "../ui/label";
+import Input from "../ui/Input";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import Button from "../button";
-import {useShortenUrlMutation} from "../../../app/services/urlapi";
+import Button from "../ui/button";
+import {useShortenUrlMutation} from "../../app/services/urlapi";
 import {toast} from "react-toastify";
 
 type Props = {

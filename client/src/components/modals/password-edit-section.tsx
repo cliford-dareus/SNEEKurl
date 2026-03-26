@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import Switch from "../switch";
-import {Url} from "../../../app/services/urlapi";
+import Switch from "../ui/switch";
+import {Url} from "../../app/services/urlapi";
 import {Controller, UseFormRegister} from "react-hook-form";
-import Input from "../Input";
-import {useAppSelector} from "../../../app/hook";
-import {selectCurrentUser} from "../../../features/auth/authslice";
+import Input from "../ui/Input";
+import {useAppSelector} from "../../app/hook";
+import {selectCurrentUser} from "../../features/auth/authslice";
 
 type Props = {
     control: any;

@@ -12,8 +12,27 @@ const LinksInBio = () => {
     const {slug} = useParams();
     const {data, isLoading} = useGetPageQuery({id: slug});
 
+    const getBackgroundColor = () => {
+        if (data?.backgroundType === "image") {
+            return {
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${data?.backgroundImageUrl})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }
+        }
+
+        if (data?.backgroundType === 'gradient'){
+            return {background: data?.backgroundGradient}
+        }
+
+        return {backgroundColor: data?.backgroundColor}
+    };
+
     return (
-        <main className="bg-black">
+        <main
+            className="bg-black"
+            style={{...getBackgroundColor(), color: data?.textColor}}
+        >
             <div
                 className="min-h-screen flex flex-col items-center justify-start px-6 py-16 md:py-24 max-w-2xl mx-auto">
                 <motion.div
@@ -70,42 +89,56 @@ const LinksInBio = () => {
                 </motion.div>
 
                 <div className="w-full space-y-4 mb-12">
-                    {!isLoading && data?.links?.map(({_id: link, category}: {_id: any, category: string}, index: number) => {
+                    {!isLoading && data?.links?.map(({_id: link, category}: {
+                        _id: any,
+                        category: string
+                    }, index: number) => {
                         if (category === "website" || category === "marketing") {
                             return (
                                 <VisitLinkButton key={link._id} url={link}>
-                                    <motion.a
-                                        key={link.name}
-                                        href={link.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <motion.div
                                         initial={{opacity: 0, x: -20}}
                                         animate={{opacity: 1, x: 0}}
                                         transition={{delay: 0.1 * index + 0.3}}
-                                        className="group block w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                        style={{
+                                            backgroundColor: `${data?.accentColor}08`,
+                                            borderColor: `${data.accentColor}15`,
+                                        }}
+                                        className="group block w-full p-4 rounded-2xl border hover:bg-white/10 hover:border-white/20 transition-all duration-300"
                                     >
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-4">
-                                                <div className="p-2 rounded-xl bg-white/5 group-hover:bg-white/10 transition-colors">
+                                                <div
+                                                    className="p-2 rounded-xl transition-colors"
+                                                    style={{backgroundColor: `${data.backgroundColor}10`}}
+                                                >
                                                     <img
                                                         className="w-full h-full"
-                                                        src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(link.longUrl)}`}
+                                                        src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(link?.longUrl)}`}
                                                         alt="Favicon"
                                                     />
                                                 </div>
                                                 <div className="text-left">
-                                                    <h3 className="font-medium text-white group-hover:text-white transition-colors">
-                                                        Redux
+                                                    <h3
+                                                        className="font-medium transition-colors"
+                                                        style={{color: data.accentColor}}
+                                                    >
+                                                        {link?.name}
                                                     </h3>
-                                                    <p className="text-xs text-white/40 group-hover:text-white/60 transition-colors">
+                                                    <p
+                                                        className="text-xs opacity-40 group-hover:opacity-60 transition-colors"
+                                                        style={{color: data.textColor}}
+                                                    >
                                                         Redux toolkit for managing state in React applications.
                                                     </p>
                                                 </div>
                                             </div>
                                             <BiChevronRight
-                                                className="w-5 h-5 text-white/20 group-hover:text-white/60 transition-transform group-hover:translate-x-1"/>
+                                                className="w-5 h-5 opacity-20 group-hover:opacity-60 transition-transform group-hover:translate-x-1"
+                                                style={{color: data.accentColor}}
+                                            />
                                         </div>
-                                    </motion.a>
+                                    </motion.div>
                                 </VisitLinkButton>
                             )
                         }
@@ -113,9 +146,9 @@ const LinksInBio = () => {
                 </div>
 
                 <motion.footer
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
+                    initial={{opacity: 0}}
+                    animate={{opacity: 1}}
+                    transition={{delay: 1}}
                     className="mt-auto pt-8 border-t border-white/5 w-full text-center"
                 >
                     <p className="text-white/20 text-[10px] uppercase tracking-[0.2em] font-medium">

@@ -10,7 +10,7 @@ import {
     LuTrendingUp,
     LuMousePointer,
 } from "react-icons/lu";
-import FilterLinkModal from "../components/ui/modals/filter-link-modal";
+import FilterLinkModal from "../components/modals/filter-link-modal";
 import LinkItems from "../components/link-items";
 import MyResponsiveLine from "../components/ui/responsive-line";
 import {useAppSelector} from "../app/hook";
@@ -52,7 +52,7 @@ const Dashboard = () => {
                 <div className="mb-4 flex justify-between items-center">
                     <div className="">
                         <h2 className="font-medium text-2xl uppercase">Hey, {user.user.username}</h2>
-                        <p className="text-sm">Track your links and customize your bio links</p>
+                        <p className="text-sm text-zinc-400">Track your links and customize your bio links</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <select
@@ -178,12 +178,11 @@ const Dashboard = () => {
                     </div>
                 )}
 
-                <div
-                    className="sticky top-0 z-20 my-4 flex items-center gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
+                <div className="sticky top-0 z-20 my-4 flex items-center gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
                     <div className="flex items-center gap-4">
                         <div className="">
-                            <span>My Links</span>
-                            <p className="text-sm text-base-content">{data?.urls.length} total links</p>
+                            <span className="font-medium">My Links</span>
+                            <p className="text-sm text-zinc-400">{data?.urls.length} total links</p>
                         </div>
                         {activeFilter.length !== 0 &&
                             activeFilter?.map((filter) => (

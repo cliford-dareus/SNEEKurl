@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction, forwardRef } from "react";
 import { Path, UseFormRegister } from "react-hook-form";
 import { Url } from "../../app/services/urlapi";
-import {CreateLinkInBioProp} from "./modals/create-link-in-bio-modal";
+import {CreateLinkInBioProp} from "../modals/create-link-in-bio-modal";
 
 type Props = {
   isChecked: boolean;

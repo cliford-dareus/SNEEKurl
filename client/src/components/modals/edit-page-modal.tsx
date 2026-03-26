@@ -1,50 +1,68 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
-import Label from "../label";
-import Input from "../Input";
-import Button from "../button";
-import Switch from "../switch";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
+import MultiSelect from "../ui/multi-select";
+import Input from "../ui/Input";
+import Label from "../ui/label";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {useCreatePageMutation} from "../../../app/services/page";
+import {CreateLinkInBioProp} from "./create-link-in-bio-modal";
+import Switch from "../ui/switch";
+import Button from "../ui/button";
+import {useUpdatePageMutation} from "../../app/services/page";
 import {toast} from "react-toastify";
-import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../dialog";
 
 type Props = {
-    createLinkInBioActive: boolean;
-    setCreateLinkInBioActive: Dispatch<SetStateAction<boolean>>;
+    editPageActive: boolean;
+    setEditPageActive: Dispatch<SetStateAction<{ state: boolean; id: string }>>;
+    page: any;
 };
 
-export type CreateLinkInBioProp = {
-    title: string;
-    description: string;
-    slug: string;
-    public: boolean;
-};
-const CreateLinkInBioModal = ({
-                                  createLinkInBioActive,
-                                  setCreateLinkInBioActive,
-                              }: Props) => {
-    const [createLinkInBio] = useCreatePageMutation();
-    const [isChecked, setChecked] = useState(false);
-    const {register, handleSubmit, reset, control} = useForm<CreateLinkInBioProp>();
+interface UpdateLinkInBioProps extends CreateLinkInBioProp {
+    links: string[];
+}
 
-    const handleCreateLinkInBio: SubmitHandler<CreateLinkInBioProp> = async (
+const EditPageModal = ({editPageActive, setEditPageActive, page}: Props) => {
+    const [updatePage] = useUpdatePageMutation();
+    const [isChecked, setChecked] = useState(page.isPublic);
+    const {register, control, handleSubmit, setValue} = useForm<UpdateLinkInBioProps>({
+        defaultValues: {
+            title: page.title,
+            description: page.description,
+            slug: page.slug,
+            public: page.public,
+            links: [],
+        },
+    });
+
+    const handleUpdatePage: SubmitHandler<UpdateLinkInBioProps> = async (
         dataform
     ) => {
+        console.log(dataform);
         try {
-            await createLinkInBio(dataform).unwrap();
-            toast.success("Page created successfully");
-            setCreateLinkInBioActive(false);
-            reset();
+            await updatePage({
+                id: page._id,
+                title: dataform.title,
+                description: dataform.description,
+                slug: dataform.slug,
+                isPublic: dataform.public,
+                links: dataform.links,
+            }).unwrap();
+            toast.success("Page updated successfully");
+            setEditPageActive({state: false, id: ""});
         } catch (e) {
-            toast.error("Page creation failed");
+            toast.error("Page update failed");
+            console.log(e);
         }
+    };
+
+    const handleSetEditPageActive = (newState: boolean) => {
+        setEditPageActive({state: newState, id: ""});
     };
 
     return (
         <>
-            {createLinkInBioActive && (
+            {editPageActive && (
                 <>
-                    <Dialog open={createLinkInBioActive} onOpenChange={setCreateLinkInBioActive}>
+                    <Dialog open={editPageActive} onOpenChange={handleSetEditPageActive}>
                         <DialogContent>
                             <DialogHeader>
                                 <div className="flex items-center gap-3">
@@ -67,7 +85,9 @@ const CreateLinkInBioModal = ({
                                 </div>
                             </DialogHeader>
                             <div className="px-6 py-4">
-                                <form onSubmit={handleSubmit(handleCreateLinkInBio)}>
+                                <form
+                                    onSubmit={handleSubmit(handleUpdatePage)}
+                                >
                                     <div className="flex flex-col gap-4 pt-8">
                                         <div>
                                             <Label>Title</Label>
@@ -111,19 +131,7 @@ const CreateLinkInBioModal = ({
                                             />
                                         </div>
 
-                                        <div>
-                                            <Label>Slug</Label>
-                                            <Controller
-                                                name="slug"
-                                                control={control}
-                                                render={({field}) => (
-                                                    <Input
-                                                        {...field}
-                                                        placeholder="Enter a slug"
-                                                    />
-                                                )}
-                                            />
-                                        </div>
+                                        <MultiSelect setvalues={setValue}/>
 
                                         <div className="flex items-center justify-between">
                                             <p>Public</p>
@@ -134,7 +142,7 @@ const CreateLinkInBioModal = ({
                                                 register={register}
                                             />
                                         </div>
-                                        <Button type="submit" classnames="self-start bg-primary">Create</Button>
+                                        <Button classnames="self-start">Update</Button>
                                     </div>
                                 </form>
                             </div>
@@ -146,4 +154,4 @@ const CreateLinkInBioModal = ({
     );
 };
 
-export default CreateLinkInBioModal;
+export default EditPageModal;

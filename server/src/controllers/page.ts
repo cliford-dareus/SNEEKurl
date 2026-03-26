@@ -45,7 +45,8 @@ const createPage = async (req: any, res: Response) => {
 
 const updatePage = async (req: any, res: Response) => {
     try {
-        const {id, title, description, slug, isPublic, links, category} = req.body;
+        const {
+            id, title, description, slug, isPublic, links, category} = req.body;
         const client_id = req.session.client_id;
 
         if (!title && !description && !slug && !isPublic && !links) {
@@ -72,12 +73,12 @@ const updatePage = async (req: any, res: Response) => {
 
         const formatedLinks = allLinks.reduce((acc, link) => {
             if (typeof link === "object") {
-                acc = [...acc, {_id: link._id, category: link.category}];
+                acc = [...acc, {_id: link._id, category: link.category, name: link.name}];
             } else {
-                acc = [...acc, {_id: link, category: category ? category : "website"}];
+                acc = [...acc, {_id: link, category: category ? category : "website", name: link}];
             }
             return acc;
-        }, [] as unknown as { _id: string; catetory: string }[]);
+        }, [] as unknown as { _id: string; catetory: string, name: string }[]);
 
         const uniqueAges = formatedLinks
             .map((item: any) => item)
@@ -98,6 +99,53 @@ const updatePage = async (req: any, res: Response) => {
         await page.save();
         res.status(StatusCodes.OK).json(page);
     } catch (e) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            message: "Error updating page",
+        });
+    }
+};
+
+const customizePage = async (req: any, res: Response) => {
+    const {
+        id,
+        backgroundType,
+        backgroundColor,
+        backgroundGradient,
+        backgroundImageUrl,
+        themeColor,
+        accentColor,
+        textColor
+    } = req.body;
+
+    try {
+        console.log("BODY", req.body);
+        const user = await User.findOne({_id: req.user._id});
+        if (!user) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({message: "Invalid user"});
+        }
+
+        const page = await Page.findById(id);
+        if (!page) {
+            return res
+                .status(StatusCodes.BAD_REQUEST)
+                .json({message: "Page not found"});
+        }
+
+        const updateOps: Record<string, unknown> = {};
+        if (backgroundType) updateOps.backgroundType = backgroundType;
+        if (backgroundColor) updateOps.backgroundColor = backgroundColor;
+        if (backgroundGradient) updateOps.backgroundGradient = backgroundGradient;
+        if (backgroundImageUrl) updateOps.backgroundImageUrl = backgroundImageUrl;
+        if (themeColor) updateOps.themeColor = themeColor;
+        if (accentColor) updateOps.accentColor = accentColor;
+        if (textColor) updateOps.textColor = textColor;
+        if (Object.keys(updateOps).length > 0) page.set(updateOps);
+
+        await page.save();
+        res.status(StatusCodes.OK).json(page);
+    } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
             message: "Error updating page",
         });
@@ -146,4 +194,4 @@ const managePage = async (req: any, res: Response) => {
     }
 };
 
-export {getMyPages, createPage, updatePage, getPage, managePage};
+export {getMyPages, createPage, updatePage, getPage, managePage, customizePage};

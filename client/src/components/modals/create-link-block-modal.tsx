@@ -1,14 +1,13 @@
 import React from "react";
-import {Sheet, SheetContent} from "../sheet";
 import {SubmitHandler, useForm} from "react-hook-form";
-import MultiSelect from "../multi-select";
+import MultiSelect from "../ui/multi-select";
 import {CreateLinkInBioProp} from "./create-link-in-bio-modal";
-import {useGetUrlsQuery} from "../../../app/services/urlapi";
-import {useUpdatePageMutation} from "../../../app/services/page";
-import Label from "../label";
-import Button from "../button";
+import {useUpdatePageMutation} from "../../app/services/page";
+import Label from "../ui/label";
+import Button from "../ui/button";
 import {toast} from "react-toastify";
-import Dialog, { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../dialog";
+import Dialog, { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import {BsPalette, BsSave} from "react-icons/bs";
 
 type Props = {
     pageId: string;
@@ -19,7 +18,7 @@ type Props = {
 };
 
 interface CreateLinkBlockProp extends CreateLinkInBioProp {
-    links: string[];
+    links: {_id: string, url: string, name: string}[];
 }
 
 const CreateLinkBlockModal = ({
@@ -31,6 +30,7 @@ const CreateLinkBlockModal = ({
                               }: Props) => {
     const [updateLinks] = useUpdatePageMutation();
     const {handleSubmit, setValue, reset} = useForm<CreateLinkBlockProp>();
+
     const handleCreateLinkBlock: SubmitHandler<CreateLinkBlockProp> = async (
         data
     ) => {
@@ -80,10 +80,20 @@ const CreateLinkBlockModal = ({
                             <form
                                 onSubmit={handleSubmit(handleCreateLinkBlock)}
                             >
-                                <div className="flex flex-col gap-4 pt-8">
-                                    <Label>Select Urls</Label>
+                                <div className="flex flex-col gap-2 pt-8">
+                                    <div className="flex items-center gap-2 mb-4 uppercase text-xs font-bold tracking-widest">
+                                        <BsPalette className="w-3 h-3"/>
+                                        Block
+                                    </div>
+
+                                    <label className="block text-xs text-zinc-400 ml-1">Select Urls</label>
                                     <MultiSelect setvalues={setValue}/>
-                                    <Button type="submit" classnames="bg-primary">Add Blocks</Button>
+
+                                    <button className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                    >
+                                        <BsSave className="w-5 h-5"/>
+                                        Add Block
+                                    </button>
                                 </div>
                             </form>
                         </div>

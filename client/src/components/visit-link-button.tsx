@@ -1,6 +1,6 @@
 import {ReactNode, useState} from "react";
 import {Url} from "../app/services/urlapi";
-import VisitLinkPassword from "./ui/modals/visit-link-password";
+import VisitLinkPassword from "./modals/visit-link-password";
 import {API_URL} from "../Utils/common";
 
 type Props = {
