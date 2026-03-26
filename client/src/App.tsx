@@ -12,9 +12,8 @@ import {useIdentifyUserMutation} from "./app/services/auth";
 import {setCredentials} from "./features/auth/authslice";
 import {useAppDispatch} from "./app/hook";
 import Subscription from "./components/subscription";
-import LinkInBio from "./pages/link-in-bio";
 import LinksInBio from "./pages/links-in-bio";
-import ManageLinkInBio from "./pages/manage-link-in-bio";
+import ManagePage from "./pages/manage-page";
 import LinkAnalytics from "./pages/link-analytics";
 import {toast} from "react-toastify";
 import Layout from "./components/layout/layout";
@@ -25,6 +24,7 @@ import CustomizeQr from "./pages/customize-qr";
 import {useTokenRefresh} from "./hooks/useTokenRefresh";
 import Landing from "./pages/landing";
 import {API_URL} from "./Utils/common";
+import Pages from "./pages/pages";
 
 
 function App() {
@@ -116,8 +116,8 @@ function App() {
                     <Route element={<AdminLayout/>}>
                         <Route path="/overview" element={<Dashboard/>}/>
                         <Route path="/links" element={<Links/>}/>
-                        <Route path="/link-in-bio" element={<LinkInBio/>}/>
-                        <Route path="/link-in-bio/:id" element={<ManageLinkInBio/>}/>
+                        <Route path="/pages" element={<Pages/>}/>
+                        <Route path="/pages/:id" element={<ManagePage/>}/>
                         <Route path="/analytics/:id" element={<LinkAnalytics/>}/>
                         <Route path="/qr/customize" element={<CustomizeQr/>}/>
                         <Route path="/setting" element={<Setting/>}>

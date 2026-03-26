@@ -70,7 +70,7 @@ export const features = [
     {
         id: 4,
         icon: LuUsers,
-        title: "Link-in-Bio Pages",
+        title: "Link-in-Bio LinksInBio",
         description: "Create stunning landing pages that showcase all your important links in one place.",
         image: "/api/placeholder/600/400",
         benefits: ["Custom themes", "Drag & drop", "Social integration", "Mobile optimized"]
@@ -145,8 +145,8 @@ export const SIDEBAR_LINKS = [
     },
     {
         id: 3,
-        name: 'Link In Bio',
-        slug: '/link-in-bio'
+        name: 'Pages',
+        slug: '/pages'
     },
     {
         id: 4,

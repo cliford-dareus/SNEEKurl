@@ -93,7 +93,7 @@ const LinkItem = ({items, link, index, manageLinksOrder}: any) => {
     );
 };
 
-const ManageLinkInBio = ({}: Props) => {
+const ManagePage = ({}: Props) => {
     const Navigate = useNavigate();
     const {id} = useParams();
     const {data, isLoading} = useGetPageQuery({id});
@@ -210,4 +210,4 @@ const ManageLinkInBio = ({}: Props) => {
     );
 };
 
-export default ManageLinkInBio;
+export default ManagePage;

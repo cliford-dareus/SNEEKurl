@@ -60,14 +60,14 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                 </div>
 
                 <div className="ml-auto flex items-center gap-2">
-                    <Button classnames="mrounded-lg bg-primary px-2 py-1 ml-1 hover:bg-accent transition-colors">
+                    <Button classnames="mrounded-lg bg-primary px-4 py-1 ml-1 hover:bg-accent transition-colors">
                         <Link to={`/analytics/${url.short}`}>
                             <LuBarChart className="text-zinc-100" size={16}/>
                         </Link>
                     </Button>
 
                     <Button
-                        classnames="cursor-pointer bg-accent rounded-lg bg-base-200 ml-1 px-2 py-1 hover:bg-primary transition-colors"
+                        classnames="cursor-pointer bg-accent rounded-lg bg-base-200 ml-1 px-4 py-1 hover:bg-primary transition-colors"
                         onClick={() => setQrActive(true)}
                     >
                         <LuQrCode className="text-zinc-100" size={16}/>

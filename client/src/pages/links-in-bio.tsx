@@ -73,7 +73,7 @@ const LinksInBio = () => {
                     {!isLoading && data?.links?.map(({_id: link, category}: {_id: any, category: string}, index: number) => {
                         if (category === "website" || category === "marketing") {
                             return (
-                                <VisitLinkButton url={link}>
+                                <VisitLinkButton key={link._id} url={link}>
                                     <motion.a
                                         key={link.name}
                                         href={link.url}
@@ -119,7 +119,7 @@ const LinksInBio = () => {
                     className="mt-auto pt-8 border-t border-white/5 w-full text-center"
                 >
                     <p className="text-white/20 text-[10px] uppercase tracking-[0.2em] font-medium">
-                        © 2026 {data.user.username} — Built with SneekInk
+                        © 2026 {data?.user?.username} — Built with SneekInk
                     </p>
                 </motion.footer>
             </div>

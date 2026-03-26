@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {LuArrowDown, LuArrowUp, LuDot, LuFilter, LuSettings, LuView} from "react-icons/lu";
+import React, {useState} from "react";
+import {LuArrowDown, LuArrowUp, LuFilter, LuSettings, LuView} from "react-icons/lu";
 import Button from "../components/ui/button";
 import EditPageModal from "../components/ui/modals/edit-page-modal";
 import {useGetPagesQuery} from "../app/services/page";
@@ -10,7 +10,7 @@ import {GiGraspingSlug} from "react-icons/gi";
 import {BsClock, BsDot} from "react-icons/bs";
 import {TbClick} from "react-icons/tb";
 
-const LinkInBio = () => {
+const Pages = () => {
     const {data: pages, isLoading} = useGetPagesQuery();
     const [activeFilter, setActiveFilter] = useState<any[]>([]);
     const [editPageActive, setEditPageActive] = useState({
@@ -133,4 +133,4 @@ const LinkInBio = () => {
     );
 };
 
-export default LinkInBio;
+export default Pages;
