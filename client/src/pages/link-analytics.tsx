@@ -321,22 +321,22 @@ const LinkAnalytics = () => {
                             </tr>
                             </thead>
                             <tbody>
-                                {/*{recentClicks?.slice(0, 10)?.map((click, index) => (*/}
-                                {/*  <tr key={index}>*/}
-                                {/*    <td className="text-sm">*/}
-                                {/*      {new Date(click.time).toLocaleString()}*/}
-                                {/*    </td>*/}
-                                {/*    <td>{click.country}</td>*/}
-                                {/*    <td>*/}
-                                {/*      <span className={`badge ${click.isMobile ? 'badge-secondary' : 'badge-primary'}`}>*/}
-                                {/*        {click.isMobile ? 'Mobile' : 'Desktop'}*/}
-                                {/*      </span>*/}
-                                {/*    </td>*/}
-                                {/*    <td>{click.browser}</td>*/}
-                                {/*    <td>{click.os}</td>*/}
-                                {/*    <td className="truncate max-w-32">{click.referrer}</td>*/}
-                                {/*  </tr>*/}
-                                {/*))}*/}
+                                {recentClicks?.slice(0, 10)?.map((click, index) => (
+                                  <tr key={index}>
+                                    <td className="text-sm">
+                                      {new Date(click.time).toLocaleString()}
+                                    </td>
+                                    <td>{click.country}</td>
+                                    <td>
+                                      <span className={`badge ${click.isMobile ? 'badge-secondary' : 'badge-primary'}`}>
+                                        {click.isMobile ? 'Mobile' : 'Desktop'}
+                                      </span>
+                                    </td>
+                                    <td>{click.browser}</td>
+                                    <td>{click.os}</td>
+                                    <td className="truncate max-w-32">{click.referrer}</td>
+                                  </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>

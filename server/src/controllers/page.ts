@@ -156,10 +156,16 @@ const getPage = async (req: Request, res: Response) => {
     try {
         const {slug} = req.params;
 
-        const page = await Page.findOne({slug})
-            .populate({path: "user", model: "User", select: ["username", "profile"]})
-            .populate({path: "links._id", model: "Short"})
-            .exec();
+        const page = await Page.findOne({ slug })
+            .populate({
+                path: "user",
+                select: "username profile"
+            })
+            .populate({
+                path: "links._id",
+                model: "Short",
+            })
+            .exec()
 
         if (!page) {
             return res.sendStatus(StatusCodes.BAD_REQUEST);

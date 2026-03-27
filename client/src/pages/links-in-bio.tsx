@@ -89,11 +89,13 @@ const LinksInBio = () => {
                 </motion.div>
 
                 <div className="w-full space-y-4 mb-12">
-                    {!isLoading && data?.links?.map(({_id: link, category}: {
+                    {!isLoading && data?.links?.map(({_id: link, name, category}: {
                         _id: any,
+                        name: string,
                         category: string
                     }, index: number) => {
                         if (category === "website" || category === "marketing") {
+                            console.log(name);
                             return (
                                 <VisitLinkButton key={link._id} url={link}>
                                     <motion.div
@@ -120,10 +122,10 @@ const LinksInBio = () => {
                                                 </div>
                                                 <div className="text-left">
                                                     <h3
-                                                        className="font-medium transition-colors"
+                                                        className="font-medium"
                                                         style={{color: data.accentColor}}
                                                     >
-                                                        {link?.name}
+                                                        {name}
                                                     </h3>
                                                     <p
                                                         className="text-xs opacity-40 group-hover:opacity-60 transition-colors"

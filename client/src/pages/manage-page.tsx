@@ -82,7 +82,7 @@ const LinkItem = ({items, link, index, manageLinksOrder}: any) => {
                     "h-5 w-5 rounded-full"
                 )}
             ></div>
-            {getSiteUrl(link?._id?.longUrl)}
+            {link?.name}
 
             <button className="ml-auto">
                 <LuSettings/>
@@ -104,6 +104,7 @@ const ManagePage = ({}: Props) => {
     const [reorderLinks, {isLoading: reorderLoading}] = useReorderPageLinksMutation();
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
+    console.log(data);
     const manageLinksOrder = async (newOrder: any) => {
         try {
             await reorderLinks({id, links: newOrder}).unwrap();
@@ -144,36 +145,39 @@ const ManagePage = ({}: Props) => {
                     <div className="flex items-center justify-between">
                         <h1 className="text-2xl font-bold">Manage Links</h1>
                         <div className="flex items-center gap-2">
-                        <Button onClick={() => setCustomizePageOpen(true)} classnames="border text-accent-content">Customize</Button>
-                        <Popover>
-                            <PopoverTrigger>
-                                <Button classnames="bg-primary flex items-center py-1.5 px-3 rounded-md justify-center text-white">Add Block</Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                                side="bottom"
-                                align="start"
-                                className="!bg-base-300 border border-base-100 p-4"
-                                showArrow={true}
-                            >
-                                <div className="flex flex-col gap-2 items-center">
-                                    <p className="text-center font-bold">Select a Block</p>
-                                </div>
-                                <div className="flex flex-col gap-2 items-center mt-4">
-                                    {BLOCKS.map((block: any) => (
-                                        <div
-                                            key={block.id}
-                                            onClick={() => {
-                                                setBlockSelected(block.tag);
-                                                setCreateLinkBlockActive(true);
-                                            }}
-                                            className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
-                                        >
-                                            {block.name}
-                                        </div>
-                                    ))}
-                                </div>
-                            </PopoverContent>
-                        </Popover>
+                            <Button onClick={() => setCustomizePageOpen(true)}
+                                    classnames="border text-accent-content">Customize</Button>
+                            <Popover>
+                                <PopoverTrigger>
+                                    <Button
+                                        classnames="bg-primary flex items-center py-1.5 px-3 rounded-md justify-center text-white">Add
+                                        Block</Button>
+                                </PopoverTrigger>
+                                <PopoverContent
+                                    side="bottom"
+                                    align="start"
+                                    className="!bg-base-300 border border-base-100 p-4"
+                                    showArrow={true}
+                                >
+                                    <div className="flex flex-col gap-2 items-center">
+                                        <p className="text-center font-bold">Select a Block</p>
+                                    </div>
+                                    <div className="flex flex-col gap-2 items-center mt-4">
+                                        {BLOCKS.map((block: any) => (
+                                            <div
+                                                key={block.id}
+                                                onClick={() => {
+                                                    setBlockSelected(block.tag);
+                                                    setCreateLinkBlockActive(true);
+                                                }}
+                                                className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
+                                            >
+                                                {block.name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                     </div>
 
@@ -201,9 +205,7 @@ const ManagePage = ({}: Props) => {
                             src={`http://localhost:5173/${id}`}
                         ></iframe>
                     ) : (
-                        <div className="w-[300px] h-[700px] flex justify-center items-center">
-                            <p>Loading...</p>
-                        </div>
+                        <div className="animate-pulse rounded-md bg-muted w-[300px] h-[700px] flex justify-center items-center"/>
                     )}
                 </div>
             </div>
