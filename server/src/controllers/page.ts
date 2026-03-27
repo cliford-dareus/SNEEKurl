@@ -45,8 +45,7 @@ const createPage = async (req: any, res: Response) => {
 
 const updatePage = async (req: any, res: Response) => {
     try {
-        const {
-            id, title, description, slug, isPublic, links, category} = req.body;
+        const {id, title, description, slug, isPublic, links, category} = req.body;
         const client_id = req.session.client_id;
 
         if (!title && !description && !slug && !isPublic && !links) {
@@ -62,7 +61,7 @@ const updatePage = async (req: any, res: Response) => {
                 .json({message: "Invalid user"});
         }
 
-        const page = await Page.findById(id).populate("links.link");
+        const page = await Page.findById(id).populate("links._id");
         if (!page) {
             return res
                 .status(StatusCodes.BAD_REQUEST)

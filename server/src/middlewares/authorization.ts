@@ -27,7 +27,6 @@ const authorize = async (req: any, res: Response, next: NextFunction) => {
             });
         }
 
-        console.log(token);
         const decoded = verifyAccessToken(token);
         const user = await User.findById(decoded.user_id);
 
