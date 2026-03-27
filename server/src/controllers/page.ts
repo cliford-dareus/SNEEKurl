@@ -164,6 +164,7 @@ const getPage = async (req: Request, res: Response) => {
             .populate({
                 path: "links._id",
                 model: "Short",
+                select: "longUrl short"
             })
             .exec()
 

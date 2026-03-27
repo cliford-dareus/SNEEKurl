@@ -10,7 +10,7 @@ import {
     LuUsers
 } from "react-icons/lu";
 
-export const API_URL = "http://localhost:4080" || "https://sneekurl-server.onrender.com";
+export const API_URL = "https://sneekurl-server.onrender.com";
 
 export const pricingPlans = [
     {
