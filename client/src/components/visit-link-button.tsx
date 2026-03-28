@@ -43,7 +43,6 @@ const VisitLinkButton = ({url, children}: Props) => {
                 url={active.url!}
                 setStatus={setActive}
             />
-
         </>
     );
 };

@@ -14,6 +14,7 @@ interface PageInterface extends mongoose.Document {
     backgroundGradient?: string;
     accentColor?: string;
     textColor?: string;
+    content: any[];
     links: { category: string; name: string; link: ObjectId }[];
 }
 
@@ -35,6 +36,7 @@ const PageSchema = new mongoose.Schema<PageInterface>(
             ref: "User",
             required: true,
         },
+        content: [],
         links: [{
             name: {
                 type: String,

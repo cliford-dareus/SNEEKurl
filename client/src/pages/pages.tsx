@@ -76,8 +76,11 @@ const Pages = () => {
                                                 <p className="font-medium text-[18px] uppercase">{page.title}</p>
                                                 <div className={classNames("text-xs py-1 px-2.5 rounded-box text-zinc-100", page.isPublic ? "bg-secondary": "bg-red-500")}>{page.isPublic ? "Public" : "Not Public"}</div>
                                             </div>
-                                            <div className="flex items-center gap-2 text-zinc-400 text-sm">
-                                                <span className="flex items-center gap-1"><GiGraspingSlug />{page.slug}</span>
+                                            <div className="flex items-center gap-2 text-zinc-400 text-xs mt-1">
+                                                <span className="flex items-center gap-1">
+                                                    <GiGraspingSlug size={12}/>
+                                                    {page.slug}
+                                                </span>
                                                 <BsDot size={12}/>
                                                 <span className="flex items-center gap-1">
                                                     <BsClock size={12}/>
@@ -94,7 +97,7 @@ const Pages = () => {
 
                                     <div className="flex items-center gap-4">
                                         <Button classnames="bg-primary">
-                                            <Link to={`${page.slug}`}>
+                                            <Link to={`${page.slug}`} className="w-full flex-1 bg-red-500">
                                                 <AiOutlineEdit />
                                             </Link>
                                         </Button>

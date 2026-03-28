@@ -13,6 +13,7 @@ import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import Button from "../ui/button";
 import {useShortenUrlMutation} from "../../app/services/urlapi";
 import {toast} from "react-toastify";
+import {BsSave} from "react-icons/bs";
 
 type Props = {
     setAddLinkActive: Dispatch<SetStateAction<boolean>>;
@@ -68,16 +69,16 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
                         </svg>
                         <div>
                             <DialogTitle>Create New Link</DialogTitle>
-                            <DialogDescription>Shorten your URL and customize it</DialogDescription>
+                            <DialogDescription className="text-zinc-400">Shorten your URL and customize it</DialogDescription>
                         </div>
                     </div>
                 </DialogHeader>
 
                 <div className="px-6 py-4">
                     <form onSubmit={handleSubmit(handleCreateLink)} className="space-y-4">
-                        <div className="flex flex-col gap-4 pt-8">
+                        <div className="flex flex-col gap-4">
                             <div>
-                                <Label>Destination Url</Label>
+                                <Label classnames="block text-sm text-zinc-400 mb-1 ml-1">Destination Url</Label>
                                 <Controller
                                     name="longUrl"
                                     control={control}
@@ -94,7 +95,7 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
                             </div>
 
                             <div>
-                                <Label>Short Url</Label>
+                                <Label classnames="block text-sm text-zinc-400 mb-1 ml-1">Short Url</Label>
                                 <div className="flex items-center gap-2">
                                     <div className="rounded-full bg-accent px-2 py-1">
                                         sneek.co/
@@ -117,19 +118,14 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
                 </div>
 
                 <DialogFooter>
-                    <Button
-                        onClick={() => setAddLinkActive(false)}
-                        classnames="bg-base-300 text-base-content"
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleSubmit(handleCreateLink)}
+                    <button
                         type="submit"
-                        classnames="bg-primary text-primary-content"
+                        onClick={handleSubmit(handleCreateLink)}
+                        className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
+                        <BsSave className="w-5 h-5"/>
                         Create Link
-                    </Button>
+                    </button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

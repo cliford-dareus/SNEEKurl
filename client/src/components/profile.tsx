@@ -299,7 +299,6 @@ const Profile = () => {
                 </div>
             </div>
 
-
             <ChangeProfileImageModal
                 editProfileActive={editProfileActive}
                 setEditProfileActive={setEditProfileActive}

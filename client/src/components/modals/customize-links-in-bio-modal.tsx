@@ -1,5 +1,4 @@
-import Dialog, {DialogContent, DialogDescription, DialogHeader, DialogTitle} from "../ui/dialog";
-import {getSiteUrl} from "../../Utils/getSiteUrl";
+import Dialog, {DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "../ui/dialog";
 import React from "react";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {motion} from "framer-motion";
@@ -7,18 +6,15 @@ import {
     BsGithub,
     BsGlobe,
     BsInstagram,
-    BsLink,
     BsLinkedin, BsMailbox2,
     BsPalette,
-    BsPlus,
     BsSave,
-    BsTrash2,
-    BsTwitter, BsTwitterX
+    BsTwitter
 } from "react-icons/bs";
 import Button from "../ui/button";
 import Input from "../ui/Input";
 import {toast} from "react-toastify";
-import {useCustomizePageMutation, useUpdatePageMutation} from "../../app/services/page";
+import {useCustomizePageMutation} from "../../app/services/page";
 
 export interface PageProps {
     _id: string;
@@ -26,6 +22,7 @@ export interface PageProps {
     description: string;
     isPublic: boolean;
     slug: string;
+    content?: any;
     links: any;
     user: any;
     backgroundType: 'solid' | 'gradient' | 'image';
@@ -136,14 +133,16 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                         <form onSubmit={handleSubmit(savePage)}>
                             {/* Appearance Settings */}
                             <section className="mb-10">
-                                <div className="flex items-center gap-2 mb-4 uppercase text-[10px] font-bold tracking-widest">
+                                <div
+                                    className="flex items-center gap-2 mb-4 uppercase text-[10px] font-bold tracking-widest">
                                     <BsPalette className="w-3 h-3"/>
                                     Appearance
                                 </div>
                                 <div className="space-y-6">
                                     {/* Background Type */}
                                     <div>
-                                        <label className="block text-xs mb-2 ml-1 uppercase font-bold">Background Type</label>
+                                        <label className="block text-xs mb-2 ml-1 uppercase font-bold">Background
+                                            Type</label>
                                         <div className="grid grid-cols-3 gap-2 px-1">
                                             {(['solid', 'gradient', 'image'] as const).map((type) => (
                                                 <Button
@@ -223,22 +222,23 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                     {/* Accent & Text Colors */}
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-xs text-zinc-400 mb-1 ml-1">Accent Color</label>
+                                            <label className="block text-xs text-zinc-400 mb-1 ml-1">Accent
+                                                Color</label>
                                             <Controller
                                                 name="accentColor"
                                                 control={control}
                                                 render={({field}) => (
-                                                <div className="flex gap-3 items-center">
-                                                    <Input
-                                                        type="color"
-                                                        {...field}
-                                                        className="w-20 h-8 rounded-lg bg-transparent border-none cursor-pointer"
-                                                    />
-                                                    <span
-                                                        className="text-xs font-mono opacity-60 uppercase">{data?.accentColor}</span>
-                                                </div>
-                                            )}
-                                           />
+                                                    <div className="flex gap-3 items-center">
+                                                        <Input
+                                                            type="color"
+                                                            {...field}
+                                                            className="w-20 h-8 rounded-lg bg-transparent border-none cursor-pointer"
+                                                        />
+                                                        <span
+                                                            className="text-xs font-mono opacity-60 uppercase">{data?.accentColor}</span>
+                                                    </div>
+                                                )}
+                                            />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-zinc-400 mb-1 ml-1">Text Color</label>
@@ -246,165 +246,35 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                                 name="textColor"
                                                 control={control}
                                                 render={({field}) => (
-                                                <div className="flex gap-3 items-center">
-                                                    <Input
-                                                        type="color"
-                                                        {...field}
-                                                        className="w-20 h-8 rounded-lg bg-transparent border-none cursor-pointer"
-                                                    />
-                                                    <span
-                                                        className="text-xs font-mono opacity-60 uppercase">{data?.textColor}</span>
-                                                </div>
-                                            )}
+                                                    <div className="flex gap-3 items-center">
+                                                        <Input
+                                                            type="color"
+                                                            {...field}
+                                                            className="w-20 h-8 rounded-lg bg-transparent border-none cursor-pointer"
+                                                        />
+                                                        <span
+                                                            className="text-xs font-mono opacity-60 uppercase">{data?.textColor}</span>
+                                                    </div>
+                                                )}
                                             />
                                         </div>
                                     </div>
                                 </div>
                             </section>
-
-                            {/* Profile Settings */}
-                            {/*<section className="mb-10">*/}
-                            {/*    <div*/}
-                            {/*        className="flex items-center gap-2 mb-4 uppercase text-[10px] font-bold tracking-widest">*/}
-                            {/*        /!*<BsUser className="w-3 h-3"/>*!/*/}
-                            {/*        Profile*/}
-                            {/*    </div>*/}
-                            {/*    <div className="space-y-4">*/}
-                            {/*        <div>*/}
-                            {/*            <label className="block text-xs text-zinc-400 mb-1 ml-1">Name</label>*/}
-                            {/*            <input*/}
-                            {/*                type="text"*/}
-                            {/*                value={data?.name}*/}
-                            {/*                // onChange={(e) => setData(prev => ({...prev, name: e.target.value}))}*/}
-                            {/*                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 focus:outline-none focus:border-white/30 transition-colors"*/}
-                            {/*            />*/}
-                            {/*        </div>*/}
-                            {/*        <div>*/}
-                            {/*            <label className="block text-xs text-zinc-400 mb-1 ml-1">Bio</label>*/}
-                            {/*            <textarea*/}
-                            {/*                value={data?.bio}*/}
-                            {/*                // onChange={(e) => setData(prev => ({...prev, bio: e.target.value}))}*/}
-                            {/*                rows={3}*/}
-                            {/*                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 focus:outline-none focus:border-white/30 transition-colors resize-none"*/}
-                            {/*            />*/}
-                            {/*        </div>*/}
-                            {/*        <div>*/}
-                            {/*            <label className="block text-xs text-zinc-400 mb-1 ml-1">Avatar URL</label>*/}
-                            {/*            <input*/}
-                            {/*                type="text"*/}
-                            {/*                value={data?.avatarUrl}*/}
-                            {/*                // onChange={(e) => setData(prev => ({...prev, avatarUrl: e.target.value}))}*/}
-                            {/*                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 focus:outline-none focus:border-white/30 transition-colors"*/}
-                            {/*            />*/}
-                            {/*        </div>*/}
-                            {/*        <div>*/}
-                            {/*            <label className="block text-xs text-zinc-400 mb-1 ml-1">Status Dot*/}
-                            {/*                Color</label>*/}
-                            {/*            <div className="flex gap-3 items-center">*/}
-                            {/*                <input*/}
-                            {/*                    type="color"*/}
-                            {/*                    value={data?.themeColor}*/}
-                            {/*                    // onChange={(e) => setData(prev => ({*/}
-                            {/*                    //     ...prev,*/}
-                            {/*                    //     themeColor: e.target.value*/}
-                            {/*                    // }))}*/}
-                            {/*                    className="w-10 h-10 rounded-lg bg-transparent border-none cursor-pointer"*/}
-                            {/*                />*/}
-                            {/*                <span*/}
-                            {/*                    className="text-sm font-mono opacity-60 uppercase">{data?.themeColor}</span>*/}
-                            {/*            </div>*/}
-                            {/*        </div>*/}
-                            {/*    </div>*/}
-                            {/*</section>*/}
-
-                            {/* Links Settings */}
-                            {/*<section className="mb-10">*/}
-                            {/*    <div className="flex items-center justify-between mb-4">*/}
-                            {/*        <div*/}
-                            {/*            className="flex items-center gap-2 text-zinc-400 uppercase text-[10px] font-bold tracking-widest">*/}
-                            {/*            <BsLink className="w-3 h-3"/>*/}
-                            {/*            Links*/}
-                            {/*        </div>*/}
-                            {/*        <button*/}
-                            {/*            // onClick={handleAddLink}*/}
-                            {/*            className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-white hover:text-white/80 transition-colors"*/}
-                            {/*        >*/}
-                            {/*            <BsPlus className="w-3 h-3"/>*/}
-                            {/*            Add Link*/}
-                            {/*        </button>*/}
-                            {/*    </div>*/}
-                            {/*    <div className="space-y-6">*/}
-                            {/*        {data?.links.map((link) => (*/}
-                            {/*            <div key={link.id}*/}
-                            {/*                 className="p-4 rounded-2xl bg-white/5 border border-white/10 relative group/item">*/}
-                            {/*                <button*/}
-                            {/*                    // onClick={() => handleRemoveLink(link.id)}*/}
-                            {/*                    className="absolute -top-2 -right-2 p-1.5 bg-red-500 rounded-full opacity-0 group-hover/item:opacity-100 transition-opacity shadow-lg"*/}
-                            {/*                >*/}
-                            {/*                    <BsTrash2 className="w-3 h-3 text-white"/>*/}
-                            {/*                </button>*/}
-                            {/*                <div className="space-y-3">*/}
-                            {/*                    <div className="grid grid-cols-2 gap-3">*/}
-                            {/*                        <div>*/}
-                            {/*                            <label*/}
-                            {/*                                className="block text-[10px] text-white/40 mb-1 ml-1 uppercase font-bold">Label</label>*/}
-                            {/*                            <input*/}
-                            {/*                                type="text"*/}
-                            {/*                                value={link.name}*/}
-                            {/*                                // onChange={(e) => handleUpdateLink(link.id, 'name', e.target.value)}*/}
-                            {/*                                className="w-full bg-black/40 border border-white/5 rounded-lg p-2 text-sm focus:outline-none focus:border-white/20"*/}
-                            {/*                            />*/}
-                            {/*                        </div>*/}
-                            {/*                        <div>*/}
-                            {/*                            <label*/}
-                            {/*                                className="block text-[10px] text-white/40 mb-1 ml-1 uppercase font-bold">Icon</label>*/}
-                            {/*                            <select*/}
-                            {/*                                value={link.iconType}*/}
-                            {/*                                // onChange={(e) => handleUpdateLink(link.id, 'iconType', e.target.value as any)}*/}
-                            {/*                                className="w-full bg-black/40 border border-white/5 rounded-lg p-2 text-sm focus:outline-none focus:border-white/20 appearance-none"*/}
-                            {/*                            >*/}
-                            {/*                                {Object.keys(ICON_MAP).map(type => (*/}
-                            {/*                                    <option key={type} value={type}>{type}</option>*/}
-                            {/*                                ))}*/}
-                            {/*                            </select>*/}
-                            {/*                        </div>*/}
-                            {/*                    </div>*/}
-                            {/*                    <div>*/}
-                            {/*                        <label*/}
-                            {/*                            className="block text-[10px] text-white/40 mb-1 ml-1 uppercase font-bold">URL</label>*/}
-                            {/*                        <input*/}
-                            {/*                            type="text"*/}
-                            {/*                            value={link?.url}*/}
-                            {/*                            // onChange={(e) => handleUpdateLink(link.id, 'url', e.target.value)}*/}
-                            {/*                            className="w-full bg-black/40 border border-white/5 rounded-lg p-2 text-sm focus:outline-none focus:border-white/20"*/}
-                            {/*                        />*/}
-                            {/*                    </div>*/}
-                            {/*                    <div>*/}
-                            {/*                        <label*/}
-                            {/*                           className="block text-[10px] text-white/40 mb-1 ml-1 uppercase font-bold">Description</label>*/}
-                            {/*                        <input*/}
-                            {/*                            type="text"*/}
-                            {/*                            value={link?.description}*/}
-                            {/*                            // onChange={(e) => handleUpdateLink(link.id, 'description', e.target.value)}*/}
-                            {/*                            className="w-full bg-black/40 border border-white/5 rounded-lg p-2 text-sm focus:outline-none focus:border-white/20"*/}
-                            {/*                        />*/}
-                            {/*                    </div>*/}
-                            {/*                </div>*/}
-                            {/*            </div>*/}
-                            {/*        ))}*/}
-                            {/*    </div>*/}
-                            {/*</section>*/}
-
-                            <button
-                                // onClick={() => setIsEditing(false)}
-                                className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                            >
-                                <BsSave className="w-5 h-5"/>
-                                Save Changes
-                            </button>
                         </form>
                     </motion.div>
                 </div>
+
+                <DialogFooter className="px-6 py-4">
+                    <button
+                        type="submit"
+                        onClick={handleSubmit(savePage)}
+                        className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                        <BsSave className="w-5 h-5"/>
+                        Save Changes
+                    </button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

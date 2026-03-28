@@ -47,7 +47,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                         <VisitLinkButton url={url}>
                             <div className="flex items-center gap-2">
                                 <LuLink2 size={20} className="text-accent"/>
-                                <span className="text-[18px] ">sneek.co/{url.short}</span>
+                                <span className="text-sm text-accent">sneek.co/{url.short}</span>
                             </div>
                         </VisitLinkButton>
                         <div className="relative flex cursor-pointer items-center rounded-full p-2">
@@ -56,7 +56,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
                         </div>
                     </div>
 
-                    <p className="truncate text-sm text-zinc-400">{url.longUrl}</p>
+                    <p className="truncate text-xs text-zinc-400">{url.longUrl}</p>
                 </div>
 
                 <div className="ml-auto flex items-center gap-2">

@@ -1,0 +1,199 @@
+import React, {createContext, useReducer} from "react";
+
+type DeviceType = 'desktop' | 'mobile' | 'tablet'
+
+export type EditorElement = {
+    id: string;
+    name: string;
+    styles: React.CSSProperties;
+    type: any;
+    category: any;
+    content:
+        | {
+        href?: string;
+        innerText?: string;
+        imageUrl?: string
+        altText?: string;
+        targetUrl?: string;
+    } | EditorElement[];
+}
+
+type Editor = {
+    pageId: string;
+    liveMode: boolean;
+    previewMode: boolean;
+    visible: boolean;
+    elements: EditorElement[];
+    selectedElement: EditorElement;
+    device: DeviceType;
+}
+
+type EditorState = {
+    editor: Editor
+}
+
+type EditorAction =
+    | {
+    type: "LOAD_DATA",
+    payload: { elements: EditorElement[], withLive: boolean }
+}
+    | {
+    type: "ADD_ELEMENT",
+    payload: {
+        containerId: string,
+        elementDetails: EditorElement,
+    }
+}
+    | { type: "TOGGLE_LIVE_MODE" }
+    | { type: "TOGGLE_PREVIEW_MODE" }
+    | { type: "TOGGLE_VISIBLE" }
+
+const initialEditorState: EditorState['editor'] = {
+    elements: [
+        {
+            content: [],
+            id: "__body",
+            name: "Body",
+            styles: {
+
+            },
+            type: "__body",
+            category: "Container"
+        }
+    ],
+    selectedElement: {
+        content: [],
+        id: "__body",
+        name: "Body",
+        styles: {},
+        type: "__body",
+        category: "Container"
+    },
+    device: "mobile",
+    liveMode: false,
+    previewMode: false,
+    visible: false,
+    pageId: ""
+}
+
+const initialState: EditorState = {
+    editor: initialEditorState
+}
+
+const addElement = (elements: EditorElement[], action: EditorAction) => {
+    if(action.type !== "ADD_ELEMENT"){
+        throw new Error("Invalid action type");
+    }
+
+    return elements.map(element => {
+        if(element.id === action.payload.containerId && Array.isArray(element.content)){
+            return {
+                ...element,
+                content: [...element.content, action.payload.elementDetails]
+            }
+        }
+        return element
+    })
+}
+
+const editorReducer = (state: EditorState, action: EditorAction) => {
+    switch (action.type) {
+        case "ADD_ELEMENT":
+            const updateEditorState = {
+                ...state.editor,
+                elements: addElement(state.editor.elements, action)
+            }
+
+            return {
+                ...state,
+                editor: updateEditorState
+            }
+        case "TOGGLE_LIVE_MODE":
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    liveMode: !state.editor.liveMode
+                }
+            }
+
+        case "TOGGLE_PREVIEW_MODE":
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    previewMode: !state.editor.previewMode
+                }
+            }
+
+        case "TOGGLE_VISIBLE":
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    visible: !state.editor.visible
+                }
+            }
+
+        case "LOAD_DATA":
+            return {
+                ...initialState,
+                editor: {
+                    ...initialState.editor,
+                    elements: action.payload.elements || initialEditorState.elements,
+                    liveMode: action.payload.withLive
+                }
+            }
+        default:
+            return state
+    }
+}
+
+export type EditorContextData = {
+    device: DeviceType
+    previewMode: boolean
+    setPreviewMode: (value: boolean) => void
+    setDevice: (value: DeviceType) => void
+}
+
+export const EditorContext = createContext<{
+    state: EditorState;
+    dispatch: React.Dispatch<any>;
+    pageId: string;
+    pageDetails: any | null;
+}>({
+    state: initialState,
+    dispatch: () => undefined,
+    pageId: "",
+    pageDetails: null,
+})
+
+type Props = {
+    children: React.ReactNode;
+    pageId: string;
+    pageDetails: any | null;
+}
+
+const EditorProvider = (props: Props) => {
+    const [state, dispatch] = useReducer(editorReducer, initialState)
+    return (
+        <EditorContext.Provider value={{
+            state,
+            dispatch,
+            pageId: props.pageId,
+            pageDetails: props.pageDetails
+        }}>
+            {props.children}
+        </EditorContext.Provider>
+    )
+}
+
+export const useEditor = () => {
+    const context = React.useContext(EditorContext)
+    if (context === undefined) {
+        throw new Error("useEditor must be used within a EditorProvider")
+    }
+    return context
+}
+
+export default EditorProvider

@@ -4,7 +4,7 @@ import {
     useReorderPageLinksMutation,
 } from "../app/services/page";
 import {LuArrowLeft, LuSettings, LuTrash} from "react-icons/lu";
-import {DragEvent, useEffect, useRef, useState} from "react";
+import React, {DragEvent, useEffect, useRef, useState} from "react";
 import {
     Popover,
     PopoverTrigger,
@@ -16,6 +16,10 @@ import classNames from "classnames";
 import {getSiteUrl} from "../Utils/getSiteUrl";
 import {BLOCKS} from "../Utils/common";
 import CustomizeLinksInBioModal from "../components/modals/customize-links-in-bio-modal";
+import LinksInBioPreview from "../components/links-in-bio-preview";
+import PageEditor from "../components/editor";
+import {blocks} from "../components/editor/editor-components/blocks";
+import EditorProvider from "../hooks/use-editor";
 
 type Props = {};
 
@@ -104,7 +108,6 @@ const ManagePage = ({}: Props) => {
     const [reorderLinks, {isLoading: reorderLoading}] = useReorderPageLinksMutation();
     const iframeRef = useRef<HTMLIFrameElement | null>(null);
 
-    console.log(data);
     const manageLinksOrder = async (newOrder: any) => {
         try {
             await reorderLinks({id, links: newOrder}).unwrap();
@@ -128,103 +131,132 @@ const ManagePage = ({}: Props) => {
         );
     }
 
+    const handleStartBlockDrag = (e: DragEvent<HTMLDivElement>, type: any) => {
+        if (type == null) return;
+        e.dataTransfer.setData("componentType", type)
+    }
+
     return (
-        <section className="relative">
-            <div className="sticky top-0 z-20 mb-2 flex gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
-                <div
-                    onClick={() => Navigate(-1)}
-                    className="flex cursor-pointer items-center gap-2 rounded-full bg-base-200 py-0.5"
-                >
-                    <LuArrowLeft/>
-                    Back
+        <EditorProvider pageId={data?.slug!} pageDetails={data}>
+            <div className="flex gap-2 h-full">
+                <div className="h-full border">
+                    <PageEditor pageId={data?.slug!} liveMode={false}/>
                 </div>
-            </div>
-
-            <div className="flex gap-4">
-                <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-2xl font-bold">Manage Links</h1>
-                        <div className="flex items-center gap-2">
-                            <Button onClick={() => setCustomizePageOpen(true)}
-                                    classnames="border text-accent-content">Customize</Button>
-                            <Popover>
-                                <PopoverTrigger>
-                                    <Button
-                                        classnames="bg-primary flex items-center py-1.5 px-3 rounded-md justify-center text-white">Add
-                                        Block</Button>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    side="bottom"
-                                    align="start"
-                                    className="!bg-base-300 border border-base-100 p-4"
-                                    showArrow={true}
-                                >
-                                    <div className="flex flex-col gap-2 items-center">
-                                        <p className="text-center font-bold">Select a Block</p>
-                                    </div>
-                                    <div className="flex flex-col gap-2 items-center mt-4">
-                                        {BLOCKS.map((block: any) => (
-                                            <div
-                                                key={block.id}
-                                                onClick={() => {
-                                                    setBlockSelected(block.tag);
-                                                    setCreateLinkBlockActive(true);
-                                                }}
-                                                className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
-                                            >
-                                                {block.name}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
+                <aside className="w-[200px] h-full">
+                    {blocks.map((block: any) => (
+                        <div
+                            className="flex items-center justify-center w-full h-12 border border-base-200 bg-base-200 cursor-move"
+                            draggable
+                            key={block.id}
+                            onDragStart={(e) => handleStartBlockDrag(e, block.id)}
+                        >
+                            {block.label}
                         </div>
-                    </div>
-
-                    {!isLoading && (
-                        <ul className="mt-2">
-                            {!isLoading &&
-                                data?.links.map((link: any, index: number) => (
-                                    <LinkItem
-                                        key={index}
-                                        link={link}
-                                        index={index}
-                                        items={data?.links}
-                                        manageLinksOrder={manageLinksOrder}
-                                    />
-                                ))}
-                        </ul>
-                    )}
-                </div>
-                <div className="w-[300px] h-[700px]">
-                    {!reorderLoading ? (
-                        <iframe
-                            ref={iframeRef}
-                            width="300"
-                            height="100%"
-                            src={`http://localhost:5173/${id}`}
-                        ></iframe>
-                    ) : (
-                        <div className="animate-pulse rounded-md bg-muted w-[300px] h-[700px] flex justify-center items-center"/>
-                    )}
-                </div>
+                    ))}
+                </aside>
             </div>
+        </EditorProvider>
+    )
 
-            <CreateLinkBlockModal
-                blockSelected={blockSelected}
-                setBlockSelected={setBlockSelected}
-                createLinkBlockActive={createLinkBlockActive}
-                setCreateLinkBlockActive={setCreateLinkBlockActive}
-                pageId={data?._id as string}
-            />
-
-            <CustomizeLinksInBioModal
-                customizePageOpen={customizePageOpen}
-                setCustomizePageOpen={setCustomizePageOpen}
-                data={data!}
-            />
-        </section>
-    );
+    // return (
+    //     <section className="relative">
+    //         <div className="sticky top-0 z-20 mb-2 flex gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
+    //             <div
+    //                 onClick={() => Navigate(-1)}
+    //                 className="flex cursor-pointer items-center gap-2 rounded-full bg-base-200 py-0.5"
+    //             >
+    //                 <LuArrowLeft/>
+    //                 Back
+    //             </div>
+    //         </div>
+    //
+    //         <div className="flex gap-4">
+    //             <div className="flex-1">
+    //                 <div className="flex items-center justify-between">
+    //                     <h1 className="text-2xl font-bold">Manage Links</h1>
+    //                     <div className="flex items-center gap-2">
+    //                         <Button onClick={() => setCustomizePageOpen(true)} classnames="border text-accent-content">Customize</Button>
+    //                         <Popover>
+    //                             <PopoverTrigger>
+    //                                 <Button
+    //                                     classnames="bg-primary flex items-center py-1.5 px-3 rounded-md justify-center text-white">Add
+    //                                     Block</Button>
+    //                             </PopoverTrigger>
+    //                             <PopoverContent
+    //                                 side="bottom"
+    //                                 align="start"
+    //                                 className="!bg-base-300 border border-base-100 p-4"
+    //                                 showArrow={true}
+    //                             >
+    //                                 <div className="flex flex-col gap-2 items-center">
+    //                                     <p className="text-center font-bold">Select a Block</p>
+    //                                 </div>
+    //                                 <div className="flex flex-col gap-2 items-center mt-4">
+    //                                     {BLOCKS.map((block: any) => (
+    //                                         <div
+    //                                             key={block.id}
+    //                                             onClick={() => {
+    //                                                 setBlockSelected(block.tag);
+    //                                                 setCreateLinkBlockActive(true);
+    //                                             }}
+    //                                             className="w-full px-4 py-2 bg-base-100 hover:bg-base-300 rounded-md cursor-pointer transition-colors"
+    //                                         >
+    //                                             {block.name}
+    //                                         </div>
+    //                                     ))}
+    //                                 </div>
+    //                             </PopoverContent>
+    //                         </Popover>
+    //                     </div>
+    //                 </div>
+    //
+    //                 {!isLoading && (
+    //                     <ul className="mt-2">
+    //                         {!isLoading &&
+    //                             data?.links.map((link: any, index: number) => (
+    //                                 <LinkItem
+    //                                     key={index}
+    //                                     link={link}
+    //                                     index={index}
+    //                                     items={data?.links}
+    //                                     manageLinksOrder={manageLinksOrder}
+    //                                 />
+    //                             ))}
+    //                     </ul>
+    //                 )}
+    //             </div>
+    //             <div className="w-[350px] h-[700px]">
+    //                 {!reorderLoading ? (
+    //                     <iframe
+    //                         ref={iframeRef}
+    //                         width="350"
+    //                         height="100%"
+    //                         src={`http://localhost:5173/${id}`}
+    //                     >
+    //                         <LinksInBioPreview data={data!} isLoading={isLoading} classnames="w-full h-full p-4" container=""/>
+    //                     </iframe>
+    //                 ) : (
+    //                     <div
+    //                         className="animate-pulse rounded-md bg-muted w-[300px] h-[700px] flex justify-center items-center"/>
+    //                 )}
+    //             </div>
+    //         </div>
+    //
+    //         <CreateLinkBlockModal
+    //             blockSelected={blockSelected}
+    //             setBlockSelected={setBlockSelected}
+    //             createLinkBlockActive={createLinkBlockActive}
+    //             setCreateLinkBlockActive={setCreateLinkBlockActive}
+    //             pageId={data?._id as string}
+    //         />
+    //
+    //         <CustomizeLinksInBioModal
+    //             customizePageOpen={customizePageOpen}
+    //             setCustomizePageOpen={setCustomizePageOpen}
+    //             data={data!}
+    //         />
+    //     </section>
+    // );
 };
 
 export default ManagePage;

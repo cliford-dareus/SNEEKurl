@@ -370,7 +370,6 @@ const getClicks = async (req: any, res: Response) => {
 const getUserLimits = async (req: any, res: Response) => {
     try {
         const user = req.user;
-        console.log("user", user)
 
         if (!user) {
             return res.status(StatusCodes.UNAUTHORIZED).json({

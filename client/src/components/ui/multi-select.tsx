@@ -94,7 +94,7 @@ const MultiSelect = ({
                         </div>
                         {!isLoading &&
                             filterDate?.map((item, index) => (
-                                <div className="flex cursor-pointer items-center rounded-md border border-base-300 px-4 text-sm py-1 mt-1 hover: hover:ring-2 hover:ring-primary mt-1"
+                                <div className="flex cursor-pointer items-center rounded-md border border-base-300 px-4 text-sm py-1 hover: hover:ring-2 hover:ring-primary mt-1"
                                     key={index}
                                     onClick={() => handleSelectChange(item._id)}
                                 >

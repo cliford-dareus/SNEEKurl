@@ -113,8 +113,6 @@ const Checkout = (props: Props) => {
                             <Button classnames="mt-8 bg-primary">Proceed</Button>
                         </form>
                     </div>
-
-
                 </SheetContent>
             </Sheet>
         </>

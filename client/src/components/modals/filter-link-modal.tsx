@@ -105,7 +105,8 @@ const FilterLinkModal = ({open, setOpen, activeFilter, setActiveFilter}: Props) 
                                     </svg>
                                     <div>
                                         <DialogTitle>Filter Links</DialogTitle>
-                                        <DialogDescription className="text-zinc-400">Filter links by...</DialogDescription>
+                                        <DialogDescription className="text-zinc-400">Filter links
+                                            by...</DialogDescription>
                                     </div>
                                 </div>
                             </DialogHeader>

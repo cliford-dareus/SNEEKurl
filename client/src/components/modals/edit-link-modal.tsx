@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useState} from "react";
+import React, {Dispatch, SetStateAction, useState} from "react";
 import {
     Dialog,
     DialogContent,
@@ -18,6 +18,7 @@ import Label from "../ui/label";
 import {useAppSelector} from "../../app/hook";
 import {selectCurrentUser} from "../../features/auth/authslice";
 import {toast} from "react-toastify";
+import {BsSave} from "react-icons/bs";
 
 type Props = {
     url: Url;
@@ -86,7 +87,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                     >
                         <div className="flex flex-col gap-4 pt-8">
                             <div>
-                                <Label>Destination Url</Label>
+                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Destination Url</Label>
                                 <Controller
                                     name="longUrl"
                                     control={control}
@@ -103,7 +104,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                             </div>
 
                             <div>
-                                <Label>Short Url</Label>
+                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Short Url</Label>
                                 <div className="flex items-center gap-2">
                                     <div className="rounded-full bg-accent px-2 py-1">
                                         sneek.co/
@@ -122,7 +123,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                                 </div>
                             </div>
 
-                            <div className="my-4 border-t border-b border-base-300 py-4 text-center">
+                            <div className="my-4 border-t border-b border-base-300 py-4 text-center text-zinc-400">
                                 Optionals
                             </div>
 
@@ -133,7 +134,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                                 plan={plan}
                             />
                             <div className="flex items-center justify-between">
-                                <p>isShareale</p>
+                                <p className="block text-xs text-zinc-400 mb-1 ml-1">isShareale</p>
                                 <Switch
                                     label="isShareable"
                                     register={register}
@@ -149,21 +150,15 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                     </form>
                 </div>
                 <DialogFooter className="space-y-4">
-                    <Button
-                        // variant="outline"
-                        onClick={() => setEditActive(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
+                    <button
                         type="submit"
                         disabled={!(user.user.username !== undefined && plan !== "free")}
-                        classnames="bg-primary text-primary-content"
+                        className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
+                        <BsSave className="w-5 h-5"/>
                         Save Changes
-                    </Button>
+                    </button>
                 </DialogFooter>
-
             </DialogContent>
         </Dialog>
     );

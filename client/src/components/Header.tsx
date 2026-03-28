@@ -81,7 +81,7 @@ const Header = ({isActive, plan}: Props) => {
                         : "",
                 )}
             >
-                <div className="container mx-auto flex h-14 w-full items-center px-4">
+                <div className="max-w-6xl mx-auto flex h-14 w-full items-center px-4">
                     {/* Logo */}
                     <div className="flex items-center gap-2">
                         <svg

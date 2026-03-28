@@ -1,5 +1,5 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
-import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "../ui/dialog";
 import {getSiteUrl} from "../../Utils/getSiteUrl";
 import Button from "../ui/button";
 import Separator from "../ui/separator";
@@ -57,57 +57,60 @@ const ChangeProfileImageModal = ({
     }
 
     return (
-        <>
-            {editProfileActive &&
-                <>
-                    <Dialog open={editProfileActive} onOpenChange={setEditProfileActive}/>
-                    <DialogContent>
-                        <DialogHeader>
-                            <div className="flex items-center gap-3">
-                                <svg
-                                    width="40"
-                                    height="40"
-                                    viewBox="0 0 200 250"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                        fill="currentColor"
-                                    />
-                                </svg>
-                                <div>
-                                    <DialogTitle>Change Profile Picture</DialogTitle>
-                                    <DialogDescription>Shorten your URL and customize it</DialogDescription>
-                                </div>
-                            </div>
-                        </DialogHeader>
-
-                        <div className="px-6 py-4">
-                            <form
-                                action=""
-                                className="h-full gap-4 p-4 pt-20"
-                                onSubmit={handleSubmit(handleProfileChange)}
-                            >
-                                <CustomDropzone
-                                    fileData={fileData}
-                                    setValue={setValue}
-                                    setFileData={setFileData}
-                                />
-
-                                <Separator/>
-
-                                <div>
-                                    <input type='file'/>
-                                </div>
-                                <Button classnames="bg-primary">Update</Button>
-                            </form>
+        <Dialog open={editProfileActive} onOpenChange={setEditProfileActive}>
+            <DialogContent>
+                <DialogHeader>
+                    <div className="flex items-center gap-3">
+                        <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 200 250"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <div>
+                            <DialogTitle>Change Profile Picture</DialogTitle>
+                            <DialogDescription>Shorten your URL and customize it</DialogDescription>
                         </div>
-                    </DialogContent>
-                </>
-            }
+                    </div>
+                </DialogHeader>
 
-        </>
+                <div className="px-6 py-4">
+                    <form
+                        action=""
+                        className="h-full gap-4 p-4 pt-20"
+                        onSubmit={handleSubmit(handleProfileChange)}
+                    >
+                        <CustomDropzone
+                            fileData={fileData}
+                            setValue={setValue}
+                            setFileData={setFileData}
+                        />
+
+                        <Separator/>
+
+                        <div>
+                            <input type='file'/>
+                        </div>
+                    </form>
+                </div>
+
+                <DialogFooter className="px-6 py-4">
+                    <button
+                        type="submit"
+                        onClick={handleSubmit(handleProfileChange)}
+                        className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                    >
+                        Update Profile
+                    </button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     )
 };
 

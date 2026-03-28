@@ -6,7 +6,7 @@ import {useUpdatePageMutation} from "../../app/services/page";
 import Label from "../ui/label";
 import Button from "../ui/button";
 import {toast} from "react-toastify";
-import Dialog, { DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../ui/dialog";
+import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "../ui/dialog";
 import {BsPalette, BsSave} from "react-icons/bs";
 
 type Props = {
@@ -18,7 +18,7 @@ type Props = {
 };
 
 interface CreateLinkBlockProp extends CreateLinkInBioProp {
-    links: {_id: string, url: string, name: string}[];
+    links: { _id: string, url: string, name: string }[];
 }
 
 const CreateLinkBlockModal = ({
@@ -54,50 +54,56 @@ const CreateLinkBlockModal = ({
             {createLinkBlockActive && (
                 <>
                     <Dialog open={createLinkBlockActive} onOpenChange={setCreateLinkBlockActive}>
-                    <DialogContent>
-                             <DialogHeader>
+                        <DialogContent>
+                            <DialogHeader>
                                 <div className="flex items-center gap-3">
-                                <svg
-                                    width="40"
-                                    height="40"
-                                    viewBox="0 0 200 250"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                    d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                    fill="currentColor"
-                                    />
-                                </svg>
-                                <div>
-                                    <DialogTitle>Add Links to Block</DialogTitle>
-                                    <DialogDescription>Add links to your block</DialogDescription>
-                                </div>
+                                    <svg
+                                        width="40"
+                                        height="40"
+                                        viewBox="0 0 200 250"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                            fill="currentColor"
+                                        />
+                                    </svg>
+                                    <div>
+                                        <DialogTitle>Add Links to Block</DialogTitle>
+                                        <DialogDescription className="text-zinc-400">Add links to your
+                                            block</DialogDescription>
+                                    </div>
                                 </div>
                             </DialogHeader>
 
-                        <div className="px-6 py-4">
-                            <form
-                                onSubmit={handleSubmit(handleCreateLinkBlock)}
-                            >
-                                <div className="flex flex-col gap-2 pt-8">
-                                    <div className="flex items-center gap-2 mb-4 uppercase text-xs font-bold tracking-widest">
-                                        <BsPalette className="w-3 h-3"/>
-                                        Block
+                            <div className="px-6 py-4">
+                                <form
+                                    onSubmit={handleSubmit(handleCreateLinkBlock)}
+                                >
+                                    <div className="flex flex-col gap-2 pt-8">
+                                        <div
+                                            className="flex items-center gap-2 mb-4 uppercase text-xs font-bold tracking-widest">
+                                            <BsPalette className="w-3 h-3"/>
+                                            Block
+                                        </div>
+
+                                        <label className="block text-xs text-zinc-400 ml-1">Select Urls</label>
+                                        <MultiSelect setvalues={setValue}/>
                                     </div>
+                                </form>
+                            </div>
 
-                                    <label className="block text-xs text-zinc-400 ml-1">Select Urls</label>
-                                    <MultiSelect setvalues={setValue}/>
-
-                                    <button className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                                    >
-                                        <BsSave className="w-5 h-5"/>
-                                        Add Block
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </DialogContent>
+                            <DialogFooter className="px-6 py-4">
+                                <button
+                                    type="submit"
+                                    onClick={handleSubmit(handleCreateLinkBlock)}
+                                    className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                                >
+                                    Add Block
+                                </button>
+                            </DialogFooter>
+                        </DialogContent>
                     </Dialog>
                 </>
             )}

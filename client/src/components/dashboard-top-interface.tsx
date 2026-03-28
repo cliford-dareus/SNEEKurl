@@ -50,20 +50,20 @@ const DashboardTopInterface = ({pathname}: Props) => {
                 </div>
             </div>
 
-                <CreateLinkModal
-                    setAddLinkActive={setAddLinkActive}
-                    addLinkActive={addLinkActive}
-                />
+            <CreateLinkModal
+                setAddLinkActive={setAddLinkActive}
+                addLinkActive={addLinkActive}
+            />
 
-                <SearchLinkModal
-                    searchLinkActive={searchLinkActive}
-                    setSearchLinkActive={setSearchLinkActive}
-                />
+            <SearchLinkModal
+                searchLinkActive={searchLinkActive}
+                setSearchLinkActive={setSearchLinkActive}
+            />
 
-                <CreateLinkInBioModal
-                    createLinkInBioActive={createLinkInBioActive}
-                    setCreateLinkInBioActive={setCreateLinkInBioActive}
-                />
+            <CreateLinkInBioModal
+                createLinkInBioActive={createLinkInBioActive}
+                setCreateLinkInBioActive={setCreateLinkInBioActive}
+            />
         </>
     );
 };
