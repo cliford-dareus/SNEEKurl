@@ -15,7 +15,7 @@ const LinksInBio = () => {
 
     return (
         <EditorProvider pageId={data._id} pageDetails={data}>
-            <div className="h-screen flex items-center justify-center bg-red-500  overflow-hidden">
+            <div className="h-screen flex items-center justify-center overflow-hidden bg-black">
                 <PageEditor pageId={slug!} liveMode/>
             </div>
             {/*<LinksInBioPreview data={data!} isLoading={isLoading} classnames="min-h-screen" container="px-4 py-16 md:py-24 max-w-2xl"/>*/}

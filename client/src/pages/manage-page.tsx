@@ -139,10 +139,12 @@ const ManagePage = ({}: Props) => {
     return (
         <EditorProvider pageId={data?.slug!} pageDetails={data}>
             <div className="flex gap-2 h-full">
-                <div className="h-full border">
-                    <PageEditor pageId={data?.slug!} liveMode={false}/>
+                <div className="h-full flex-1 border border-base-200">
+                    <div className="flex h-full w-full items-center justify-center px-4 py-2 border">
+                        <PageEditor pageId={data?.slug!} liveMode={false}/>
+                    </div>
                 </div>
-                <aside className="w-[200px] h-full">
+                <aside className="w-[250px] h-full">
                     {blocks.map((block: any) => (
                         <div
                             className="flex items-center justify-center w-full h-12 border border-base-200 bg-base-200 cursor-move"

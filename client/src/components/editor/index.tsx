@@ -31,7 +31,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
         dispatch({
             type: "LOAD_DATA",
             payload: {
-                elements: data.content? data.content : "",
+                elements: data.content ? data.content : "",
                 withLive: !!liveMode
             }
         })
@@ -47,15 +47,17 @@ const PageEditor = ({pageId, liveMode}: Props) => {
     }
 
     return (
-        <div className={classNames("h-full overflow-y-scroll max-w-full  overflow-x-clip bg-black text-white",
+        <div className={classNames(
+            "h-full overflow-y-scroll max-w-full  overflow-x-clip bg-black text-white",
             !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
         )}
         >
             <div
                 className={classNames(
-                    "use-animation-zoom-in h-full bg-muted transition-all rounded-none py-12 px-20 w-full flex flex-col relative",
+                    "use-animation-zoom-in h-full bg-muted transition-all rounded-none px-4 w-full overflow-hidden flex flex-col relative",
                     {
                         "!p-0 !m-0 min-w-screen min-h-screen": state.editor.previewMode || state.editor.liveMode,
+                        "overflow-y-scroll px-8": !state.editor.previewMode || !state.editor.liveMode,
                     }
                 )}
                 onClick={handleClick}
@@ -76,7 +78,10 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                     initial={{opacity: 0, y: 20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}
-                    className="flex flex-col items-center text-center mb-12"
+                    className={classNames(
+                        "flex flex-col items-center text-center mb-12",
+                            // state.editor.device === "mobile" ? "mt-12" : "mt-24",
+                        )}
                 >
                     <div className="relative mb-6">
                         <div
@@ -125,11 +130,14 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                     </div>
                 </motion.div>
 
-                {Array.isArray(state.editor.elements) &&
-                    state.editor.elements.map((childElement, index: number) => {
-                        console.log(childElement, "childElement");
-                        return <EditorPage key={index} element={childElement}/>
-                    })}
+                <div className="flex flex-col items-center w-full">
+                    {Array.isArray(state.editor.elements) &&
+                        state.editor.elements.map((childElement, index: number) => {
+                            console.log(childElement, "childElement");
+                            return <EditorPage key={index} element={childElement}/>
+                        })}
+                </div>
+
 
                 <motion.footer
                     initial={{opacity: 0}}
