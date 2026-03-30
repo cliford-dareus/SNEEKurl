@@ -1,187 +1,210 @@
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import classNames from "classnames";
 import {EditorElement, useEditor} from "../../../hooks/use-editor";
 import {BsTrash2} from "react-icons/bs";
 
-type ContainerProps = { element: any }
+type ContainerProps = { element: any, editor?: any }
 
-const Container = ({element}: ContainerProps) => {
+const Container = ({element, editor}: ContainerProps) => {
     const {id, content, name, styles, type} = element;
     const {state, dispatch} = useEditor();
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const isSelected = state.editor.selectedElement.id === id;
 
-    const handleOnDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDraggingOver(false);
-        const componentType = e.dataTransfer.getData("componentType");
+    const containerRef = useRef<HTMLDivElement>(null);
 
-        switch (componentType) {
-            case "h1":
-            case "h2":
-            case "h3":
-            case "h4":
-            case "h5":
-            case "h6":
-                dispatch({
-                    type: "ADD_ELEMENT",
-                    payload: {
-                        containerId: id,
-                        elementDetails: {
-                            content: {
-                                innerText: `Heading ${componentType.charAt(1)}`,
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+
+        const handleOnDrop = (e: DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDraggingOver(false);
+
+            const componentType = e.dataTransfer?.getData("componentType");
+
+            switch (componentType) {
+                case "h1":
+                case "h2":
+                case "h3":
+                case "h4":
+                case "h5":
+                case "h6":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: {
+                                    innerText: `Heading ${componentType.charAt(1)}`,
+                                },
+                                id: crypto.randomUUID(),
+                                name: `Heading ${componentType.charAt(1)}`,
+                                styles: {
+                                    color: "black",
+                                    // ...defaultStyles,
+                                    fontSize:
+                                        componentType === "h1"
+                                            ? "2.5rem"
+                                            : componentType === "h2"
+                                                ? "2rem"
+                                                : componentType === "h3"
+                                                    ? "1.75rem"
+                                                    : componentType === "h4"
+                                                        ? "1.5rem"
+                                                        : componentType === "h5"
+                                                            ? "1.25rem"
+                                                            : "1rem",
+                                    fontWeight:
+                                        componentType === "h1" || componentType === "h2"
+                                            ? "700"
+                                            : "600",
+                                    lineHeight: "1.2",
+                                    marginBottom: "0.5rem",
+                                },
+                                type: componentType,
+                                category: "Text",
                             },
-                            id: crypto.randomUUID(),
-                            name: `Heading ${componentType.charAt(1)}`,
-                            styles: {
-                                color: "black",
-                                // ...defaultStyles,
-                                fontSize:
-                                    componentType === "h1"
-                                        ? "2.5rem"
-                                        : componentType === "h2"
-                                            ? "2rem"
-                                            : componentType === "h3"
-                                                ? "1.75rem"
-                                                : componentType === "h4"
-                                                    ? "1.5rem"
-                                                    : componentType === "h5"
-                                                        ? "1.25rem"
-                                                        : "1rem",
-                                fontWeight:
-                                    componentType === "h1" || componentType === "h2"
-                                        ? "700"
-                                        : "600",
-                                lineHeight: "1.2",
-                                marginBottom: "0.5rem",
-                            },
-                            type: componentType,
-                            category: "Text",
                         },
-                    },
-                });
-                break;
-            case "p":
-                dispatch({
-                    type: "ADD_ELEMENT",
-                    payload: {
-                        containerId: id,
-                        elementDetails: {
-                            content: {
-                                innerText: "Paragraph",
+                    });
+                    break;
+                case "p":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: {
+                                    innerText: "Paragraph",
+                                },
+                                id: crypto.randomUUID(),
+                                name: "Paragraph",
+                                styles: {
+                                    color: "black",
+                                    // ...defaultStyles,
+                                    fontSize: "1rem",
+                                    lineHeight: "1.5",
+                                    marginBottom: "1rem",
+                                },
+                                type: componentType,
+                                category: "Text",
                             },
-                            id: crypto.randomUUID(),
-                            name: "Paragraph",
-                            styles: {
-                                color: "black",
-                                // ...defaultStyles,
-                                fontSize: "1rem",
-                                lineHeight: "1.5",
-                                marginBottom: "1rem",
-                            },
-                            type: componentType,
-                            category: "Text",
                         },
-                    },
-                });
-                break;
-            case "span":
-                dispatch({
-                    type: "ADD_ELEMENT",
-                    payload: {
-                        containerId: id,
-                        elementDetails: {
-                            content: {
-                                innerText: "Text",
+                    });
+                    break;
+                case "span":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: {
+                                    innerText: "Text",
+                                },
+                                id: crypto.randomUUID(),
+                                name: "Text",
+                                styles: {
+                                    color: "black",
+                                    // ...defaultStyles,
+                                    fontSize: "1rem",
+                                    display: "inline",
+                                },
+                                type: componentType,
+                                category: "Text",
                             },
-                            id: crypto.randomUUID(),
-                            name: "Text",
-                            styles: {
-                                color: "black",
-                                // ...defaultStyles,
-                                fontSize: "1rem",
-                                display: "inline",
-                            },
-                            type: componentType,
-                            category: "Text",
                         },
-                    },
-                });
-                break;
-            case "image":
-                dispatch({
-                    type: "ADD_ELEMENT",
-                    payload: {
-                        containerId: id,
-                        elementDetails: {
-                            content: {
-                                imageUrl: undefined,
-                                altText: undefined,
+                    });
+                    break;
+                case "image":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: {
+                                    imageUrl: undefined,
+                                    altText: undefined,
+                                },
+                                id: crypto.randomUUID(),
+                                name: "Image",
+                                styles: {},
+                                type: componentType,
+                                category: "Basic",
                             },
-                            id: crypto.randomUUID(),
-                            name: "Image",
-                            styles: {},
-                            type: componentType,
-                            category: "Basic",
                         },
-                    },
-                });
-                break;
-            case "container":
-                dispatch({
-                    type: "ADD_ELEMENT",
-                    payload: {
-                        containerId: id,
-                        elementDetails: {
-                            content: [],
-                            id: crypto.randomUUID(),
-                            name: "Container",
-                            styles: {},
-                            type: "container",
-                            category: "layout",
+                    });
+                    break;
+                case "container":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: [],
+                                id: crypto.randomUUID(),
+                                name: "Container",
+                                styles: {
+                                    pointerEvents: "all",
+                                },
+                                type: "container",
+                                category: "layout",
+                            }
                         }
-                    }
-                })
-            default:
+                    })
+                default:
+
+            }
+
         }
 
-    }
+        const handleDragStart = (e: DragEvent, type: string) => {
+            if (type === "__body") return;
+            e.dataTransfer?.setData("componentType", type);
+        };
 
-    const handleDragStart = (e: React.DragEvent, type: string) => {
-        if (type === "__body") return;
-        e.dataTransfer.setData("componentType", type);
-    };
+        const handleDragOver = (e: DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDraggingOver(true);
+        };
 
-    const handleDragOver = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDraggingOver(true);
-    };
+        const handleDragLeave = (e: DragEvent) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsDraggingOver(false);
+        };
 
-    const handleDragLeave = (e: React.DragEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        setIsDraggingOver(false);
-    };
+        const handleOnClickBody = (e: React.MouseEvent) => {
+            e.stopPropagation();
+            dispatch({
+                type: "CHANGE_SELECTED_ELEMENT",
+                payload: {
+                    elementDetails: element,
+                },
+            });
+        };
 
-    const handleOnClickBody = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        dispatch({
-            type: "CHANGE_SELECTED_ELEMENT",
-            payload: {
-                elementDetails: element,
-            },
-        });
-    };
+        const handleDeleteElement = () => {
+            dispatch({type: "DELETE_ELEMENT", payload: {elementDetails: element}});
+        };
 
-    const handleDeleteElement = () => {
-        dispatch({type: "DELETE_ELEMENT", payload: {elementDetails: element}});
-    };
+        el.addEventListener('dragstart', (e) => handleDragStart(e, type), true);
+        el.addEventListener('dragover', handleDragOver, true);
+        el.addEventListener('dragleave', handleDragLeave, true);
+        el.addEventListener('drop', handleOnDrop, true);
+
+        return () => {
+            el.removeEventListener('dragover', handleDragOver, true);
+            el.removeEventListener('dragleave', handleDragLeave, true);
+            el.removeEventListener('drop', handleOnDrop, true);
+        };
+    }, [dispatch, id])
 
     return (
         <div
-            className={classNames("relative group my-1", {
+            ref={containerRef}
+            className={classNames("relative group my-1 !pointer-events-auto", {
                 "max-w-full w-full":
                     (type === "container" || type === "2Col") && !styles?.width,
                 "h-fit": type === "container" && !styles?.height,
@@ -209,13 +232,7 @@ const Container = ({element}: ContainerProps) => {
                     !state.editor.liveMode,
             })}
             style={{width: styles?.width, height: styles?.height}}
-            onDrop={(e) => {
-                handleOnDrop(e);
-            }}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDragStart={(e) => handleDragStart(e, "container")}
-            onClick={handleOnClickBody}
+            onPointerDown={(e) => e.stopPropagation()}
         >
             <div
                 className={classNames(
@@ -376,7 +393,7 @@ function EditorPage({element}: EditorProps) {
         case 'image':
             return <img/>;
         case 'container':
-            return <Container element={element} />;
+            return <Container element={element}/>;
     }
 
     switch (element.category) {

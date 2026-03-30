@@ -20,6 +20,8 @@ import LinksInBioPreview from "../components/links-in-bio-preview";
 import PageEditor from "../components/editor";
 import {blocks} from "../components/editor/editor-components/blocks";
 import EditorProvider from "../hooks/use-editor";
+import {Tldraw} from "tldraw";
+import InlineEditor from "../components/editor/editor-components/editor-ui/inline-editor";
 
 type Props = {};
 
@@ -134,15 +136,17 @@ const ManagePage = ({}: Props) => {
     const handleStartBlockDrag = (e: DragEvent<HTMLDivElement>, type: any) => {
         if (type == null) return;
         e.dataTransfer.setData("componentType", type)
+        e.dataTransfer.effectAllowed = "copy"
     }
 
     return (
         <EditorProvider pageId={data?.slug!} pageDetails={data}>
             <div className="flex gap-2 h-full">
-                <div className="h-full flex-1 border border-base-200">
-                    <div className="flex h-full w-full items-center justify-center px-4 py-2 border">
-                        <PageEditor pageId={data?.slug!} liveMode={false}/>
-                    </div>
+                <div className="w-screen h-full flex-1 border border-base-200">
+                    {/*<div className="flex h-full w-full items-center justify-center px-4 py-2 border">*/}
+                    {/*    <PageEditor pageId={data?.slug!} liveMode={false}/>*/}
+                    {/*</div>*/}
+                    <InlineEditor height={700} />
                 </div>
                 <aside className="w-[250px] h-full">
                     {blocks.map((block: any) => (

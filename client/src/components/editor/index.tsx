@@ -80,8 +80,8 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                     transition={{duration: 0.6}}
                     className={classNames(
                         "flex flex-col items-center text-center mb-12",
-                            // state.editor.device === "mobile" ? "mt-12" : "mt-24",
-                        )}
+                        // state.editor.device === "mobile" ? "mt-12" : "mt-24",
+                    )}
                 >
                     <div className="relative mb-6">
                         <div
@@ -133,7 +133,6 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                 <div className="flex flex-col items-center w-full">
                     {Array.isArray(state.editor.elements) &&
                         state.editor.elements.map((childElement, index: number) => {
-                            console.log(childElement, "childElement");
                             return <EditorPage key={index} element={childElement}/>
                         })}
                 </div>

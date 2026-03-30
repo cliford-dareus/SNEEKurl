@@ -55,7 +55,7 @@ const initialEditorState: EditorState['editor'] = {
             id: "__body",
             name: "Body",
             styles: {
-
+                pointerEvents: "all"
             },
             type: "__body",
             category: "Container"
