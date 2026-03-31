@@ -22,6 +22,7 @@ import {blocks} from "../components/editor/editor-components/editor-ui/blocks";
 import EditorProvider from "../hooks/use-editor";
 import {Tldraw} from "tldraw";
 import InlineEditor from "../components/editor/editor-components/editor-ui/inline-editor";
+import IPHONE_MOCKUP from "../assets/apple-iphone-15-black-portrait.png";
 
 type Props = {};
 
@@ -142,8 +143,8 @@ const ManagePage = ({}: Props) => {
     return (
         <EditorProvider pageId={data?.slug!} pageDetails={data}>
             <div className="flex gap-2 h-full">
-                <div className="w-screen h-full flex-1 border border-base-200">
-                    <InlineEditor width={400} height={700} />
+                <div className="h-full flex-1 border border-base-200 relative">
+                    <InlineEditor width={402} height={700} />
                 </div>
 
                 <aside className="w-[250px] h-full">

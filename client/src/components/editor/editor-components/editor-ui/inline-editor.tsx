@@ -1,13 +1,14 @@
 import {Tldraw} from 'tldraw'
 import 'tldraw/tldraw.css'
 import { EditableShapeUtil} from "./phone-mockup";
+import IPHONE_MOCKUP from "../../../../assets/apple-iphone-15-black-portrait.png";
 
 {/*
     TODO:  set zoom to 85% on onload
     TODO: disable pinch to zoom if ppossible
 */}
 
-function InlineEditor({ width= 400, height = 600 }: { width?: number; height?: number }) {
+function InlineEditor({ width= 402, height = 874 }: { width?: number; height?: number }) {
     const customShapeUtils = [EditableShapeUtil]
 
     return (
@@ -17,8 +18,8 @@ function InlineEditor({ width= 400, height = 600 }: { width?: number; height?: n
                     height,
                     position: 'relative',
                     overflow: 'hidden',
-                    border: '1px solid #e5e5e5',
-                    background: '#fafafa',
+                    // border: '1px solid #e5e5e5',
+                    background: 'transparent',
                 }}
                 className="tldraw__editor"
             >
@@ -32,7 +33,7 @@ function InlineEditor({ width= 400, height = 600 }: { width?: number; height?: n
                             wheelBehavior: 'none',     // disables mouse wheel + trackpad pinch
                             zoomSpeed: 0, // extra safety
                         })
-                        editor.zoomToBounds({ x: 50, y: 150, w: 500, h: 698 }, { animation: { duration: 0 } });
+                        editor.zoomToBounds({ x: 50, y: 200, w: 550, h: 698 }, { animation: { duration: 0 } });
                     }}
                 />
             </div>

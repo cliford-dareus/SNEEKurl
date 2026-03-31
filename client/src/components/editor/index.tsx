@@ -2,7 +2,7 @@ import classNames from "classnames";
 import Button from "../ui/button";
 import {useEditor} from "../../hooks/use-editor";
 import {useGetPageQuery} from "../../app/services/page";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {BsEye} from "react-icons/bs";
 import EditorPage from "./editor-components/editor-element";
 import {motion} from "framer-motion";
@@ -18,6 +18,31 @@ const PageEditor = ({pageId, liveMode}: Props) => {
     const {state, dispatch} = useEditor();
     const {data, isLoading, isSuccess} = useGetPageQuery({id: pageId});
     const isMobile = window.innerWidth <= 768;
+
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    // === STOP TLDraw FROM STEALING WHEEL EVENTS ===
+    useEffect(() => {
+        const scrollContainer = scrollRef.current;
+        if (!scrollContainer) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            // Only stop propagation if we can actually scroll
+            const canScrollVertically =
+                scrollContainer.scrollHeight > scrollContainer.clientHeight;
+
+            if (canScrollVertically) {
+                e.stopPropagation();           // Prevent tldraw from zooming/panning
+                // Do NOT call preventDefault() — let browser scroll naturally
+            }
+        };
+
+        scrollContainer.addEventListener('wheel', handleWheel, { passive: true });
+
+        return () => {
+            scrollContainer.removeEventListener('wheel', handleWheel);
+        };
+    }, []);
 
 
     useEffect(() => {
@@ -48,9 +73,11 @@ const PageEditor = ({pageId, liveMode}: Props) => {
 
     return (
         <div className={classNames(
-            "h-full overflow-y-auto max-w-full  overflow-x-clip bg-black text-white",
+            "h-full overflow-hidden max-w-full  overflow-x-clip bg-black text-white",
             !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
+
         )}
+             onPointerDown={(e) => e.stopPropagation()}
         >
             <div
                 className={classNames(
@@ -61,6 +88,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                     }
                 )}
                 onClick={handleClick}
+                ref={scrollRef}
             >
                 <Button
                     onClick={handleUnPreview}
@@ -79,7 +107,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.6}}
                     className={classNames(
-                        "flex flex-col items-center text-center mb-12",
+                        "flex flex-col items-center text-center mb-4",
                         state.editor.device === "mobile" ? "mt-12" : "mt-24",
                     )}
                 >
