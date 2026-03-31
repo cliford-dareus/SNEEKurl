@@ -1,12 +1,11 @@
 import { BaseBoxShapeUtil, HTMLContainer, RecordProps, T, TLShape } from 'tldraw'
-import EditorPage from "../editor-element";
 import PageEditor from "../../index";
 
-const MY_EDITABLE_SHAPE_TYPE = 'my-editable-shape'
+const MY_PHONE_MOCKUP_SHAPE_TYPE = 'my_phone_mockup_shape'
 
 declare module 'tldraw' {
     export interface TLGlobalShapePropsMap {
-        [MY_EDITABLE_SHAPE_TYPE]: {
+        [MY_PHONE_MOCKUP_SHAPE_TYPE]: {
             w: number
             h: number
             animal: number
@@ -16,10 +15,10 @@ declare module 'tldraw' {
 
 const ANIMAL_EMOJIS = ['🐶', '🐱', '🐨', '🐮', '🐴']
 
-export type IMyEditableShape = TLShape<typeof MY_EDITABLE_SHAPE_TYPE>
+export type IMyEditableShape = TLShape<typeof MY_PHONE_MOCKUP_SHAPE_TYPE>
 
 export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
-    static override type = MY_EDITABLE_SHAPE_TYPE
+    static override type = MY_PHONE_MOCKUP_SHAPE_TYPE
     static override props: RecordProps<IMyEditableShape> = {
         w: T.number,
         h: T.number,
@@ -44,11 +43,8 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
         }
     }
 
-    // [2]
     component(shape: IMyEditableShape) {
-        // [a]
         const isEditing = this.editor.getEditingShapeId() === shape.id
-        console.log(shape.id)
 
         return (
             <HTMLContainer
@@ -64,7 +60,7 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
                     backgroundColor: 'red',
                     padding: '16px',
                     position: 'relative',
-                    overflow: 'auto',
+                    overflow: 'hidden',
                     // padding: 16,
                 }}
             >

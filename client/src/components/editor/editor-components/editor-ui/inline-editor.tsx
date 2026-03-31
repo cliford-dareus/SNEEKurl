@@ -1,29 +1,13 @@
-import {
-    TldrawEditor,
-    TldrawUi,
-    TldrawHandles,
-    TldrawScribble,
-    TldrawSelectionForeground,
-    TldrawShapeIndicators,
-    TldrawOverlays,
-    defaultShapeUtils,
-    defaultBindingUtils,
-    defaultShapeTools,
-    defaultTools,
-    useEditor, Tldraw,
-} from 'tldraw'
+import {Tldraw} from 'tldraw'
 import 'tldraw/tldraw.css'
 import { EditableShapeUtil} from "./phone-mockup";
 
-const defaultComponents = {
-    Scribble: TldrawScribble,
-    ShapeIndicators: TldrawShapeIndicators,
-    SelectionForeground: TldrawSelectionForeground,
-    Handles: TldrawHandles,
-    Overlays: TldrawOverlays,
-}
+{/*
+    TODO:  set zoom to 85% on onload
+    TODO: disable pinch to zoom if ppossible
+*/}
 
-function InlineEditor({ height = 600 }: { width?: number; height?: number }) {
+function InlineEditor({ width= 400, height = 600 }: { width?: number; height?: number }) {
     const customShapeUtils = [EditableShapeUtil]
 
     return (
@@ -40,11 +24,15 @@ function InlineEditor({ height = 600 }: { width?: number; height?: number }) {
             >
                 <Tldraw
                     hideUi={true}
-                    // Pass in the array of custom shape classes
                     shapeUtils={customShapeUtils}
-                    // Create a shape when the editor mounts
                     onMount={(editor) => {
-                        editor.createShape({id: "shape:mobile-editor", type: 'my-editable-shape', x: 100, y: 100 })
+                        editor.createShape({type: 'my_phone_mockup_shape', x: 100, y: 100 })
+                        editor.setCameraOptions({
+                            isLocked: false,           // keep panning if you want
+                            wheelBehavior: 'none',     // disables mouse wheel + trackpad pinch
+                            zoomSpeed: 0, // extra safety
+                        })
+                        editor.zoomToBounds({ x: 50, y: 150, w: 500, h: 698 }, { animation: { duration: 0 } });
                     }}
                 />
             </div>

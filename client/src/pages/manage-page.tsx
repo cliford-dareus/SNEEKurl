@@ -18,7 +18,7 @@ import {BLOCKS} from "../Utils/common";
 import CustomizeLinksInBioModal from "../components/modals/customize-links-in-bio-modal";
 import LinksInBioPreview from "../components/links-in-bio-preview";
 import PageEditor from "../components/editor";
-import {blocks} from "../components/editor/editor-components/blocks";
+import {blocks} from "../components/editor/editor-components/editor-ui/blocks";
 import EditorProvider from "../hooks/use-editor";
 import {Tldraw} from "tldraw";
 import InlineEditor from "../components/editor/editor-components/editor-ui/inline-editor";
@@ -143,11 +143,9 @@ const ManagePage = ({}: Props) => {
         <EditorProvider pageId={data?.slug!} pageDetails={data}>
             <div className="flex gap-2 h-full">
                 <div className="w-screen h-full flex-1 border border-base-200">
-                    {/*<div className="flex h-full w-full items-center justify-center px-4 py-2 border">*/}
-                    {/*    <PageEditor pageId={data?.slug!} liveMode={false}/>*/}
-                    {/*</div>*/}
-                    <InlineEditor height={700} />
+                    <InlineEditor width={400} height={700} />
                 </div>
+
                 <aside className="w-[250px] h-full">
                     {blocks.map((block: any) => (
                         <div

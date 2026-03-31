@@ -38,7 +38,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
     }, [pageId, liveMode, dispatch, data])
 
     const handleClick = (e) => {
-        dispatch({type: "CHANGE_CLICKED_ELEMENT", payload: {}})
+        dispatch({type: "CHANGE_SELECTED_ELEMENT", payload: {}})
     }
 
     const handleUnPreview = () => {
@@ -48,13 +48,13 @@ const PageEditor = ({pageId, liveMode}: Props) => {
 
     return (
         <div className={classNames(
-            "h-full overflow-y-scroll max-w-full  overflow-x-clip bg-black text-white",
+            "h-full overflow-y-auto max-w-full  overflow-x-clip bg-black text-white",
             !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
         )}
         >
             <div
                 className={classNames(
-                    "use-animation-zoom-in h-full bg-muted transition-all rounded-none px-4 w-full overflow-hidden flex flex-col relative",
+                    "use-animation-zoom-in h-full bg-muted transition-all rounded-none px-4 w-full overflow-x-hidden overflow-y-scroll flex flex-col relative",
                     {
                         "!p-0 !m-0 min-w-screen min-h-screen": state.editor.previewMode || state.editor.liveMode,
                         "overflow-y-scroll px-8": !state.editor.previewMode || !state.editor.liveMode,
@@ -80,7 +80,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                     transition={{duration: 0.6}}
                     className={classNames(
                         "flex flex-col items-center text-center mb-12",
-                        // state.editor.device === "mobile" ? "mt-12" : "mt-24",
+                        state.editor.device === "mobile" ? "mt-12" : "mt-24",
                     )}
                 >
                     <div className="relative mb-6">

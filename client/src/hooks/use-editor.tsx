@@ -44,9 +44,34 @@ type EditorAction =
         elementDetails: EditorElement,
     }
 }
+    | {
+    type: "UPDATE_ELEMENT",
+    payload: {
+        elementDetails: EditorElement,
+    }
+} | {
+    type: "DELETE_ELEMENT",
+    payload: {
+        elementDetails: EditorElement,
+    }
+}
     | { type: "TOGGLE_LIVE_MODE" }
     | { type: "TOGGLE_PREVIEW_MODE" }
     | { type: "TOGGLE_VISIBLE" }
+    | {
+    type: "CHANGE_SELECTED_ELEMENT",
+    payload: {
+        elementDetails: EditorElement | {
+            content: [],
+            id: "",
+            name: "",
+            styles: {},
+            type: null,
+            category: null
+        }
+    }
+}
+
 
 const initialEditorState: EditorState['editor'] = {
     elements: [
@@ -81,12 +106,12 @@ const initialState: EditorState = {
 }
 
 const addElement = (elements: EditorElement[], action: EditorAction) => {
-    if(action.type !== "ADD_ELEMENT"){
+    if (action.type !== "ADD_ELEMENT") {
         throw new Error("Invalid action type");
     }
 
     return elements.map(element => {
-        if(element.id === action.payload.containerId && Array.isArray(element.content)){
+        if (element.id === action.payload.containerId && Array.isArray(element.content)) {
             return {
                 ...element,
                 content: [...element.content, action.payload.elementDetails]
@@ -95,6 +120,41 @@ const addElement = (elements: EditorElement[], action: EditorAction) => {
         return element
     })
 }
+
+const updateElement = (elements: EditorElement[], action: EditorAction): EditorElement[] => {
+    if (action.type !== "UPDATE_ELEMENT") {
+        throw new Error("Invalid action type");
+    }
+
+    return elements.map(element => {
+        if (element.id === action.payload.elementDetails.id) {
+            return {
+                ...element,
+                ...action.payload.elementDetails
+            }
+        } else if (element.content && Array.isArray(element.content)) {
+            return {
+                ...element,
+                content: updateElement(element.content, action)
+            }
+        }
+        return element
+    })
+}
+
+const deleteElement = (elements: EditorElement[], action: EditorAction): EditorElement[] => {
+    if (action.type !== "DELETE_ELEMENT") {
+        throw new Error("Invalid action type");
+    }
+    return elements.filter(element => {
+        if (element.id === action.payload.elementDetails.id) {
+            return false
+        } else if (element.content && Array.isArray(element.content)) {
+            element.content = deleteElement(element.content, action)
+        }
+        return true
+    })
+};
 
 const editorReducer = (state: EditorState, action: EditorAction) => {
     switch (action.type) {
@@ -108,6 +168,43 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                 ...state,
                 editor: updateEditorState
             }
+        case "UPDATE_ELEMENT":
+            const updatedElements = updateElement(state.editor.elements, action)
+            const updatedElementIsSelected = state.editor.selectedElement.id === action.payload.elementDetails.id
+            const updatedEditorState = {
+                ...state.editor,
+                elements: updatedElements,
+                selectedElement: updatedElementIsSelected ? action.payload.elementDetails : {
+                    id: "",
+                    name: "",
+                    styles: {},
+                    type: null,
+                    category: null,
+                    content: []
+                }
+            }
+            return {
+                ...state,
+                editor: updatedEditorState
+            }
+        case "DELETE_ELEMENT":
+            const updatedElementsAfterDelete = deleteElement(state.editor.elements, action)
+            const updatedEditorStateAfterDelete = {
+                ...state.editor,
+                elements: updatedElementsAfterDelete,
+                selectedElement: {
+                    id: "",
+                    name: "",
+                    styles: {},
+                    type: null,
+                    category: null,
+                    content: []
+                }
+            }
+            return {
+                ...state,
+                editor: updatedEditorStateAfterDelete
+            }
         case "TOGGLE_LIVE_MODE":
             return {
                 ...state,
@@ -116,7 +213,6 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                     liveMode: !state.editor.liveMode
                 }
             }
-
         case "TOGGLE_PREVIEW_MODE":
             return {
                 ...state,
@@ -125,7 +221,6 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                     previewMode: !state.editor.previewMode
                 }
             }
-
         case "TOGGLE_VISIBLE":
             return {
                 ...state,
@@ -134,7 +229,6 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                     visible: !state.editor.visible
                 }
             }
-
         case "LOAD_DATA":
             return {
                 ...initialState,
@@ -142,6 +236,21 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                     ...initialState.editor,
                     elements: action.payload.elements || initialEditorState.elements,
                     liveMode: action.payload.withLive
+                }
+            }
+        case "CHANGE_SELECTED_ELEMENT":
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    selectedElement: action.payload.elementDetails || {
+                        content: [],
+                        id: "",
+                        name: "",
+                        styles: {},
+                        type: null,
+                        category: null
+                    }
                 }
             }
         default:
