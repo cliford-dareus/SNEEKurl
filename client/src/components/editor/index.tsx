@@ -21,7 +21,6 @@ const PageEditor = ({pageId, liveMode}: Props) => {
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    // === STOP TLDraw FROM STEALING WHEEL EVENTS ===
     useEffect(() => {
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
@@ -32,8 +31,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                 scrollContainer.scrollHeight > scrollContainer.clientHeight;
 
             if (canScrollVertically) {
-                e.stopPropagation();           // Prevent tldraw from zooming/panning
-                // Do NOT call preventDefault() — let browser scroll naturally
+                e.stopPropagation();
             }
         };
 
@@ -52,17 +50,17 @@ const PageEditor = ({pageId, liveMode}: Props) => {
     }, [liveMode, dispatch])
 
     useEffect(() => {
-        if (data.content.length === 1) return
+        if (data?.content.length === 1) return
         dispatch({
             type: "LOAD_DATA",
             payload: {
-                elements: data.content ? data.content : "",
+                elements: data?.content ? data.content : "",
                 withLive: !!liveMode
             }
         })
     }, [pageId, liveMode, dispatch, data])
 
-    const handleClick = (e) => {
+    const handleClick = () => {
         dispatch({type: "CHANGE_SELECTED_ELEMENT", payload: {}})
     }
 
@@ -164,7 +162,6 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                             return <EditorPage key={index} element={childElement}/>
                         })}
                 </div>
-
 
                 <motion.footer
                     initial={{opacity: 0}}

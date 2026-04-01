@@ -1,5 +1,5 @@
-import {EditorElement, useEditor} from "../../../../hooks/use-editor";
-import ElementWrapper from "./element-wrapper";
+import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
+import ElementWrapper from "../element-wrapper";
 
 type TextProps = {
     element: EditorElement;

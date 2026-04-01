@@ -20,7 +20,7 @@ const Button = ({ children, classnames, onClick, disabled, type = "button" }: Pr
         "hover:opacity-90 active:scale-95",
         "disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
         "focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2",
-        "min-h-[40px]", // Ensure minimum touch target size for mobile
+        "min-h-[40px]",
         classnames
       )}
     >

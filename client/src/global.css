@@ -16,19 +16,23 @@
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
 
-        /* Remove oklch() wrapper - just store the values */
         --color-base-100: 98% 0.003 247.858;
         --color-base-200: 96% 0.007 247.896;
         --color-base-300: 92% 0.013 255.508;
         --color-base-content: 20% 0.042 265.755;
+
         --color-primary: 0% 0 0;
         --color-primary-content: 100% 0 0;
+
         --color-secondary: 84% 0.238 128.85;
         --color-secondary-content: 27% 0.072 132.109;
+
         --color-accent: 70% 0.183 293.541;
         --color-accent-content: 28% 0.141 291.089;
+
         --color-neutral: 27% 0.041 260.031;
         --color-neutral-content: 98% 0.003 247.858;
+
         --color-info: 58% 0.158 241.966;
         --color-info-content: 97% 0.013 236.62;
         --color-success: 59% 0.145 163.225;

@@ -1,6 +1,6 @@
 import {EditorElement} from "../../../hooks/use-editor";
-import Container from "./editor-ui/container";
-import TextComponent from "./editor-ui/text";
+import Container from "./editor-ui/layouts/container";
+import TextComponent from "./editor-ui/blocks/text";
 import CalendarBlock from "./editor-ui/blocks/calendar";
 
 type EditorProps = { element: EditorElement }

@@ -1,8 +1,8 @@
-import {useEditor} from "../../../../hooks/use-editor";
+import {useEditor} from "../../../../../hooks/use-editor";
 import {useEffect, useRef, useState} from "react";
 import classNames from "classnames";
 import {BsTrash2} from "react-icons/bs";
-import EditorPage from "../editor-element";
+import EditorPage from "../../editor-element";
 
 type ContainerProps = { element: any, editor?: any }
 
@@ -146,10 +146,10 @@ const Container = ({element, editor}: ContainerProps) => {
                                 id: crypto.randomUUID(),
                                 name: "Calendar",
                                 styles: {
-                                    color: "white",
+                                    color: "red",
                                     // ...defaultStyles,
-                                    fontSize: "5rem",
-                                    display: "inline",
+                                    fontSize: "2rem",
+                                    display: "flex",
                                 },
                                 type: componentType,
                                 category: "block",
@@ -197,20 +197,6 @@ const Container = ({element, editor}: ContainerProps) => {
             setIsDraggingOver(false);
         };
 
-        const handleOnClickBody = (e: React.MouseEvent) => {
-            e.stopPropagation();
-            dispatch({
-                type: "CHANGE_SELECTED_ELEMENT",
-                payload: {
-                    elementDetails: element,
-                },
-            });
-        };
-
-        const handleDeleteElement = () => {
-            dispatch({type: "DELETE_ELEMENT", payload: {elementDetails: element}});
-        };
-
         el.addEventListener('dragstart', (e) => handleDragStart(e, type), true);
         el.addEventListener('dragover', handleDragOver, true);
         el.addEventListener('dragleave', handleDragLeave, true);
@@ -222,6 +208,20 @@ const Container = ({element, editor}: ContainerProps) => {
             el.removeEventListener('drop', handleOnDrop, true);
         };
     }, [dispatch, id])
+
+    const handleOnClickBody = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        dispatch({
+            type: "CHANGE_SELECTED_ELEMENT",
+            payload: {
+                elementDetails: element,
+            },
+        });
+    };
+
+    const handleDeleteElement = () => {
+        dispatch({type: "DELETE_ELEMENT", payload: {elementDetails: element}});
+    };
 
     return (
         <div
@@ -254,6 +254,7 @@ const Container = ({element, editor}: ContainerProps) => {
                     !state.editor.liveMode,
             })}
             style={{width: styles?.width, height: styles?.height}}
+            onClick={handleOnClickBody}
             onPointerDown={(e) => e.stopPropagation()}
         >
             <div
@@ -282,7 +283,7 @@ const Container = ({element, editor}: ContainerProps) => {
                 state.editor.selectedElement.type !== "__body" && (
                     <div
                         className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[26px] -right-[1px] rounded-none rounded-t-lg dark:bg-background">
-                        <BsTrash2 className="inline-block mr-1"/>
+                        <BsTrash2 className="inline-block mr-1" onClick={handleDeleteElement} size={16}/>
                     </div>
                 )}
         </div>

@@ -11,21 +11,19 @@ declare module 'tldraw' {
         [MY_PHONE_MOCKUP_SHAPE_TYPE]: {
             w: number
             h: number
-            animal: number
+            pageId: string
         }
     }
 }
 
-const ANIMAL_EMOJIS = ['🐶', '🐱', '🐨', '🐮', '🐴']
+export type IPhoneMockupShape = TLShape<typeof MY_PHONE_MOCKUP_SHAPE_TYPE>
 
-export type IMyEditableShape = TLShape<typeof MY_PHONE_MOCKUP_SHAPE_TYPE>
-
-export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
+export class EditableShapeUtil extends BaseBoxShapeUtil<IPhoneMockupShape> {
     static override type = MY_PHONE_MOCKUP_SHAPE_TYPE
-    static override props: RecordProps<IMyEditableShape> = {
+    static override props: RecordProps<IPhoneMockupShape> = {
         w: T.number,
         h: T.number,
-        animal: T.number,
+        pageId: T.string,
     }
 
     // [1]
@@ -38,15 +36,15 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
         return true
     }
 
-    getDefaultProps(): IMyEditableShape['props'] {
+    getDefaultProps(): IPhoneMockupShape['props'] {
         return {
             w: 402,
             h: 874,
-            animal: 0,
+            pageId: "",
         }
     }
 
-    component(shape: IMyEditableShape) {
+    component(shape: IPhoneMockupShape) {
         const isEditing = this.editor.getEditingShapeId() === shape.id
 
         return (
@@ -57,15 +55,9 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
                 style={{
                     width: "100%",
                     height: "100%",
-                    // background: '#f8fafc',
-                    // border: '3px dashed #94a3b8',
-                    // borderRadius: '12px',
-                    // backgroundColor: 'red',
-                    // padding: '16px',
-                    // backgroundColor: 'transparent',
                     position: 'relative',
                     overflow: 'hidden',
-                    // padding: 16,
+                    userSelect: 'none',
                 }}
             >
                 <img
@@ -86,28 +78,28 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IMyEditableShape> {
                 <div
                     style={{
                         position: 'absolute',
-                        top: '25px',      // Adjust these values to fit inside the phone screen
+                        top: '25px',
                         left: '8px',
-                        width: '385px',   // 380 - 36px (bezel)
-                        height: '825px',  // 680 - 96px (top + bottom bezel)
+                        width: '385px',
+                        height: '825px',
                         background: '#ffffff',
                         borderRadius: '60px',
                         overflow: 'hidden',
                         boxShadow: 'inset 0 0 8px rgba(0,0,0,0.1)',
                         zIndex: 2,
                     }}>
-                    <PageEditor pageId="gaming" liveMode={false}/>
+                    <PageEditor pageId={shape.props.pageId} liveMode={false}/>
                 </div>
             </HTMLContainer>
         )
     }
 
-    indicator(shape: IMyEditableShape) {
+    indicator(shape: IPhoneMockupShape) {
         return <rect width={shape.props.w} height={shape.props.h}/>
     }
 
     // [3]
-    override onEditEnd(shape: IMyEditableShape) {
+    override onEditEnd(shape: IPhoneMockupShape) {
         this.editor.animateShape(
             {...shape, rotation: shape.rotation + Math.PI * 2},
             {animation: {duration: 250}}

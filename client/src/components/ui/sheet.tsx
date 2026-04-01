@@ -354,7 +354,7 @@ const SheetFooter = ({ children, className }: SheetFooterProps) => {
   );
 };
 
-// Legacy compatibility - simple sheet with trigger function
+// Legacy compatibility - a simple sheet with a trigger function
 interface LegacySheetProps {
   classnames?: string;
   triggerFn?: React.Dispatch<React.SetStateAction<boolean>> | (() => void);
@@ -368,7 +368,7 @@ const LegacySheet = ({ classnames, triggerFn }: LegacySheetProps) => {
         try {
           triggerFn(false as any);
         } catch {
-          triggerFn();
+          triggerFn(false);
         }
       }
     }
