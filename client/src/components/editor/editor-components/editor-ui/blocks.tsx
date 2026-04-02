@@ -6,13 +6,14 @@ export const blocks = [
         id: "container",
         group: "layout",
         category: "Container",
-        icon: BsBoxes,
+        icon: <BsBoxes className="text-xl"/>,
     },
     {
         label: "2 Column",
-        id: "2col",
+        id: "2Col",
         group: "layout",
-        category: "Column",
+        category: "Container",
+        icon: <BsBoxes className="text-xl"/>,
     },
     {
         label: "Calendar",
@@ -36,8 +37,15 @@ export const blocks = [
         icon: <BsImage className="text-xl"/>
     },
     {
+        label: "Website List",
+        id: "websiteList",
+        group: "block",
+        category: "block",
+        icon: <BsBodyText className="text-xl"/>
+    },
+    {
         label: "Text",
-        id: "text",
+        id: "p",
         group: "block",
         category: "block",
         icon: <BsTextarea className="text-xl"/>

@@ -20,6 +20,7 @@ export type EditorElement = {
 
 type Editor = {
     pageId: string;
+    pageLinks: any;
     liveMode: boolean;
     previewMode: boolean;
     visible: boolean;
@@ -35,7 +36,11 @@ type EditorState = {
 type EditorAction =
     | {
     type: "LOAD_DATA",
-    payload: { elements: EditorElement[], withLive: boolean }
+    payload: {
+        elements: EditorElement[],
+        withLive: boolean
+        pageLinks?: any
+    }
 }
     | {
     type: "ADD_ELEMENT",
@@ -72,7 +77,6 @@ type EditorAction =
     }
 }
 
-
 const initialEditorState: EditorState['editor'] = {
     elements: [
         {
@@ -94,6 +98,7 @@ const initialEditorState: EditorState['editor'] = {
         type: "__body",
         category: "Container"
     },
+    pageLinks: [],
     device: "mobile",
     liveMode: false,
     previewMode: false,
@@ -105,7 +110,7 @@ const initialState: EditorState = {
     editor: initialEditorState
 }
 
-const addElement = (elements: EditorElement[], action: EditorAction) => {
+const addElement = (elements: EditorElement[], action: EditorAction): EditorElement[] => {
     if (action.type !== "ADD_ELEMENT") {
         throw new Error("Invalid action type");
     }
@@ -115,6 +120,11 @@ const addElement = (elements: EditorElement[], action: EditorAction) => {
             return {
                 ...element,
                 content: [...element.content, action.payload.elementDetails]
+            }
+        }else if (element.content && Array.isArray(element.content)) {
+            return {
+                ...element,
+                content: addElement(element.content, action)
             }
         }
         return element
@@ -235,6 +245,7 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                 editor: {
                     ...initialState.editor,
                     elements: action.payload.elements || initialEditorState.elements,
+                    pageLinks: action.payload.pageLinks || initialEditorState.pageLinks,
                     liveMode: action.payload.withLive
                 }
             }

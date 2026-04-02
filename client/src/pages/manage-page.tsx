@@ -13,96 +13,26 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "../components/ui/tabs";
 
 type Props = {};
 
-const LinkItem = ({items, link, index, manageLinksOrder}: any) => {
-    const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
-
-    const handleDragStart = (index: number, e: DragEvent<HTMLLIElement>) => {
-        e.dataTransfer.effectAllowed = "move";
-        e.dataTransfer.setData("text/html", JSON.stringify(items[index]));
-    };
-
-    const handleDragOver = (i: number, e: DragEvent<HTMLLIElement>) => {
-        e.preventDefault();
-        setDragOverIndex(i);
-    };
-
-    const handleDrop = (dropIndex: number, e: DragEvent<HTMLLIElement>) => {
-        e.preventDefault();
-        const draggedItemId = JSON.parse(e.dataTransfer.getData("text/html"))._id
-            ._id;
-        const newItems = [...items];
-
-        const draggedItem = items.find(
-            (item: any) => item._id._id === draggedItemId
-        );
-
-        newItems.splice(
-            items.findIndex((item: any) => item._id._id === draggedItemId),
-            1
-        );
-        newItems.splice(dropIndex, 0, draggedItem);
-
-        manageLinksOrder(newItems);
-        setDragOverIndex(null);
-    };
-
-    const handleDeleteLink = async (linkId: string) => {
-        const newItems = items.filter((item: any, i: number) => {
-            const isNotDragged = item._id._id !== linkId;
-            return isNotDragged;
-        });
-
-        manageLinksOrder(newItems);
-    };
-
-    return (
-        <li
-            key={link?._id?._id}
-            draggable
-            onDragStart={(e) => handleDragStart(index, e)}
-            onDragOver={(e) => handleDragOver(index, e)}
-            onDrop={(e) => handleDrop(index, e)}
-            className="w-full flex items-center gap-4 mt-2 rounded-md border border-base-200 bg-base-200 px-4 py-1"
-        >
-            <div
-                className={classNames(
-                    link.category === "website"
-                        ? "bg-indigo-300"
-                        : link.category === "social"
-                            ? "bg-red-500"
-                            : link.category === "marketing"
-                                ? "bg-green-300"
-                                : "bg-base-300",
-                    "h-5 w-5 rounded-full"
-                )}
-            ></div>
-            {link?.name}
-
-            <button className="ml-auto">
-                <LuSettings/>
-            </button>
-            <button onClick={() => handleDeleteLink(link._id._id)} className="ml-4">
-                <LuTrash/>
-            </button>
-        </li>
-    );
-};
-
 const ManagePage = ({}: Props) => {
     const {id} = useParams();
     const Navigate = useNavigate();
     const {data, isLoading} = useGetPageQuery({id});
-    const [reorderLinks, {isLoading: reorderLoading}] = useReorderPageLinksMutation();
-    const [activeTab, setActiveTab] = useState("blocks");
     const {state, dispatch} = useEditor();
+    const [activeTab, setActiveTab] = useState(state.editor.selectedElement.id !== "__body" ? "style" : "block");
 
-    const manageLinksOrder = async (newOrder: any) => {
-        try {
-            await reorderLinks({id, links: newOrder}).unwrap();
-        } catch (error) {
-            console.log(error);
-        }
-    };
+    const handleTabChange = (tab: string) => {
+        setActiveTab(tab);
+    }
+
+    const handleStartBlockDrag = (e: DragEvent<HTMLDivElement>, type: any) => {
+        if (type == null) return;
+        e.dataTransfer.setData("componentType", type)
+        e.dataTransfer.effectAllowed = "copy"
+    }
+
+    useEffect(() => {
+        console.log(state.editor.selectedElement.id)
+    }, [state.editor.selectedElement.id, activeTab, state.editor.selectedElement.type, state.editor.selectedElement.id !== "__body" ? "style" : "block"])
 
     if (isLoading) {
         return (
@@ -114,24 +44,6 @@ const ManagePage = ({}: Props) => {
         );
     }
 
-    const handleTabChange = (tab: string) => {
-        setActiveTab(tab);
-    }
-
-    useEffect(() => {
-        if(state.editor.selectedElement.id !== "__body"){
-            setActiveTab("style");
-        };
-
-        setActiveTab("block")
-    }, [state.editor.selectedElement.id, dispatch])
-
-    const handleStartBlockDrag = (e: DragEvent<HTMLDivElement>, type: any) => {
-        if (type == null) return;
-        e.dataTransfer.setData("componentType", type)
-        e.dataTransfer.effectAllowed = "copy"
-    }
-
     return (
         <EditorProvider pageId={data?.slug!} pageDetails={data}>
             <div className="flex gap-2 h-full">
@@ -141,7 +53,7 @@ const ManagePage = ({}: Props) => {
 
                 <aside className="w-[250px] h-full">
                     <div className="">
-                        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+                        <Tabs value={activeTab} onValueChange={(e) => handleTabChange(e)} className="w-full">
                             <TabsList variant="line" className="w-full">
                                 <TabsTrigger className="" value="block">BLOCKS</TabsTrigger>
                                 <TabsTrigger className="" value="layout">LAYOUTS</TabsTrigger>

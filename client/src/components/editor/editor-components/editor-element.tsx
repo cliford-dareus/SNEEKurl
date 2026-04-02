@@ -2,6 +2,7 @@ import {EditorElement} from "../../../hooks/use-editor";
 import Container from "./editor-ui/layouts/container";
 import TextComponent from "./editor-ui/blocks/text";
 import CalendarBlock from "./editor-ui/blocks/calendar";
+import WebsiteList from "./editor-ui/blocks/website-list";
 
 type EditorProps = { element: EditorElement }
 
@@ -13,9 +14,16 @@ function EditorPage({element}: EditorProps) {
             return <Container element={element}/>;
         case "calendar":
             return <CalendarBlock element={element}/>;
+        case "websiteList":
+            return <WebsiteList element={element}/>;
         case "link":
+            return <Container element={element}/>;
         case "image":
-        case "2col":
+            return <Container element={element}/>;
+        case "2Col":
+            return <Container element={element}/>;
+        case "button":
+            return <Container element={element}/>;
 
 
     }

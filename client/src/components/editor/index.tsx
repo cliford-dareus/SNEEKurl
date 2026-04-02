@@ -17,7 +17,6 @@ type Props = {
 const PageEditor = ({pageId, liveMode}: Props) => {
     const {state, dispatch} = useEditor();
     const {data, isLoading, isSuccess} = useGetPageQuery({id: pageId});
-    const isMobile = window.innerWidth <= 768;
 
     const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +34,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
             }
         };
 
-        scrollContainer.addEventListener('wheel', handleWheel, { passive: true });
+        scrollContainer.addEventListener('wheel', handleWheel, {passive: true});
 
         return () => {
             scrollContainer.removeEventListener('wheel', handleWheel);
@@ -50,6 +49,13 @@ const PageEditor = ({pageId, liveMode}: Props) => {
     }, [liveMode, dispatch])
 
     useEffect(() => {
+        dispatch({
+            type: "LOAD_DATA",
+            payload: {
+                pageLinks: data?.links
+            }
+        })
+
         if (data?.content.length === 1) return
         dispatch({
             type: "LOAD_DATA",
@@ -73,7 +79,6 @@ const PageEditor = ({pageId, liveMode}: Props) => {
         <div className={classNames(
             "h-full overflow-hidden max-w-full  overflow-x-clip bg-black text-white",
             !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
-
         )}
              onPointerDown={(e) => e.stopPropagation()}
         >

@@ -1,8 +1,9 @@
-import {useEditor} from "../../../../../hooks/use-editor";
-import {useEffect, useRef, useState} from "react";
 import classNames from "classnames";
 import {BsTrash2} from "react-icons/bs";
 import EditorPage from "../../editor-element";
+import {useEffect, useRef, useState} from "react";
+import {useEditor} from "../../../../../hooks/use-editor";
+import {defaultStyles} from "../../../../../Utils/common";
 
 type ContainerProps = { element: any, editor?: any }
 
@@ -24,6 +25,7 @@ const Container = ({element, editor}: ContainerProps) => {
             setIsDraggingOver(false);
 
             const componentType = e.dataTransfer?.getData("componentType");
+            console.log("componentType", componentType);
 
             switch (componentType) {
                 case "h1":
@@ -44,7 +46,7 @@ const Container = ({element, editor}: ContainerProps) => {
                                 name: `Heading ${componentType.charAt(1)}`,
                                 styles: {
                                     color: "black",
-                                    // ...defaultStyles,
+                                    ...defaultStyles,
                                     fontSize:
                                         componentType === "h1"
                                             ? "2.5rem"
@@ -83,7 +85,7 @@ const Container = ({element, editor}: ContainerProps) => {
                                 name: "Paragraph",
                                 styles: {
                                     color: "black",
-                                    // ...defaultStyles,
+                                    ...defaultStyles,
                                     fontSize: "1rem",
                                     lineHeight: "1.5",
                                     marginBottom: "1rem",
@@ -107,7 +109,7 @@ const Container = ({element, editor}: ContainerProps) => {
                                 name: "Text",
                                 styles: {
                                     color: "black",
-                                    // ...defaultStyles,
+                                    ...defaultStyles,
                                     fontSize: "1rem",
                                     display: "inline",
                                 },
@@ -147,7 +149,7 @@ const Container = ({element, editor}: ContainerProps) => {
                                 name: "Calendar",
                                 styles: {
                                     color: "red",
-                                    // ...defaultStyles,
+                                    ...defaultStyles,
                                     fontSize: "2rem",
                                     display: "flex",
                                 },
@@ -156,6 +158,25 @@ const Container = ({element, editor}: ContainerProps) => {
                             },
                         },
                     });
+                    break;
+                case "websiteList":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: [],
+                                id: crypto.randomUUID(),
+                                name: "Website List",
+                                styles: {
+                                    color: "red",
+                                    ...defaultStyles,
+                                },
+                                type: componentType,
+                                category: "block",
+                            }
+                        }
+                    })
                     break;
                 case "container":
                     dispatch({
@@ -167,22 +188,65 @@ const Container = ({element, editor}: ContainerProps) => {
                                 id: crypto.randomUUID(),
                                 name: "Container",
                                 styles: {
-                                    pointerEvents: "all",
+                                    ...defaultStyles,
                                 },
                                 type: "container",
                                 category: "layout",
                             }
                         }
                     })
+                    break;
+                case "2Col":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: [
+                                    {
+                                        content: [],
+                                        id: crypto.randomUUID(),
+                                        name: "Container",
+                                        styles: {
+                                            ...defaultStyles,
+                                            width: "100%",
+                                        },
+                                        type: "container",
+                                        category: "Container",
+                                    },
+                                    {
+                                        content: [],
+                                        id: crypto.randomUUID(),
+                                        name: "Container",
+                                        styles: {
+                                            ...defaultStyles,
+                                            width: "100%",
+                                        },
+                                        type: "container",
+                                        category: "Container",
+                                    }
+                                ],
+                                id: crypto.randomUUID(),
+                                name: "Two Column",
+                                styles: {
+                                    ...defaultStyles,
+                                    display: "flex",
+                                },
+                                type: "2Col",
+                                category: "Container",
+                            }
+                        }
+                    })
+                    break;
                 default:
-
             }
 
         }
 
         const handleDragStart = (e: DragEvent, type: string) => {
-            if (type === "__body") return;
-            e.dataTransfer?.setData("componentType", type);
+            if (type !== "__body") {
+                e.dataTransfer?.setData("componentType", type);
+            }
         };
 
         const handleDragOver = (e: DragEvent) => {
@@ -197,17 +261,17 @@ const Container = ({element, editor}: ContainerProps) => {
             setIsDraggingOver(false);
         };
 
-        el.addEventListener('dragstart', (e) => handleDragStart(e, type), true);
-        el.addEventListener('dragover', handleDragOver, true);
-        el.addEventListener('dragleave', handleDragLeave, true);
-        el.addEventListener('drop', handleOnDrop, true);
+        el.addEventListener('dragstart', (e) => handleDragStart(e, type), false);
+        el.addEventListener('dragover', handleDragOver, false);
+        el.addEventListener('dragleave', handleDragLeave, false);
+        el.addEventListener('drop', handleOnDrop, false);
 
         return () => {
-            el.removeEventListener('dragover', handleDragOver, true);
-            el.removeEventListener('dragleave', handleDragLeave, true);
-            el.removeEventListener('drop', handleOnDrop, true);
+            el.removeEventListener('dragover', handleDragOver, false);
+            el.removeEventListener('dragleave', handleDragLeave, false);
+            el.removeEventListener('drop', handleOnDrop, false);
         };
-    }, [dispatch, id])
+    }, [dispatch, id, type])
 
     const handleOnClickBody = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -226,7 +290,7 @@ const Container = ({element, editor}: ContainerProps) => {
     return (
         <div
             ref={containerRef}
-            className={classNames("relative group my-1 !pointer-events-auto", {
+            className={classNames("relative group my-1", {
                 "max-w-full w-full":
                     (type === "container" || type === "2Col") && !styles?.width,
                 "h-fit": type === "container" && !styles?.height,
@@ -255,7 +319,7 @@ const Container = ({element, editor}: ContainerProps) => {
             })}
             style={{width: styles?.width, height: styles?.height}}
             onClick={handleOnClickBody}
-            onPointerDown={(e) => e.stopPropagation()}
+            // onPointerDown={(e) => e.stopPropagation()}
         >
             <div
                 className={classNames(
