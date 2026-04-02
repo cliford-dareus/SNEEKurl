@@ -16,6 +16,8 @@ function EditorPage({element}: EditorProps) {
             return <CalendarBlock element={element}/>;
         case "websiteList":
             return <WebsiteList element={element}/>;
+        case "Map":
+            return <Container element={element}/>;
         case "link":
             return <Container element={element}/>;
         case "image":
@@ -24,8 +26,6 @@ function EditorPage({element}: EditorProps) {
             return <Container element={element}/>;
         case "button":
             return <Container element={element}/>;
-
-
     }
 
     switch (element.category) {

@@ -52,7 +52,8 @@ const PageEditor = ({pageId, liveMode}: Props) => {
         dispatch({
             type: "LOAD_DATA",
             payload: {
-                pageLinks: data?.links
+                pageLinks: data?.links,
+                pageId: data?.slug
             }
         })
 
@@ -64,7 +65,7 @@ const PageEditor = ({pageId, liveMode}: Props) => {
                 withLive: !!liveMode
             }
         })
-    }, [pageId, liveMode, dispatch, data])
+    }, [pageId, liveMode, dispatch])
 
     const handleClick = () => {
         dispatch({type: "CHANGE_SELECTED_ELEMENT", payload: {}})

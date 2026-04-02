@@ -1,7 +1,6 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import {API_URL} from "../../Utils/common";
 import {PageProps} from "../../components/modals/customize-links-in-bio-modal";
-import {BaseQueryArg} from "@reduxjs/toolkit/dist/query/baseQueryTypes";
 
 const URL = `${API_URL}/page` || "http://localhost:4080/page";
 

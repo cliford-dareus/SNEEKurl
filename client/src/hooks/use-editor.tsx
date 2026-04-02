@@ -245,7 +245,7 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                 editor: {
                     ...initialState.editor,
                     elements: action.payload.elements || initialEditorState.elements,
-                    pageLinks: action.payload.pageLinks || initialEditorState.pageLinks,
+                    pageLinks: action.payload.pageLinks,
                     liveMode: action.payload.withLive
                 }
             }
