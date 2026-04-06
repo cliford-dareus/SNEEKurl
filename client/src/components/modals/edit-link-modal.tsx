@@ -11,7 +11,7 @@ import {Url, useEditUrlMutation} from "../../app/services/urlapi";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import Input from "../ui/Input";
 import {getSiteUrl} from "../../Utils/getSiteUrl";
-import Button from "../ui/button";
+import {Button} from "../ui/button";
 import Switch from "../ui/switch";
 import PasswordEditSection from "./password-edit-section";
 import Label from "../ui/label";
@@ -74,7 +74,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                         />
                         <div>
                             <DialogTitle>Edit Link</DialogTitle>
-                            <DialogDescription className="text-zinc-400">
+                            <DialogDescription className="text-foreground/50">
                                 Editing sneek.co/{url.short}
                             </DialogDescription>
                         </div>
@@ -123,7 +123,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                                 </div>
                             </div>
 
-                            <div className="my-4 border-t border-b border-base-300 py-4 text-center text-zinc-400">
+                            <div className="my-4 border-t border-b py-4 text-center text-foreground/50">
                                 Optionals
                             </div>
 
@@ -134,7 +134,7 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                                 plan={plan}
                             />
                             <div className="flex items-center justify-between">
-                                <p className="block text-xs text-zinc-400 mb-1 ml-1">isShareale</p>
+                                <p className="block text-xs text-foreground/50 mb-1 ml-1">isShareale</p>
                                 <Switch
                                     label="isShareable"
                                     register={register}
@@ -150,14 +150,14 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                     </form>
                 </div>
                 <DialogFooter className="space-y-4">
-                    <button
+                    <Button
                         type="submit"
                         disabled={!(user.user.username !== undefined && plan !== "free")}
-                        className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                        className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:bg-primary hover:text-primary-foreground hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
                         <BsSave className="w-5 h-5"/>
                         Save Changes
-                    </button>
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

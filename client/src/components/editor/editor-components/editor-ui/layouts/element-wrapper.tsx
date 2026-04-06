@@ -1,4 +1,4 @@
-import {EditorElement, useEditor} from "../../../../hooks/use-editor";
+import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
 import {BsTrash2} from "react-icons/bs";
 import classNames from "classnames";
 

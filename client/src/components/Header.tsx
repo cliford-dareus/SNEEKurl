@@ -2,7 +2,7 @@ import {useWindowSize} from "../hooks/windowSize";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppDispatch} from "../app/hook";
 import {useEffect, useState} from "react";
-import Button from "./ui/button";
+import {Button} from "./ui/button";
 import {removeCredentials} from "../features/auth/authslice";
 import {LuMoon, LuSunDim, LuUserCircle2, LuMenu, LuX} from "react-icons/lu";
 import {useLogoutUserMutation} from "../app/services/auth";
@@ -75,9 +75,9 @@ const Header = ({isActive, plan}: Props) => {
         <>
             <header
                 className={classNames(
-                    "fixed z-40 w-full text-base-content flex justify-between items-center transition-all",
+                    "fixed z-40 w-full flex justify-between items-center transition-all bg-background/90",
                     scrolled || isActive
-                        ? "border-b border-base-300 bg-base-100/75 backdrop-blur-lg"
+                        ? "border-b border-background/20 backdrop-blur-lg"
                         : "",
                 )}
             >
@@ -117,7 +117,7 @@ const Header = ({isActive, plan}: Props) => {
                     {/* Desktop Actions */}
                     <div className="hidden md:flex items-center gap-4">
                         <div
-                            className="cursor-pointer p-2 rounded-lg hover:bg-base-200 transition-colors"
+                            className="cursor-pointer p-2 rounded-lg hover:bg-accent transition-colors"
                             onClick={toggleTheme}
                         >
                             {theme === 'light' ? <LuMoon size={24}/> : <LuSunDim size={24}/>}
@@ -125,22 +125,22 @@ const Header = ({isActive, plan}: Props) => {
 
                         {!isAuthenticated ? (
                             <>
-                                <Button classnames="bg-primary">
+                                <Button className="bg-primary">
                                     <Link to="/login">Sign In</Link>
                                 </Button>
-                                <Button classnames="bg-secondary">
+                                <Button className="bg-secondary">
                                     <Link to="/register">Sign Up</Link>
                                 </Button>
                             </>
                         ) : (
                             <>
-                                <Button classnames="bg-primary">
+                                <Button className="bg-primary">
                                     <Link to="/links" className="w-full flex items-center gap-2">
                                         <LuUserCircle2 size={24}/>
                                         <p>{user.username}</p>
                                     </Link>
                                 </Button>
-                                <Button classnames="bg-secondary" onClick={logout}>
+                                <Button className="bg-accent text-accent-foreground" onClick={logout}>
                                     Sign Out
                                 </Button>
                             </>
@@ -150,7 +150,7 @@ const Header = ({isActive, plan}: Props) => {
                     {/* Mobile Actions */}
                     <div className="flex md:hidden items-center gap-2 ml-auto">
                         <div
-                            className="cursor-pointer p-2 rounded-lg hover:bg-base-200 transition-colors"
+                            className="cursor-pointer p-2 rounded-lg hover:bg-accent transition-colors"
                             onClick={toggleTheme}
                         >
                             {theme === 'light' ? <LuMoon size={20}/> : <LuSunDim size={20}/>}
@@ -170,7 +170,7 @@ const Header = ({isActive, plan}: Props) => {
             {/* Mobile Menu Overlay */}
             {isMobileMenuOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-30 md:hidden"
+                    className="fixed inset-0 bg-foreground/50 z-30 md:hidden"
                     onClick={closeMobileMenu}
                 />
             )}
@@ -178,7 +178,7 @@ const Header = ({isActive, plan}: Props) => {
             {/* Mobile Menu */}
             <div
                 className={classNames(
-                    "fixed top-14 left-0 right-0 bg-base-100 border-b border-base-300 z-30 md:hidden transition-all duration-300 ease-in-out",
+                    "fixed top-14 left-0 right-0 bg-background border-b border-foreground/20 z-30 md:hidden transition-all duration-300 ease-in-out",
                     isMobileMenuOpen
                         ? "opacity-100 translate-y-0"
                         : "opacity-0 -translate-y-full pointer-events-none"
@@ -206,12 +206,12 @@ const Header = ({isActive, plan}: Props) => {
                     <div className="space-y-3">
                         {!isAuthenticated ? (
                             <>
-                                <Button classnames="w-full bg-primary justify-center">
+                                <Button className="w-full bg-primary justify-center">
                                     <Link to="/login" onClick={closeMobileMenu}>
                                         Sign In
                                     </Link>
                                 </Button>
-                                <Button classnames="w-full bg-secondary justify-center">
+                                <Button className="w-full bg-secondary justify-center">
                                     <Link to="/register" onClick={closeMobileMenu}>
                                         Sign Up
                                     </Link>
@@ -219,7 +219,7 @@ const Header = ({isActive, plan}: Props) => {
                             </>
                         ) : (
                             <>
-                                <Button classnames="w-full bg-primary justify-center">
+                                <Button className="w-full bg-primary justify-center">
                                     <Link
                                         to="/links"
                                         className="w-full flex items-center justify-center gap-2"
@@ -230,7 +230,7 @@ const Header = ({isActive, plan}: Props) => {
                                     </Link>
                                 </Button>
                                 <Button
-                                    classnames="w-full bg-secondary justify-center"
+                                    className="w-full bg-secondary justify-center"
                                     onClick={logout}
                                 >
                                     Sign Out

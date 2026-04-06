@@ -10,7 +10,7 @@ import {
 import Label from "../ui/label";
 import Input from "../ui/Input";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import Button from "../ui/button";
+import {Button} from "../ui/button";
 import {useShortenUrlMutation} from "../../app/services/urlapi";
 import {toast} from "react-toastify";
 import {BsSave} from "react-icons/bs";
@@ -46,13 +46,7 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
 
     return (
         <Dialog open={addLinkActive} onOpenChange={setAddLinkActive}>
-            <DialogContent
-                size="lg"
-                className="bg-base-100"
-                closeOnOutsideClick={true}
-                closeOnEscape={true}
-                position="center"
-            >
+            <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-3">
                         <svg

@@ -4,7 +4,7 @@ import {RootState} from "../app/store";
 import {useRetrieveSubscriptionQuery} from "../app/services/stripe";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import Input from "./ui/Input";
-import Button from "./ui/button";
+import {Button} from "./ui/button";
 import ChangePasswordSection from "./modals/change-password-section";
 import Separator from "./ui/separator";
 import ChangeProfileImageModal from "./modals/change-profile-image-modal";
@@ -140,7 +140,7 @@ const Profile = () => {
                             </div>
                             <Button
                                 onClick={() => setIsEditing(!isEditing)}
-                                classnames={`${isEditing ? 'bg-base-300 text-base-content' : 'bg-primary'} flex items-center gap-2`}
+                                className={`${isEditing ? 'bg-base-300 text-base-content' : 'bg-primary'} flex items-center gap-2`}
                             >
                                 {/* <LuEdit3 size={16} /> */}
                                 {isEditing ? 'Cancel' : 'Edit Profile'}
@@ -213,7 +213,7 @@ const Profile = () => {
                                 <Button
                                     type="submit"
                                     disabled={!isDirty || isLoading}
-                                    classnames="bg-primary text-white flex items-center gap-2 disabled:opacity-50"
+                                    className="bg-primary text-white flex items-center gap-2 disabled:opacity-50"
                                 >
                                     <LuSave size={16}/>
                                     {isLoading ? 'Saving...' : 'Save Changes'}
@@ -221,7 +221,7 @@ const Profile = () => {
                                 <Button
                                     type="button"
                                     onClick={() => setIsEditing(false)}
-                                    classnames="bg-base-300 text-base-content"
+                                    className="bg-base-300 text-base-content"
                                 >
                                     Cancel
                                 </Button>
@@ -290,7 +290,7 @@ const Profile = () => {
                             </div>
                             <Button
                                 onClick={() => setDeleteModalOpen(true)}
-                                classnames="bg-error text-white hover:bg-error-focus"
+                                className="bg-error text-white hover:bg-error-focus"
                             >
                                 Delete Account
                             </Button>

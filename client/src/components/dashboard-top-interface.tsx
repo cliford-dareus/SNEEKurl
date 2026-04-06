@@ -1,4 +1,4 @@
-import Button from "./ui/button";
+import {Button} from "./ui/button";
 import CreateLinkModal from "./modals/create-link-modal";
 import {useState} from "react";
 import {LuSearch} from "react-icons/lu";
@@ -22,14 +22,14 @@ const DashboardTopInterface = ({pathname}: Props) => {
                         className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
                         onClick={() => setAddLinkActive(true)}
                     >
-                        <Button classnames="bg-primary">Add New Link</Button>
+                        <Button className="bg-primary">Add New Link</Button>
                     </div>
                 ) : (
                     <div
                         className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
                         onClick={() => setCreateLinkInBioActive(true)}
                     >
-                        <Button classnames="bg-primary">Add New Page</Button>
+                        <Button className="bg-primary">Add New Page</Button>
                     </div>
                 )}
 
@@ -43,7 +43,7 @@ const DashboardTopInterface = ({pathname}: Props) => {
                             onFocus={() => setSearchLinkActive(true)}
                             placeholder="Search links..."
                         />
-                        <Button classnames="bg-primary">
+                        <Button className="bg-primary">
                             <LuSearch/>
                         </Button>
                     </div>

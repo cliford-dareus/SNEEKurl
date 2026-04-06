@@ -99,7 +99,8 @@ function App() {
 
     return (
         <div
-            className="bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#fafafa_100%)] dark:bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#010101_100%)]">
+            // className="w-full h-full bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#fafafa_100%)] dark:bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#010101_100%)]"
+        >
             <Routes>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>

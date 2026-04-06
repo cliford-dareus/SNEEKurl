@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from "react";
-import Button from "../components/ui/button";
+import {Button} from "../components/ui/button";
 import classNames from "classnames";
 import {useAppSelector} from "../app/hook";
 import {Outlet, useNavigate} from "react-router-dom";
@@ -109,14 +109,14 @@ const Pricing = (): JSX.Element => {
                             <div className="border-b px-2 py-8">
                                 {activeplan === opt.price ? (
                                     <Button
-                                        classnames="w-full"
+                                        className="w-full"
                                         //Manage the active plan
                                     >
                                         Active Plan
                                     </Button>
                                 ) : (
                                     <Button
-                                        classnames="w-full"
+                                        className="w-full"
                                         onClick={() => {
                                             if (
                                                 user.username !== "Guest" &&

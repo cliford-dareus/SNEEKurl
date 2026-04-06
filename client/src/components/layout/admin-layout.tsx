@@ -50,14 +50,15 @@ const AdminLayout = () => {
                                 {SIDEBAR_LINKS.map((link, index) => (
                                     <li
                                         key={link.id}
-                                        className="relative flex w-full items-center justify-center"
+                                        className="relative flex w-full items-center justify-center bg-background"
                                     >
                                         <NavLink
                                             onClick={() => setActiveIndex(index)}
-                                            className="w-full rounded-md bg-base-200 px-4 py-2 hover:bg-base-300"
+                                            className="flex items-center gap-2 w-full rounded-md border  px-4 py-2 hover:bg-primary/20"
                                             to={link.slug}
                                         >
-                                            {link.name}
+                                            <link.icon size={18}/>
+                                            <span className="">{link.name}</span>
                                         </NavLink>
 
                                         {activeIndex === index && (
@@ -70,14 +71,15 @@ const AdminLayout = () => {
                                                 {link.children?.map((sub_link, i) => (
                                                     <li
                                                         key={i}
-                                                        className="relative flex w-full items-center"
+                                                        className="relative flex w-full items-center bg-background"
                                                     >
                                                         <NavLink
-                                                            className="w-full rounded-md bg-base-200 px-4 py-2 hover:bg-base-300"
+                                                            className="flex items-center gap-2 border w-full rounded-md px-4 py-2 hover:bg-primary/20"
                                                             onClick={() => setSub_Active(i)}
                                                             to={sub_link.slug}
                                                         >
-                                                            {sub_link.name}
+                                                            <sub_link.icon size={18}/>
+                                                            <span>{sub_link.name}</span>
                                                         </NavLink>
 
                                                         {sub_active === i && (
@@ -91,7 +93,6 @@ const AdminLayout = () => {
                                 ))}
                             </ul>
                         </nav>
-
                         <LinkLimitsDisplay />
                     </div>
                     <div className="flex-1 overflow-y-scroll no-scrollbar">

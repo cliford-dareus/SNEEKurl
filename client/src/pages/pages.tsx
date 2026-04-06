@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {LuArrowDown, LuArrowUp, LuFilter, LuSettings, LuView} from "react-icons/lu";
-import Button from "../components/ui/button";
+import {Button} from "../components/ui/button";
 import EditPageModal from "../components/modals/edit-page-modal";
 import {useGetPagesQuery} from "../app/services/page";
 import {Link} from "react-router-dom";
@@ -96,14 +96,14 @@ const Pages = () => {
                                     </div>
 
                                     <div className="flex items-center gap-4">
-                                        <Button classnames="bg-primary">
+                                        <Button className="bg-primary">
                                             <Link to={`${page.slug}`} className="w-full flex-1 bg-red-500">
                                                 <AiOutlineEdit />
                                             </Link>
                                         </Button>
                                         <Button
                                             onClick={() => handleOpenLinkInBio(page.slug)}
-                                            classnames="bg-accent"
+                                            className="bg-accent"
                                         >
                                             <LuView className=""/>
                                         </Button>

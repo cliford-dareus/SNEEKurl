@@ -2,7 +2,7 @@ import {FormEvent, useState} from "react";
 import {Sheet, SheetContent, SheetHeader, SheetTitle} from "./ui/sheet";
 import {useLocation, useNavigate} from "react-router-dom";
 import {CardElement, useStripe, useElements} from "@stripe/react-stripe-js";
-import Button from "./ui/button";
+import {Button} from "./ui/button";
 import {PaymentIntent, StripeCardElement} from "@stripe/stripe-js";
 import {useAppSelector} from "../app/hook";
 import {toast} from "react-toastify";
@@ -110,7 +110,7 @@ const Checkout = (props: Props) => {
                                 </div>
                             </div>
 
-                            <Button classnames="mt-8 bg-primary">Proceed</Button>
+                            <Button className="mt-8 bg-primary">Proceed</Button>
                         </form>
                     </div>
                 </SheetContent>

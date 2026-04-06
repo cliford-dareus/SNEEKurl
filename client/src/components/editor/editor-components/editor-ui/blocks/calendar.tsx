@@ -1,5 +1,5 @@
 import {BsCalendar} from "react-icons/bs";
-import ElementWrapper from "../element-wrapper";
+import ElementWrapper from "../layouts/element-wrapper";
 import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
 
 type TextProps = {

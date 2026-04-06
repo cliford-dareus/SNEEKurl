@@ -16,29 +16,29 @@ const LinkLimitsDisplay = () => {
     const percentage = (current / limit) * 100;
 
     return (
-        <div className="bg-base-200 rounded-lg p-4 shadow-sm border border-base-200">
+        <div className="bg-background rounded-lg p-4 shadow-sm border border-base-200">
             <div className="flex justify-between items-center mb-2">
-                <h3 className="text-sm font-medium text-base-content">Link Usage</h3>
-                <span className="text-xs text-base-content">{limits.plan.name} Plan</span>
+                <h3 className="text-sm font-medium text-foreground">Link Usage</h3>
+                <span className="text-xs text-primary">{limits.plan.name} Plan</span>
             </div>
 
             <div className="flex justify-between items-center mb-1">
-                <span className="text-sm text-base-content">{current} of {limit} links used</span>
-                <span className="text-sm text-base-content">{remaining} remaining</span>
+                <span className="text-sm text-foreground/50">{current} of {limit} links used</span>
+                <span className="text-sm text-foreground/50">{remaining} remaining</span>
             </div>
 
-            <div className="w-full bg-base-300 rounded-full h-2">
+            <div className="w-full bg-background/30 rounded-full h-2">
                 <div
                     className={`h-2 rounded-full transition-all duration-300 ${
-                        percentage > 90 ? 'bg-error' :
-                            percentage > 70 ? 'bg-warning' : 'bg-success'
+                        percentage > 90 ? 'bg-primary' :
+                            percentage > 70 ? 'bg-accent' : 'bg-background/30'
                     }`}
                     style={{width: `${percentage}%`}}
                 />
             </div>
 
             {percentage > 90 && (
-                <p className="text-xs text-error mt-2">
+                <p className="text-xs text-destructive mt-2">
                     You're approaching your link limit. Consider upgrading your plan.
                 </p>
             )}

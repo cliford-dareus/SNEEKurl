@@ -1,6 +1,6 @@
 import classNames from "classnames";
-import {useEffect, useRef, useState} from "react";
-import ElementWrapper from "../element-wrapper";
+import React, {useEffect, useRef, useState} from "react";
+import ElementWrapper from "../layouts/element-wrapper";
 import {LuSettings, LuTrash} from "react-icons/lu";
 import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
 import {useReorderPageLinksMutation} from "../../../../../app/services/page";
@@ -9,7 +9,7 @@ type TextProps = {
     element: EditorElement;
 };
 
-function WebsiteList({element}: TextProps) {
+const WebsiteList = ({element}: TextProps) => {
     const {state, pageDetails, dispatch} = useEditor();
     const [reorderLinks, {isLoading: reorderLoading}] = useReorderPageLinksMutation();
 
@@ -34,7 +34,6 @@ function WebsiteList({element}: TextProps) {
                     items={state.editor.pageLinks}
                     manageLinksOrder={manageLinksOrder}
                 />
-
             </div>
         </ElementWrapper>
     );
@@ -100,9 +99,7 @@ const LinkContainer = ({ items, manageLinksOrder}: any) => {
     };
 
     return (
-        <div
-            className="w-full"
-        >
+        <div className="w-full">
             {items.map((item: any, index: number) => (
                 <div
                     key={item?._id?._id}
@@ -110,7 +107,7 @@ const LinkContainer = ({ items, manageLinksOrder}: any) => {
                     ref={listContainerRef}
                     onDragStart={(e) => handleDragStart(e, index)}
                     onDragOver={(e) => handleDragOver(e, index)}
-                    className="w-full flex items-center gap-4 rounded-md border border-red-200 bg-base-200 px-4 py-1"
+                    className="w-full flex items-center gap-4 rounded-md border bg-base-200 px-4 py-2"
                 >
                     <div
                         className={classNames(

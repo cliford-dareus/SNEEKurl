@@ -1,10 +1,8 @@
-import {Sheet, SheetContent} from "../ui/sheet";
 import {getSiteUrl} from "../../Utils/getSiteUrl";
 import {Dispatch, SetStateAction, useCallback, useEffect} from "react";
-import {Option, Select} from "../ui/select";
+import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue} from "../ui/select";
 import {useSearchParams} from "react-router-dom";
-import {set} from "react-hook-form";
-import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
 
 type Props = {
     open: boolean;
@@ -78,67 +76,70 @@ const FilterLinkModal = ({open, setOpen, activeFilter, setActiveFilter}: Props) 
 
 
     useEffect(() => {
-        if (!searchParams.size) {
+        if (!searchParams) {
             setActiveFilter([])
         }
     }, [searchParams]);
 
     return (
-        <>
-            {open && (
-                <>
-                    <Dialog open={open} onOpenChange={setOpen}>
-                        <DialogContent>
-                            <DialogHeader>
-                                <div className="flex items-center gap-3">
-                                    <svg
-                                        width="40"
-                                        height="40"
-                                        viewBox="0 0 200 250"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
-                                            fill="currentColor"
-                                        />
-                                    </svg>
-                                    <div>
-                                        <DialogTitle>Filter Links</DialogTitle>
-                                        <DialogDescription className="text-zinc-400">Filter links
-                                            by...</DialogDescription>
-                                    </div>
-                                </div>
-                            </DialogHeader>
-                            {/*<div className="relative h-full w-[400px]"></div>*/}
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <div className="flex items-center gap-3">
+                        <svg
+                            width="40"
+                            height="40"
+                            viewBox="0 0 200 250"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M0 62.5V200L62.5 250V112.5H137.5V200L200 250V112.5L87.5 0V62.5H0Z"
+                                fill="currentColor"
+                            />
+                        </svg>
+                        <div>
+                            <DialogTitle>Filter Links</DialogTitle>
+                            <DialogDescription className="text-zinc-400">Filter links
+                                by...</DialogDescription>
+                        </div>
+                    </div>
+                </DialogHeader>
+                {/*<div className="relative h-full w-[400px]"></div>*/}
 
-                            <div className="p-4">
-                                <Select
-                                    classnames=""
-                                    onChange={(e) => updateSearchParams({sort: e.target.value})}
-                                >
-                                    <Option>Sort by date</Option>
-                                    <Option value="asc">Old to New</Option>
-                                    <Option classnames="mt-2"
-                                            value="desc">
-                                        New to Old
-                                    </Option>
-                                </Select>
+                <div className="p-4">
+                    <Select
+                        onValueChange={(value) => updateSearchParams({sort: value})}
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Theme"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectGroup>
+                                <SelectItem value="asc">Old to New</SelectItem>
+                                <SelectItem value="desc">New to Old</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
 
-                                <Select
-                                    classnames="mt-2"
-                                    onChange={(e) => updateSearchParams({clicks: e.target.value})}
-                                >
-                                    <Option>Sort by clicks</Option>
-                                    <Option value="most_click">Most Click</Option>
-                                    <Option value="less_click">Less Click</Option>
-                                </Select>
-                            </div>
-                        </DialogContent>
-                    </Dialog>
-                </>
-            )}
-        </>
+                    <Select
+                        onValueChange={(value) => updateSearchParams({clicks: value})}
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Theme"/>
+                        </SelectTrigger>
+                        <SelectContent className="mt-2">
+                            <SelectGroup>
+                                <SelectItem value="light">Most Clicks</SelectItem>
+                                <SelectItem value="dark">Less Clicks</SelectItem>
+                            </SelectGroup>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </DialogContent>
+        </Dialog>
+
+
     );
 };
 

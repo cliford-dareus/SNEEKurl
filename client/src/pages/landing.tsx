@@ -1,32 +1,23 @@
 import {
     Url,
-    useGetGuestUrlQuery,
-    useGetUrlQuery,
     useGetUrlsQuery,
 } from "../app/services/urlapi";
 import {
     LuArrowRight,
-    LuBarChart3,
     LuCheck,
     LuClock,
-    LuGlobe,
     LuLink2,
     LuMoreVertical,
-    LuPalette,
+
     LuQrCode,
     LuShare2,
-    LuShield,
-    LuSmartphone,
     LuStar,
-    LuTrendingUp,
-    LuUsers,
 } from "react-icons/lu";
 import {ReactNode, useEffect, useRef, useState} from "react";
 import {useAppSelector} from "../app/hook";
 import BrowserShot from "../assets/706shots_so.webp";
 import {Outlet} from "react-router-dom";
-import {BiCustomize, BiShareAlt} from "react-icons/bi";
-import {MdOutlineSwitchAccessShortcut} from "react-icons/md";
+
 import EditQrModal from "../components/modals/edit-qr-modal";
 import EditLinkModal from "../components/modals/edit-link-modal";
 import {selectCurrentUser} from "../features/auth/authslice";
@@ -35,15 +26,12 @@ import VisitLinkButton from "../components/visit-link-button";
 import classNames from "classnames";
 import {
     Tooltip,
-    TooltipProvider,
-    TooltipTrigger,
-    TooltipContent,
 } from "../components/ui/tooltip";
 import {useUserPlan} from "../components/layout/layout";
 import {useInView} from "framer-motion";
 import ShareLinkModal from "../components/modals/share-link-modal";
 import {motion} from "framer-motion";
-import Button from "../components/ui/button";
+import {Button} from "../components/ui/button";
 import {features, pricingPlans, stats, testimonials, useCases} from "../Utils/common";
 
 const TIMELEFT = {
@@ -86,16 +74,15 @@ const HomeLinkItem = ({
 
     return (
         <>
-            <div
-                className={classNames(
-                    timeLeft.expires ? "opacity-50" : "",
-                    "relative flex items-center justify-between rounded-lg bg-base-300 px-4 py-2 h-[60px] w-full",
-                )}
+            <div className={classNames(
+                timeLeft.expires ? "opacity-50" : "",
+                "relative flex items-center justify-between rounded-full bg-background px-4 py-2 h-[60px] w-full shadow-lg",
+            )}
             >
                 <div className="w-[80%]">
                     <div className="flex items-center gap-2">
                         <VisitLinkButton url={url}>
-                            <div className="flex items-center gap-2 text-accent">
+                            <div className="flex items-center gap-2 text-primary">
                                 <LuLink2 size={16}/>
                                 <span className="text-sm">sneek.co/{url.short}</span>
                             </div>
@@ -132,12 +119,13 @@ const HomeLinkItem = ({
                     </div>
 
                     <div className="text-left">
-                        <p className="truncate text-xs text-zinc-400">{url.longUrl}</p>
+                        <p className="truncate text-xs text-foreground/50">{url.longUrl}</p>
                     </div>
                 </div>
                 <div className="cursor-pointer flex items-center">
                     <LuMoreVertical
                         size={18}
+                        className="text-foreground/50"
                         onClick={() => (isAuthenticated ? setActive(true) : null)}
                     />
                 </div>
@@ -165,36 +153,12 @@ const HomeLinkItem = ({
     );
 };
 
-const Section = ({children}: { children: ReactNode }) => {
-    const ref = useRef(null);
-    const isInView = useInView(ref, {once: true});
-
-    return (
-        <div className="h-1/3 py-4" ref={ref}>
-            <div
-                style={{
-                    transform: isInView ? "none" : "translateY(200px)",
-                    opacity: isInView ? 1 : 0,
-                    transition: "all 0.9s cubic-bezier(0.17, 0.55, 0.55, 1) 0.5s",
-                }}
-                className="sticky h-fit p-4 top-[30%] rounded-md flex items-center"
-            >
-                <h3 className="text-5xl font-medium">{children}</h3>
-            </div>
-        </div>
-    );
-};
-
 const Landing = () => {
     const {plan} = useUserPlan();
     const isFreePlan = plan === "free";
     const user = useAppSelector(selectCurrentUser);
     const isAuthenticated = user.user.username !== undefined;
     const {data, isSuccess} = useGetUrlsQuery("limit=5");
-
-
-    const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-    const videoRef = useRef<HTMLVideoElement>(null);
 
     const heroRef = useRef(null);
     const featuresRef = useRef(null);
@@ -206,51 +170,52 @@ const Landing = () => {
 
     return (
         <>
-            <section className="container mx-auto flex flex-col justify-center p-4 text-center">
-                <div className="mt-28">
-          <span className="rounded-full bg-primary px-4 py-1 text-white">
-            +1k github
-          </span>
-                    <p className="mt-4 text-bold text-xl text-neutral dark:text-neutral-content">
-                        Your shortcut to instant connections.
-                    </p>
-                    <h1 className="mx-auto text-7xl  max-w-[800px] dark:text-neutral-content">
-                        Link small, connect big!
-                    </h1>
-                </div>
+            <section className="bg-background/90">
+                <div className="max-w-6xl  mx-auto flex flex-col justify-center p-4 text-center">
+                    <div className="mt-28">
+                    <span className="rounded-full bg-primary px-4 py-1 text-primary-foreground">
+                        +1k github
+                    </span>
+                        <p className="mt-4 text-bold text-xl text-foreground/50">
+                            Your shortcut to instant connections.
+                        </p>
+                        <h1 className="mx-auto text-7xl max-w-[800px]">
+                            Link small, connect big!
+                        </h1>
+                    </div>
 
-                <div className="mt-4">
-                    <div className="mx-auto flex flex-col gap-4 max-w-[500px] w-full">
+                    <div className="mt-4">
+                        <div className="mx-auto flex flex-col gap-4 max-w-[500px] w-full">
+                            <HomeCreateLinkManager
+                                isAuthenticated={isAuthenticated}
+                                isFreePlan={isFreePlan}
+                            />
 
-                        <HomeCreateLinkManager
-                            isAuthenticated={isAuthenticated}
-                            isFreePlan={isFreePlan}
-                        />
-
-                        <div className="flex flex-col gap-2 max-w-[500px] mx-auto w-full">
-                            {data?.urls
-                                .slice(0, 3)
-                                .map((url) => (
-                                    <HomeLinkItem
-                                        key={url._id}
-                                        url={url}
-                                        isAuthenticated={!!isAuthenticated}
-                                        isFreePlan={isFreePlan}
-                                        plan={plan!}
-                                    />
-                                ))
-                            }
+                            <div className="flex flex-col gap-2 max-w-[500px] mx-auto w-full">
+                                {data?.urls
+                                    .slice(0, 3)
+                                    .map((url) => (
+                                        <HomeLinkItem
+                                            key={url._id}
+                                            url={url}
+                                            isAuthenticated={!!isAuthenticated}
+                                            isFreePlan={isFreePlan}
+                                            plan={plan!}
+                                        />
+                                    ))
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div className="flex justify-center items-center mt-8">
-                    <img className="" src={BrowserShot} alt="shot"/>
+                    <div className="flex justify-center items-center mt-8">
+                        <img className="" src={BrowserShot} alt="shot"/>
+                    </div>
                 </div>
             </section>
 
-            <section ref={statsRef} className="py-20 bg-base-100">
-                <div className="container mx-auto px-4">
+            <section ref={statsRef} className="py-20 bg-background/90">
+                <div className="max-w-6xl  mx-auto px-4">
                     <motion.div
                         initial={{opacity: 0, y: 30}}
                         animate={isStatsInView ? {opacity: 1, y: 0} : {}}
@@ -270,15 +235,15 @@ const Landing = () => {
                                     <stat.icon className="text-primary" size={24}/>
                                 </div>
                                 <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
-                                <div className="text-base-content/70">{stat.label}</div>
+                                <div className="text-foreground/50">{stat.label}</div>
                             </motion.div>
                         ))}
                     </motion.div>
                 </div>
             </section>
 
-            <section ref={featuresRef} className="py-20 bg-base-200">
-                <div className="container mx-auto px-4">
+            <section ref={featuresRef} className="py-20 bg-background/90">
+                <div className="max-w-6xl  mx-auto px-4">
                     <motion.div
                         initial={{opacity: 0, y: 30}}
                         animate={isFeaturesInView ? {opacity: 1, y: 0} : {}}
@@ -286,7 +251,7 @@ const Landing = () => {
                         className="text-center mb-16"
                     >
                         <h2 className="text-5xl font-bold mb-6">Powerful Features</h2>
-                        <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
+                        <p className="text-xl text-foreground/50 max-w-2xl mx-auto">
                             Everything you need to create, manage, and track your links with professional-grade tools.
                         </p>
                     </motion.div>
@@ -303,26 +268,26 @@ const Landing = () => {
                                     className={classNames(
                                         "p-6 rounded-xl cursor-pointer transition-all duration-300",
                                         activeFeature === index
-                                            ? "bg-primary text-white shadow-lg"
-                                            : "bg-base-100 hover:bg-base-300"
+                                            ? "bg-primary text-primary-foreground shadow-lg"
+                                            : "bg-background hover:bg-accent/50"
                                     )}
                                     onClick={() => setActiveFeature(index)}
                                 >
                                     <div className="flex items-start gap-4">
                                         <div className={classNames(
                                             "w-12 h-12 rounded-lg flex items-center justify-center",
-                                            activeFeature === index ? "bg-white/20" : "bg-primary/10"
+                                            activeFeature === index ? "bg-background/20" : "bg-primary/10"
                                         )}>
                                             <feature.icon
                                                 size={24}
-                                                className={activeFeature === index ? "text-white" : "text-primary"}
+                                                className={activeFeature === index ? "text-background" : "text-primary"}
                                             />
                                         </div>
                                         <div className="flex-1">
                                             <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
                                             <p className={classNames(
                                                 "mb-4",
-                                                activeFeature === index ? "text-white/90" : "text-base-content/70"
+                                                activeFeature === index ? "text-background/90" : "text-foreground/70"
                                             )}>
                                                 {feature.description}
                                             </p>
@@ -333,7 +298,7 @@ const Landing = () => {
                                                         className={classNames(
                                                             "px-3 py-1 rounded-full text-sm",
                                                             activeFeature === index
-                                                                ? "bg-white/20 text-white"
+                                                                ? "bg-background/20 text-background"
                                                                 : "bg-primary/10 text-primary"
                                                         )}
                                                     >
@@ -355,7 +320,7 @@ const Landing = () => {
                             transition={{duration: 0.5}}
                             className="relative"
                         >
-                            <div className="bg-base-100 rounded-2xl p-8 shadow-xl">
+                            <div className="bg-background rounded-2xl p-8 shadow-xl">
                                 <div
                                     className="aspect-video bg-gradient-to-br from-primary/10 to-accent/10 rounded-xl flex items-center justify-center">
                                     {/* <features[activeFeature].icon size={80} className="text-primary/50" /> */}
@@ -363,7 +328,7 @@ const Landing = () => {
                                 <div className="mt-6">
                                     <h4 className="text-2xl font-bold mb-3">{features[activeFeature].title}</h4>
                                     <p className="text-base-content/70 mb-4">{features[activeFeature].description}</p>
-                                    <Button classnames="bg-primary text-white">
+                                    <Button className="bg-primary text-primary-foreground hover:bg-accent">
                                         Try {features[activeFeature].title}
                                         <LuArrowRight className="ml-2" size={16}/>
                                     </Button>
@@ -373,12 +338,13 @@ const Landing = () => {
                     </div>
                 </div>
             </section>
+
             {/* Use Cases Section */}
-            <section className="py-20 bg-base-100">
-                <div className="container mx-auto px-4">
+            <section className="py-20 bg-background/90">
+                <div className="max-w-6xl  mx-auto px-4">
                     <div className="text-center mb-16">
                         <h2 className="text-5xl font-bold mb-6">Perfect for Every Use Case</h2>
-                        <p className="text-xl text-base-content/80 max-w-2xl mx-auto">
+                        <p className="text-xl text-foreground/70 max-w-2xl mx-auto">
                             From marketing campaigns to social media, Sneek adapts to your needs.
                         </p>
                     </div>
@@ -391,14 +357,14 @@ const Landing = () => {
                                 whileInView={{opacity: 1, y: 0}}
                                 transition={{duration: 0.6, delay: index * 0.1}}
                                 viewport={{once: true}}
-                                className="bg-base-200 rounded-xl p-8 hover:shadow-lg transition-shadow"
+                                className="bg-background/50 rounded-xl p-8 hover:shadow-lg transition-shadow"
                             >
                                 <div
                                     className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
                                     <useCase.icon className="text-primary" size={28}/>
                                 </div>
                                 <h3 className="text-2xl font-bold mb-4">{useCase.title}</h3>
-                                <p className="text-base-content/70 mb-6">{useCase.description}</p>
+                                <p className="text-foreground/70 mb-6">{useCase.description}</p>
                                 <ul className="space-y-2">
                                     {useCase.features.map((feature, idx) => (
                                         <li key={idx} className="flex items-center gap-2">
@@ -414,11 +380,11 @@ const Landing = () => {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-20 bg-base-200">
-                <div className="container mx-auto px-4">
+            <section className="py-20 bg-background/90">
+                <div className="max-w-6xl  mx-auto px-4">
                     <div className="text-center mb-16">
                         <h2 className="text-5xl font-bold mb-6">Loved by Thousands</h2>
-                        <p className="text-xl text-base-content/80">See what our users say about Sneek</p>
+                        <p className="text-xl text-foreground/70">See what our users say about Sneek</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
@@ -429,14 +395,14 @@ const Landing = () => {
                                 whileInView={{opacity: 1, y: 0}}
                                 transition={{duration: 0.6, delay: index * 0.1}}
                                 viewport={{once: true}}
-                                className="bg-base-100 rounded-xl p-8 shadow-lg"
+                                className="bg-background/20 rounded-xl p-8 shadow-lg"
                             >
                                 <div className="flex items-center gap-1 mb-4">
                                     {[...Array(testimonial.rating)].map((_, i) => (
-                                        <LuStar key={i} className="text-warning fill-current" size={16}/>
+                                        <LuStar key={i} className="text-destructive fill-current" size={16}/>
                                     ))}
                                 </div>
-                                <p className="text-base-content/80 mb-6 italic">"{testimonial.text}"</p>
+                                <p className="text-foreground/70 mb-6 italic">"{testimonial.text}"</p>
                                 <div className="flex items-center gap-3">
                                     <div
                                         className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -446,7 +412,7 @@ const Landing = () => {
                                     </div>
                                     <div>
                                         <div className="font-semibold">{testimonial.name}</div>
-                                        <div className="text-sm text-base-content/70">
+                                        <div className="text-sm text-foreground/70">
                                             {testimonial.role} at {testimonial.company}
                                         </div>
                                     </div>
@@ -458,8 +424,8 @@ const Landing = () => {
             </section>
 
             {/* Pricing Section */}
-            <section className="py-20 bg-base-100">
-                <div className="container mx-auto px-4">
+            <section className="py-20 bg-background/90">
+                <div className="max-w-6xl  mx-auto px-4">
                     <div className="text-center mb-16">
                         <h2 className="text-5xl font-bold mb-6">Simple, Transparent Pricing</h2>
                         <p className="text-xl text-base-content/80">Choose the plan that fits your needs</p>
@@ -507,7 +473,7 @@ const Landing = () => {
                                 </ul>
 
                                 <Button
-                                    classnames={classNames(
+                                    className={classNames(
                                         "w-full",
                                         plan.popular
                                             ? "bg-primary text-white"
@@ -524,7 +490,7 @@ const Landing = () => {
 
             {/* CTA Section */}
             <section className="py-20 bg-gradient-to-r from-primary to-accent">
-                <div className="container mx-auto px-4 text-center">
+                <div className="max-w-6xl  mx-auto px-4 text-center">
                     <motion.div
                         initial={{opacity: 0, y: 30}}
                         whileInView={{opacity: 1, y: 0}}
@@ -532,18 +498,18 @@ const Landing = () => {
                         viewport={{once: true}}
                         className="max-w-3xl mx-auto"
                     >
-                        <h2 className="text-5xl font-bold text-white mb-6">
+                        <h2 className="text-5xl font-bold text-primary-foreground mb-6">
                             Ready to Transform Your Links?
                         </h2>
-                        <p className="text-xl text-white/90 mb-8">
+                        <p className="text-xl text-primary-foreground/80 mb-8">
                             Join thousands of users who trust Sneek for their link management needs.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Button classnames="bg-white text-primary px-8 py-4 text-lg font-semibold">
+                            <Button className="bg-accent text-accent-foreground px-8 py-4 text-lg font-semibold">
                                 Start Free Trial
                                 <LuArrowRight className="ml-2" size={20}/>
                             </Button>
-                            <Button classnames="bg-transparent border-2 border-white text-white px-8 py-4 text-lg">
+                            <Button className="bg-transparent border-2 border-white text-primary-foreground px-8 py-4 text-lg">
                                 Contact Sales
                             </Button>
                         </div>

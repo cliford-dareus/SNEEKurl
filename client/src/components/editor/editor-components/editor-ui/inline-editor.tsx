@@ -1,8 +1,8 @@
 import {Tldraw} from 'tldraw'
 import 'tldraw/tldraw.css'
-import { EditableShapeUtil} from "./phone-mockup";
+import {EditableShapeUtil} from "./phone-mockup";
 
-function InlineEditor({ width= 402, height = 874, pageId }: { width?: number; height?: number, pageId?: string }) {
+function InlineEditor({width = 402, height = 874, pageId}: { width?: number; height?: number, pageId?: string }) {
     const customShapeUtils = [EditableShapeUtil]
 
     return (
@@ -26,7 +26,7 @@ function InlineEditor({ width= 402, height = 874, pageId }: { width?: number; he
                             wheelBehavior: 'none',
                             zoomSpeed: 0,
                         })
-                        editor.zoomToBounds({ x: 50, y: 200, w: 550, h: 698 }, { animation: { duration: 0 } });
+                        editor.zoomToBounds({x: 50, y: 200, w: 550, h: 698}, {animation: {duration: 0}});
                     }}
                 />
             </div>

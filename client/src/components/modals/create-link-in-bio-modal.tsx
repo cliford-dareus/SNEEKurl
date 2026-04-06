@@ -1,12 +1,12 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
 import Label from "../ui/label";
 import Input from "../ui/Input";
-import Button from "../ui/button";
+import {Button} from "../ui/button";
 import Switch from "../ui/switch";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {useCreatePageMutation} from "../../app/services/page";
 import {toast} from "react-toastify";
-import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "../ui/dialog";
+import {Dialog,DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "../ui/dialog";
 
 type Props = {
     createLinkInBioActive: boolean;

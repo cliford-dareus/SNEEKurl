@@ -25,7 +25,6 @@ const Container = ({element, editor}: ContainerProps) => {
             setIsDraggingOver(false);
 
             const componentType = e.dataTransfer?.getData("componentType");
-            console.log("componentType", componentType);
 
             switch (componentType) {
                 case "h1":
@@ -144,7 +143,9 @@ const Container = ({element, editor}: ContainerProps) => {
                         payload: {
                             containerId: id,
                             elementDetails: {
-                                content: [],
+                                content: {
+                                    date: undefined,
+                                },
                                 id: crypto.randomUUID(),
                                 name: "Calendar",
                                 styles: {
@@ -154,7 +155,7 @@ const Container = ({element, editor}: ContainerProps) => {
                                     display: "flex",
                                 },
                                 type: componentType,
-                                category: "block",
+                                category: "Basic",
                             },
                         },
                     });
@@ -165,7 +166,9 @@ const Container = ({element, editor}: ContainerProps) => {
                         payload: {
                             containerId: id,
                             elementDetails: {
-                                content: [],
+                                content: {
+                                    links: [],
+                                },
                                 id: crypto.randomUUID(),
                                 name: "Website List",
                                 styles: {
@@ -173,7 +176,7 @@ const Container = ({element, editor}: ContainerProps) => {
                                     ...defaultStyles,
                                 },
                                 type: componentType,
-                                category: "block",
+                                category: "Basic",
                             }
                         }
                     })
@@ -273,7 +276,7 @@ const Container = ({element, editor}: ContainerProps) => {
         };
     }, [dispatch, id, type])
 
-    const handleOnClickBody = (e: React.MouseEvent) => {
+    const handleOnClickBody = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         dispatch({
             type: "CHANGE_SELECTED_ELEMENT",
@@ -318,7 +321,7 @@ const Container = ({element, editor}: ContainerProps) => {
                     !state.editor.liveMode,
             })}
             style={{width: styles?.width, height: styles?.height}}
-            onClick={handleOnClickBody}
+            onClick={(e) => handleOnClickBody(e)}
             // onPointerDown={(e) => e.stopPropagation()}
         >
             <div

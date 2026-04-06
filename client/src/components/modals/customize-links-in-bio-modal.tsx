@@ -11,7 +11,7 @@ import {
     BsSave,
     BsTwitter
 } from "react-icons/bs";
-import Button from "../ui/button";
+import {Button} from "../ui/button";
 import Input from "../ui/Input";
 import {toast} from "react-toastify";
 import {useCustomizePageMutation} from "../../app/services/page";
@@ -149,7 +149,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                                     key={type}
                                                     type="button"
                                                     onClick={() => setBackgroundType(type)}
-                                                    classnames={`py-2 rounded-lg text-xs font-medium border transition-all ${
+                                                    className={`py-2 rounded-lg text-xs font-medium border transition-all ${
                                                         data?.backgroundType === type
                                                             ? 'bg-red-500 text-black border-white'
                                                             : 'text-zinc-500 border-zinc-200 hover:border-zinc-300'

@@ -8,7 +8,7 @@ import {getSiteUrl, getWebsiteName} from "../../Utils/getSiteUrl";
 import {UseDebounce} from "../../hooks/use-debounce";
 import {useSearchParams} from "react-router-dom";
 import {useGetUrlsQuery} from "../../app/services/urlapi";
-import Dialog, {DialogContent, DialogHeader, DialogTitle, DialogDescription} from "../ui/dialog";
+import {DialogContent, DialogHeader, DialogTitle, DialogDescription, Dialog} from "../ui/dialog";
 import {AnimatePresence, motion} from "framer-motion";
 import LinkCard from '../link-card';
 

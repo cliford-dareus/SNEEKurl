@@ -1,7 +1,7 @@
 import {IFormValues} from "./urlform";
 import {Controller, useForm} from "react-hook-form";
 import Input from "../../components/ui/Input";
-import Button from "../../components/ui/button";
+import {Button} from "../../components/ui/button";
 import {useShortenUrlMutation} from "../../app/services/urlapi";
 import {toast} from "react-toastify";
 import {memo, useCallback} from "react";
@@ -32,7 +32,7 @@ const HomeCreateLinkManager = memo(
 
         return (
             <form onSubmit={formMethods.handleSubmit(handleSubmit)}
-                  className="flex items-center gap-2 bg-base-100 rounded-full p-2 shadow-lg">
+                  className="flex items-center gap-2 bg-background rounded-full p-2 shadow-lg">
                 <svg className="h-[1em] opacity-50 ml-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <g
                         strokeLinejoin="round"
@@ -68,7 +68,7 @@ const HomeCreateLinkManager = memo(
 
                 <Button
                     type="submit"
-                    classnames="bg-primary text-white rounded-full px-6"
+                    className="bg-primary text-primary-foreground rounded-full px-6"
                 >
                     Shorten
                 </Button>

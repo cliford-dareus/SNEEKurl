@@ -9,6 +9,8 @@ import {
     LuTrendingUp,
     LuUsers
 } from "react-icons/lu";
+import {MdOutlineDashboard, MdOutlineSettings, MdPerson, MdSubscriptions} from "react-icons/md";
+import { SiSpeedypage } from "react-icons/si";
 
 // export const API_URL = "https://sneekurl-server.onrender.com";
 export const API_URL = "http://localhost:4080";
@@ -137,29 +139,35 @@ export const SIDEBAR_LINKS = [
         id: 1,
         name: 'Overview',
         slug: '/overview',
+        icon: MdOutlineDashboard
     },
     {
         id: 2,
         name: 'Links',
-        slug: '/links'
+        slug: '/links',
+        icon: LuLink2
     },
     {
         id: 3,
         name: 'Pages',
-        slug: '/pages'
+        slug: '/pages',
+        icon: SiSpeedypage
     },
     {
         id: 4,
         name: 'Setting',
         slug: '/setting',
+        icon: MdOutlineSettings,
         children: [
             {
                 name: 'Profile',
                 slug: 'setting',
+                icon: MdPerson
             },
             {
                 name: 'Subscription',
                 slug: 'setting/subscription',
+                icon: MdSubscriptions
             }
         ]
     }

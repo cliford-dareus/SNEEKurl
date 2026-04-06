@@ -22,13 +22,13 @@ const Layout = (props: Props) => {
     const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
 
     return (
-        <div className="">
+        <>
             <Header isActive={false}  plan={plan}/>
-            <main className="pt-16">
+            <main className="pt-15">
                 <Outlet context={{plan} as ContextType}/>
             </main>
             <Background/>
-        </div>
+        </>
     );
 };
 

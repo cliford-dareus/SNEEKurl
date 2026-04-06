@@ -6,7 +6,7 @@ import Label from "../ui/label";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {CreateLinkInBioProp} from "./create-link-in-bio-modal";
 import Switch from "../ui/switch";
-import Button from "../ui/button";
+import {Button} from "../ui/button";
 import {useUpdatePageMutation} from "../../app/services/page";
 import {toast} from "react-toastify";
 import {BsSave} from "react-icons/bs";

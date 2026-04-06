@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import Button from "../ui/button";
 import {useEditor} from "../../hooks/use-editor";
 import {useGetPageQuery} from "../../app/services/page";
 import React, {useEffect, useRef} from "react";
@@ -8,6 +7,7 @@ import EditorPage from "./editor-components/editor-element";
 import {motion} from "framer-motion";
 import {Link} from "react-router-dom";
 import {getSiteUrl} from "../../Utils/getSiteUrl";
+import {Button} from "../ui/button";
 
 type Props = {
     pageId: string;
@@ -41,7 +41,6 @@ const PageEditor = ({pageId, liveMode}: Props) => {
         };
     }, []);
 
-
     useEffect(() => {
         if (liveMode) {
             dispatch({type: "TOGGLE_LIVE_MODE", payload: {value: true}})
@@ -53,7 +52,8 @@ const PageEditor = ({pageId, liveMode}: Props) => {
             type: "LOAD_DATA",
             payload: {
                 pageLinks: data?.links,
-                pageId: data?.slug
+                pageId: data?.slug,
+                id: data?._id
             }
         })
 
@@ -62,12 +62,14 @@ const PageEditor = ({pageId, liveMode}: Props) => {
             type: "LOAD_DATA",
             payload: {
                 elements: data?.content ? data.content : "",
-                withLive: !!liveMode
+                withLive: !!liveMode,
+                id: data?._id
             }
         })
     }, [pageId, liveMode, dispatch])
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.stopPropagation();
         dispatch({type: "CHANGE_SELECTED_ELEMENT", payload: {}})
     }
 
@@ -81,22 +83,22 @@ const PageEditor = ({pageId, liveMode}: Props) => {
             "h-full overflow-hidden max-w-full  overflow-x-clip bg-black text-white",
             !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
         )}
+                onClick={handleClick}
              onPointerDown={(e) => e.stopPropagation()}
         >
             <div
                 className={classNames(
-                    "use-animation-zoom-in h-full bg-muted transition-all rounded-none px-4 w-full overflow-x-hidden overflow-y-scroll flex flex-col relative",
+                    "use-animation-zoom-in h-full bg-black transition-all rounded-none px-4 w-full overflow-x-hidden overflow-y-scroll flex flex-col relative",
                     {
                         "!p-0 !m-0 min-w-screen min-h-screen": state.editor.previewMode || state.editor.liveMode,
                         "overflow-y-scroll px-8": !state.editor.previewMode || !state.editor.liveMode,
                     }
                 )}
-                onClick={handleClick}
                 ref={scrollRef}
             >
                 <Button
                     onClick={handleUnPreview}
-                    classnames={`absolute top-5 right-5 w-12 h-12 rounded-lg z-[500] shadow-lg flex items-center justify-center transition-all duration-300 transform 
+                    className={`absolute top-5 right-5 w-12 h-12 rounded-lg z-[500] shadow-lg flex items-center justify-center transition-all duration-300 transform 
                         ${state.editor.previewMode
                         ? "translate-x-0 opacity-100"
                         : "translate-x-20 opacity-0"

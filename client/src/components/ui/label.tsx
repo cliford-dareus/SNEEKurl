@@ -1,13 +1,24 @@
+"use client"
+
+import * as React from "react"
+import { Label as LabelPrimitive } from "radix-ui"
+
 import classNames from "classnames";
-import React, { ReactNode } from "react";
 
-type Props = {
-  children: ReactNode;
-  classnames?: string;
-};
-
-const Label = ({ children, classnames }: Props) => {
-  return <label className={classNames(classnames)}>{children}</label>;
-};
+function Label({
+                 className,
+                 ...props
+               }: React.ComponentProps<typeof LabelPrimitive.Root>) {
+  return (
+      <LabelPrimitive.Root
+          data-slot="label"
+          className={classNames(
+              "flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
+              className
+          )}
+          {...props}
+      />
+  )
+}
 
 export default Label;

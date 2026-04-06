@@ -4,7 +4,7 @@ import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription} fro
 import {Dispatch, SetStateAction} from "react";
 import {Url} from "../../app/services/urlapi";
 import {getSiteUrl} from "../../Utils/getSiteUrl";
-import Button from "../ui/button";
+import {Button} from "../ui/button";
 import {LuFacebook, LuTwitter, LuLinkedin, LuInstagram, LuCopy, LuMail} from "react-icons/lu";
 import {toast} from "react-toastify";
 
@@ -123,7 +123,7 @@ const ShareLinkModal = ({shareActive, setShareActive, url}: Props) => {
                             />
                             <Button
                                 onClick={handleCopyToClipboard}
-                                classnames="btn-sm bg-primary text-white"
+                                className="btn-sm bg-primary text-white"
                             >
                                 <LuCopy size={16}/>
                                 Copy
@@ -140,7 +140,7 @@ const ShareLinkModal = ({shareActive, setShareActive, url}: Props) => {
                                 placeholder="friend@example.com"
                                 type="email"
                             />
-                            <Button type="submit" classnames="btn-sm bg-secondary text-white">
+                            <Button type="submit" className="btn-sm bg-secondary text-white">
                                 <LuMail size={16}/>
                                 Email
                             </Button>
@@ -155,7 +155,7 @@ const ShareLinkModal = ({shareActive, setShareActive, url}: Props) => {
                     <div className="grid grid-cols-2 gap-3">
                         <Button
                             onClick={() => handleSocialShare("facebook")}
-                            classnames="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
+                            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center justify-center gap-2"
                         >
                             <LuFacebook size={18}/>
                             Facebook
@@ -163,7 +163,7 @@ const ShareLinkModal = ({shareActive, setShareActive, url}: Props) => {
 
                         <Button
                             onClick={() => handleSocialShare("twitter")}
-                            classnames="bg-black hover:bg-gray-800 text-white flex items-center justify-center gap-2"
+                            className="bg-black hover:bg-gray-800 text-white flex items-center justify-center gap-2"
                         >
                             <LuTwitter size={18}/>
                             Twitter/X
@@ -171,7 +171,7 @@ const ShareLinkModal = ({shareActive, setShareActive, url}: Props) => {
 
                         <Button
                             onClick={() => handleSocialShare("linkedin")}
-                            classnames="bg-blue-700 hover:bg-blue-800 text-white flex items-center justify-center gap-2"
+                            className="bg-blue-700 hover:bg-blue-800 text-white flex items-center justify-center gap-2"
                         >
                             <LuLinkedin size={18}/>
                             LinkedIn
@@ -179,7 +179,7 @@ const ShareLinkModal = ({shareActive, setShareActive, url}: Props) => {
 
                         <Button
                             onClick={() => handleSocialShare("instagram")}
-                            classnames="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white flex items-center justify-center gap-2"
+                            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white flex items-center justify-center gap-2"
                         >
                             <LuInstagram size={18}/>
                             Instagram

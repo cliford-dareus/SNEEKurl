@@ -20,6 +20,7 @@ export type EditorElement = {
 
 type Editor = {
     pageId: string;
+    id: string;
     pageLinks: any;
     liveMode: boolean;
     previewMode: boolean;
@@ -39,7 +40,9 @@ type EditorAction =
     payload: {
         elements: EditorElement[],
         withLive: boolean
-        pageLinks?: any
+        pageLinks: any
+        pageId: string
+        id: string
     }
 }
     | {
@@ -103,7 +106,8 @@ const initialEditorState: EditorState['editor'] = {
     liveMode: false,
     previewMode: false,
     visible: false,
-    pageId: ""
+    pageId: "",
+    id: "",
 }
 
 const initialState: EditorState = {
@@ -246,6 +250,8 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                     ...initialState.editor,
                     elements: action.payload.elements || initialEditorState.elements,
                     pageLinks: action.payload.pageLinks,
+                    id: action.payload.id,
+                    // pageId: action.payload.pageId,
                     liveMode: action.payload.withLive
                 }
             }
