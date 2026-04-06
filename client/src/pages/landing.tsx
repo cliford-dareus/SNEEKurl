@@ -25,7 +25,7 @@ import HomeCreateLinkManager from "../features/url/urllandingmanager";
 import VisitLinkButton from "../components/visit-link-button";
 import classNames from "classnames";
 import {
-    Tooltip,
+    Tooltip, TooltipContent, TooltipTrigger,
 } from "../components/ui/tooltip";
 import {useUserPlan} from "../components/layout/layout";
 import {useInView} from "framer-motion";
@@ -103,16 +103,15 @@ const HomeLinkItem = ({
                             </div>
 
                             {!isAuthenticated && (
-                                <Tooltip
-                                    content="Link will expire in 24 hours"
-                                    side="bottom"
-                                    delayDuration={500}
-                                >
-                                    <div className="flex items-center gap-1 text-xs cursor-help">
-                                        <LuClock size={18}/>
-                                        {timeLeft.hours === 0 ? "" : `${timeLeft.hours} hours`}
-                                        {timeLeft.minutes}m
-                                    </div>
+                                <Tooltip>
+                                    <TooltipTrigger>
+                                        <div className="flex items-center gap-1 text-xs cursor-help">
+                                            <LuClock size={18}/>
+                                            {timeLeft.hours === 0 ? "" : `${timeLeft.hours} hours`}
+                                            {timeLeft.minutes}m
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent></TooltipContent>
                                 </Tooltip>
                             )}
                         </div>

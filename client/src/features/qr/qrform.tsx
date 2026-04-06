@@ -7,7 +7,7 @@ import {useDispatch} from "react-redux";
 import {createQr} from "./qrslice";
 import {useAppSelector} from "../../app/hook";
 import {RootState} from "../../app/store";
-import {Select} from "../../components/ui/select";
+import {Select, SelectContent, SelectItem} from "../../components/ui/select";
 import {LuLink, LuImage, LuSettings, LuSparkles} from "react-icons/lu";
 
 type Props = {};
@@ -71,7 +71,7 @@ const Qrform = (props: Props) => {
                                 {...field}
                                 className="w-full"
                                 placeholder="https://example.com"
-                                error={fieldState.error?.message}
+                                // error={fieldState.error?.message}
                             />
                         )}
                     />
@@ -87,17 +87,18 @@ const Qrform = (props: Props) => {
                         QR Code Size
                     </Label>
                     <Select
-                        className="w-full"
                         {...register("size", {
                             required: "Please select a size",
                             valueAsNumber: true
                         })}
                     >
-                        <option value="">Choose size...</option>
-                        <option value={200}>Small (200x200px)</option>
-                        <option value={300}>Medium (300x300px)</option>
-                        <option value={400}>Large (400x400px)</option>
-                        <option value={500}>Extra Large (500x500px)</option>
+                        <SelectContent className="w-full">
+                            <SelectItem value="">Choose size...</SelectItem>
+                            <SelectItem value="200">Small (200x200px)</SelectItem>
+                            <SelectItem value="300">Medium (300x300px)</SelectItem>
+                            <SelectItem value="400">Large (400x400px)</SelectItem>
+                            <SelectItem value="500">Extra Large (500x500px)</SelectItem>
+                        </SelectContent>
                     </Select>
                     {errors.size && (
                         <p className="text-sm text-destructive">{errors.size.message}</p>
@@ -127,7 +128,7 @@ const Qrform = (props: Props) => {
                                 {...field}
                                 className="w-full"
                                 placeholder="https://example.com/logo.png"
-                                error={fieldState.error?.message}
+                                // error={fieldState.error?.message}
                             />
                         )}
                     />

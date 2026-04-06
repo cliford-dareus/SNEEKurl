@@ -18,7 +18,6 @@ const LinksInBio = () => {
             <div className="h-screen flex items-center justify-center overflow-hidden bg-black">
                 <PageEditor pageId={slug!} liveMode/>
             </div>
-            {/*<LinksInBioPreview data={data!} isLoading={isLoading} classnames="min-h-screen" container="px-4 py-16 md:py-24 max-w-2xl"/>*/}
         </EditorProvider>
     );
 };

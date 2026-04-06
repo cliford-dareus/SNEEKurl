@@ -16,7 +16,7 @@
         --popover-foreground: 222 47% 11%;
 
         /* Primary - Modern energetic red (your original red kept but refined) */
-        --primary: 348 83% 53%;            /* Bright, trustworthy red (#EF233C) */
+        --primary: 357 79% 50%;            /* Bright, trustworthy red (#EF233C) */
         --primary-foreground: 0 0% 100%;
 
         /* Secondary - Very subtle cool gray */
@@ -28,7 +28,8 @@
         --muted-foreground: 215 16% 46%;
 
         /* Accent - Fresh lime green for "success / shortened" moments */
-        --accent: 80 82% 58%;              /* Vibrant but not childish lime (#A3E635) */
+        /*--accent: 80 82% 58%;              !* Vibrant but not childish lime (#A3E635) *!*/
+        --accent: 260 86% 53%;
         --accent-foreground: 222 47% 11%;
 
         /* Destructive */
@@ -79,7 +80,7 @@
         --popover-foreground: 0 0% 98%;
 
         /* Primary - Vibrant, trustworthy red */
-        --primary: 348 83% 58%;              /* Bright modern red (#FF2D55 approx) */
+        --primary: 357 79% 50%;              /* Bright modern red (#FF2D55 approx) */
         --primary-foreground: 0 0% 100%;
 
         /* Secondary */

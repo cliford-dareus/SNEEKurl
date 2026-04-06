@@ -27,6 +27,7 @@ const CreateLinkBlockModal = ({
                                   createLinkBlockActive,
                                   setCreateLinkBlockActive,
                               }: Props) => {
+    const {dispatch} = useEditor();
     const [categories, setCategories] = React.useState("");
     const [updateLinks] = useUpdatePageMutation();
     const {handleSubmit, setValue, reset} = useForm<CreateLinkBlockProp>();
@@ -40,6 +41,13 @@ const CreateLinkBlockModal = ({
                 links: data.links,
                 category: "website",
             }).unwrap();
+
+            dispatch({
+                type: "UPDATE_PAGE_LINKS",
+                payload: {
+                    pageLinks: response?.links,
+                }
+            })
             toast.success("Blocks added successfully");
             setCreateLinkBlockActive(false);
             reset();

@@ -71,12 +71,12 @@ const PageEditor = ({pageId, liveMode}: Props) => {
     const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
         dispatch({type: "CHANGE_SELECTED_ELEMENT", payload: {}})
-    }
+    };
 
     const handleUnPreview = () => {
         dispatch({type: "TOGGLE_PREVIEW_MODE"})
         dispatch({type: "TOGGLE_LIVE_MODE"})
-    }
+    };
 
     return (
         <div className={classNames(

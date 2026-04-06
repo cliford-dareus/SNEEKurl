@@ -17,7 +17,13 @@ const WebsiteList = ({element}: TextProps) => {
         try {
             const data = await reorderLinks({id: pageDetails.slug, links: newOrder}).unwrap();
             const newLinks = data?.links
-            // dispatch to update the links in the state
+
+            dispatch({
+                type: "UPDATE_PAGE_LINKS",
+                payload: {
+                    pageLinks: newLinks,
+                },
+            });
         } catch (error) {
             console.log(error);
         }
@@ -39,7 +45,7 @@ const WebsiteList = ({element}: TextProps) => {
     );
 };
 
-const LinkContainer = ({ items, manageLinksOrder}: any) => {
+const LinkContainer = ({items, manageLinksOrder}: any) => {
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
     const [draggedItem, setDraggedItem] = useState<number | null>(null);
     const listContainerRef = useRef<HTMLDivElement>(null);
@@ -93,16 +99,23 @@ const LinkContainer = ({ items, manageLinksOrder}: any) => {
 
     const handleDeleteLink = async (linkId: string) => {
         const newItems = items.filter((item: any, i: number) => {
-            return item._id._id !== linkId;
+            return item._id !== linkId;
         });
         manageLinksOrder(newItems);
     };
+
+    if(items.length === 0) return (
+        <div className="w-full flex items-center gap-4 rounded-md border bg-base-200 px-4 py-2">
+            <div className="h-5 w-5 rounded-full bg-base-300"/>
+            <p className="text-sm text-base-content">No links found</p>
+        </div>
+    )
 
     return (
         <div className="w-full">
             {items.map((item: any, index: number) => (
                 <div
-                    key={item?._id?._id}
+                    key={item?._id}
                     draggable
                     ref={listContainerRef}
                     onDragStart={(e) => handleDragStart(e, index)}
@@ -125,7 +138,7 @@ const LinkContainer = ({ items, manageLinksOrder}: any) => {
                     <button className="ml-auto">
                         <LuSettings/>
                     </button>
-                    <button onClick={() => handleDeleteLink(item._id._id)} className="ml-4">
+                    <button onClick={() => handleDeleteLink(item._id)} className="ml-4">
                         <LuTrash/>
                     </button>
                 </div>

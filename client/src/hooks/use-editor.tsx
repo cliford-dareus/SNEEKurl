@@ -46,6 +46,12 @@ type EditorAction =
     }
 }
     | {
+    type: "UPDATE_PAGE_LINKS",
+    payload: {
+        pageLinks: any
+    }
+}
+    | {
     type: "ADD_ELEMENT",
     payload: {
         containerId: string,
@@ -125,7 +131,7 @@ const addElement = (elements: EditorElement[], action: EditorAction): EditorElem
                 ...element,
                 content: [...element.content, action.payload.elementDetails]
             }
-        }else if (element.content && Array.isArray(element.content)) {
+        } else if (element.content && Array.isArray(element.content)) {
             return {
                 ...element,
                 content: addElement(element.content, action)
@@ -253,6 +259,14 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                     id: action.payload.id,
                     // pageId: action.payload.pageId,
                     liveMode: action.payload.withLive
+                }
+            }
+        case "UPDATE_PAGE_LINKS":
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    pageLinks: [...action.payload.pageLinks]
                 }
             }
         case "CHANGE_SELECTED_ELEMENT":
