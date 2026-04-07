@@ -181,6 +181,50 @@ const Container = ({element, editor}: ContainerProps) => {
                         }
                     })
                     break;
+                case "link":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: {
+                                    innerText: "Visit my website",
+                                    targetUrl: undefined,
+                                    href: undefined,
+                                },
+                                id: crypto.randomUUID(),
+                                name: "Link",
+                                styles: {
+                                    ...defaultStyles,
+                                    color: "#ffffff",
+                                },
+                                type: componentType,
+                                category: "Basic",
+                            }
+                        }
+                    })
+                    break;
+                case "map":
+                    dispatch({
+                        type: "ADD_ELEMENT",
+                        payload: {
+                            containerId: id,
+                            elementDetails: {
+                                content: {
+                                    latitude: undefined,
+                                    longitude: undefined,
+                                },
+                                id: crypto.randomUUID(),
+                                name: "Map",
+                                styles: {
+                                    ...defaultStyles,
+                                },
+                                type: componentType,
+                                category: "Basic",
+                            }
+                        }
+                    })
+                    break;
                 case "container":
                     dispatch({
                         type: "ADD_ELEMENT",
@@ -294,7 +338,7 @@ const Container = ({element, editor}: ContainerProps) => {
         <div
             ref={containerRef}
             className={classNames("relative group my-1", {
-                "max-w-full w-full":
+                "max-w-full w-full no-scrollbar":
                     (type === "container" || type === "2Col") && !styles?.width,
                 "h-fit": type === "container" && !styles?.height,
                 "h-full": type === "__body",

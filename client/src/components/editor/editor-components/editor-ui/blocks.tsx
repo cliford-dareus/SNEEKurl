@@ -1,4 +1,4 @@
-import {BsBodyText, BsBoxes, BsCalendar, BsImage, BsLink, BsTextarea} from "react-icons/bs";
+import {BsBodyText, BsBoxes, BsCalendar, BsImage, BsLink, BsMap, BsTextarea} from "react-icons/bs";
 
 export const blocks = [
     {
@@ -42,6 +42,13 @@ export const blocks = [
         group: "block",
         category: "block",
         icon: <BsBodyText className="text-xl"/>
+    },
+    {
+        label: "Map",
+        id: "map",
+        group: "block",
+        category: "block",
+        icon: <BsMap className="text-xl"/>
     },
     {
         label: "Text",

@@ -13,7 +13,7 @@ type Props = {
 const MultiSelect = ({
                          setvalues,
                      }: {
-    setvalues: UseFormSetValue<CreateLinkInBioProp & { links: {_id: string, url: string, name: string }[] }>;
+    setvalues: UseFormSetValue<CreateLinkInBioProp & { links: {_id: string, url: string, name: string }[] }> | any;
 }): JSX.Element => {
     const {data, isLoading} = useGetUrlsQuery({});
     const [selectedItems, setSelectedItems] = useState<{_id: string, url: string, name: string }[]>([]);
@@ -32,9 +32,7 @@ const MultiSelect = ({
         }]);
     };
 
-    const removeSelectUrl = () => {
-
-    };
+    const removeSelectUrl = () => {};
 
     useEffect(() => {
         setvalues("links", selectedItems);

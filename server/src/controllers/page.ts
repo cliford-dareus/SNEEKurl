@@ -45,14 +45,13 @@ const createPage = async (req: any, res: Response) => {
 
 const updatePage = async (req: any, res: Response) => {
     try {
-        const {id, title, description, slug, isPublic, links, category} = req.body;
-        const client_id = req.session.client_id;
-
-        if (!title && !description && !slug && !isPublic && !links) {
+        const {id, title, description, slug, isPublic, links, category, content} = req.body;
+        if (!title && !description && !slug && !isPublic && !links && !content) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Please provide a title, description, slug, isPublic and links",
             });
         }
+
 
         const user = await User.findOne({_id: req.user._id});
         if (!user) {
@@ -61,14 +60,14 @@ const updatePage = async (req: any, res: Response) => {
                 .json({message: "Invalid user"});
         }
 
-        const page = await Page.findById(id).populate("links._id");
+        const page = await Page.findOne({_id: id, user: user._id}).populate("links._id");
         if (!page) {
             return res
                 .status(StatusCodes.BAD_REQUEST)
                 .json({message: "Page not found"});
         }
 
-        const allLinks = [...page.links, ...links];
+        const allLinks = links == undefined ? page.links : [...page.links, ...links];
 
         const formatedLinks = allLinks.reduce((acc, link) => {
             if (typeof link === "object") {
@@ -92,6 +91,7 @@ const updatePage = async (req: any, res: Response) => {
         if (description) updateOps.description = description;
         if (slug) updateOps.slug = slug;
         if (isPublic !== undefined) updateOps.isPublic = isPublic;
+        if (content) updateOps.content = content;
         if (Object.keys(updateOps).length > 0) page.set(updateOps);
         page.links = uniqueAges;
 
@@ -155,7 +155,7 @@ const getPage = async (req: Request, res: Response) => {
     try {
         const {slug} = req.params;
 
-        const page = await Page.findOne({ slug })
+        const page = await Page.findOne({slug})
             .populate({
                 path: "user",
                 select: "username profile"

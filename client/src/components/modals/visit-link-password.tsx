@@ -1,20 +1,19 @@
 import React, {Dispatch, SetStateAction, useState} from "react";
-import {Url} from "../../app/services/urlapi";
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "../ui/dialog";
-import {getSiteUrl} from "../../Utils/getSiteUrl";
-import Button from "../ui/button";
+// import {Url} from "../../app/services/urlapi";
+// import {getSiteUrl} from "../../Utils/getSiteUrl";
+// import Button from "../ui/button";
 import Input from "../ui/Input";
 
 type Props = {
     status: boolean;
-    url: Url | null;
-    setStatus: Dispatch<SetStateAction<{ status: boolean; url: Url | null }>>;
+    url: string;
+    setStatus: Dispatch<SetStateAction<{ status: boolean; url: string | null }>>;
 };
 
 const VisitLinkPassword = ({status, url, setStatus}: Props) => {
-    const {handleSubmit, reset} = useForm<{ password: "" }>(
-        {
+    const {handleSubmit, reset} = useForm<{ password: "" }>({
             defaultValues: {
                 password: "",
             },
@@ -24,7 +23,7 @@ const VisitLinkPassword = ({status, url, setStatus}: Props) => {
     const onsubmit: SubmitHandler<{ password: string }> = async (formdata) => {
         const {password} = formdata;
         window.open(
-            `http://localhost:4080/short/${url?.short}?password=${password}`
+            `http://localhost:4080/short/${url}?password=${password}`
         );
     };
 

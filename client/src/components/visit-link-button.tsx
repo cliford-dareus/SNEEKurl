@@ -1,37 +1,36 @@
 import {ReactNode, useState} from "react";
-import {Url} from "../app/services/urlapi";
 import VisitLinkPassword from "./modals/visit-link-password";
 import {API_URL} from "../Utils/common";
+import {useEditor} from "../hooks/use-editor";
 
 type Props = {
-    url: Url;
+    url: string;
     children: ReactNode;
 };
 
 const VisitLinkButton = ({url, children}: Props) => {
-    const [active, setActive] = useState<{ status: boolean; url: Url | null }>({
-        status: false,
-        url: null,
-    });
+    const {state} = useEditor();
+    const [active, setActive] = useState<{ status: boolean; url: string | null }>({status: false, url: null});
 
     return (
         <>
             <div
                 className="cursor-pointer"
                 onClick={async () => {
+                    if (!state.editor.liveMode) return;
                     try {
-                        await fetch(`${API_URL}/short/${url.short}`).then(
+                        await fetch(`${API_URL}/short/${url}`).then(
                             (res) => {
                                 if (res.status === 403) {
                                     setActive({status: true, url: url});
                                 }
 
                                 if (res.status === 200)
-                                    [window.open(`${API_URL}/short/${url.short}`)];
+                                    [window.open(`${API_URL}/short/${url}`)];
                             }
                         );
                     } catch (error) {
-                        window.open(`${API_URL}/short/${url.short}`);
+                        window.open(`${API_URL}/short/${url}`);
                     }
                 }}
             >

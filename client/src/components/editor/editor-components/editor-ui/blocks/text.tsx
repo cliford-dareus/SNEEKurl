@@ -27,7 +27,7 @@ function TextComponent({element}: TextProps) {
     return (
         <ElementWrapper element={element}>
             <div
-                // style={element.styles}
+                style={element.styles}
                 className="p-[2px] w-full relative transition-all overflow-auto"
             >
                 <TextTag

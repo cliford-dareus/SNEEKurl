@@ -1,6 +1,8 @@
 import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
 import {BsTrash2} from "react-icons/bs";
 import classNames from "classnames";
+import {defaultStyles} from "../../../../../Utils/common";
+import React from "react";
 
 type Props = {
     element: EditorElement;
@@ -13,7 +15,6 @@ function ElementWrapper({element, children, className}: Props) {
     const isSelected = state.editor.selectedElement.id === element.id;
 
     const handleDeleteElement = () => {
-        console.log("delete element");
         dispatch({type: "DELETE_ELEMENT", payload: {elementDetails: element}});
     };
 
@@ -50,7 +51,7 @@ function ElementWrapper({element, children, className}: Props) {
                     className={classNames(
                         "absolute -top-[24px] -left-[1px] rounded-none rounded-t-lg bg-primary text-primary-foreground dark:bg-background dark:text-foreground",
                     )}
-                    // style={defaultStyles}
+                    style={defaultStyles}
                 >
                     {element.name}
                 </div>

@@ -51,19 +51,11 @@ const PageEditor = ({pageId, liveMode}: Props) => {
         dispatch({
             type: "LOAD_DATA",
             payload: {
+                elements: data?.content ? JSON.parse(data.content) : "",
+                withLive: !!liveMode,
+                id: data?._id,
                 pageLinks: data?.links,
                 pageId: data?.slug,
-                id: data?._id
-            }
-        })
-
-        if (data?.content.length === 1) return
-        dispatch({
-            type: "LOAD_DATA",
-            payload: {
-                elements: data?.content ? data.content : "",
-                withLive: !!liveMode,
-                id: data?._id
             }
         })
     }, [pageId, liveMode, dispatch])
@@ -83,12 +75,11 @@ const PageEditor = ({pageId, liveMode}: Props) => {
             "h-full overflow-hidden max-w-full  overflow-x-clip bg-black text-white",
             !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
         )}
-                onClick={handleClick}
+             onClick={handleClick}
              onPointerDown={(e) => e.stopPropagation()}
         >
-            <div
-                className={classNames(
-                    "use-animation-zoom-in h-full bg-black transition-all rounded-none px-4 w-full overflow-x-hidden overflow-y-scroll flex flex-col relative",
+            <div className={classNames(
+                    "use-animation-zoom-in h-full bg-black transition-all rounded-none px-4 w-full overflow-x-hidden flex flex-col relative no-scrollbar",
                     {
                         "!p-0 !m-0 min-w-screen min-h-screen": state.editor.previewMode || state.editor.liveMode,
                         "overflow-y-scroll px-8": !state.editor.previewMode || !state.editor.liveMode,

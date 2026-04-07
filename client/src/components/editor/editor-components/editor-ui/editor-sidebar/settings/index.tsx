@@ -3,14 +3,11 @@ import Input from "../../../../../ui/Input";
 import {useEditor} from "../../../../../../hooks/use-editor";
 import Transform from "./transform";
 import Typography from "./typography";
-import {BsPalette} from "react-icons/bs";
-import MultiSelect from "../../../../../ui/multi-select";
-import React, {useState} from "react";
-import {Button} from "../../../../../ui/button";
-import {Popover, PopoverContent, PopoverTrigger} from "../../../../../ui/popover";
-import {BLOCKS} from "../../../../../../Utils/common";
+import React, {useState} from "react";;
 import {LuLink, LuPlus} from "react-icons/lu";
 import CreateLinkBlockModal from "../../../../../modals/create-link-block-modal";
+import {Textarea} from "../../../../../ui/textarea";
+import LinkSetting from "./link-setting";
 
 const Settings = () => {
     const {state, dispatch} = useEditor();
@@ -57,7 +54,6 @@ const Settings = () => {
     };
 
     const handleSelectChange = (value: string, property: string) => {
-        console.log(value, property);
         const styleObject = {
             [property]: value,
         };
@@ -91,21 +87,6 @@ const Settings = () => {
                                 return null;
 
                             switch (state.editor.selectedElement.category) {
-                                case "Link":
-                                    return (
-                                        <div className="flex flex-col gap-2">
-                                            <div className="flex items-center gap-2 text-foreground/40 uppercase text-[10px] font-bold tracking-widest">
-                                                <LuLink className="w-3 h-3"/>
-                                                Link Path
-                                            </div>
-                                            <Input
-                                                id="href"
-                                                placeholder="https:www.framely.site/editor"
-                                                onChange={handleCustomValuesChange}
-                                                value={state.editor.selectedElement.content.href}
-                                            />
-                                        </div>
-                                    );
                                 case "Text":
                                     return (
                                         <div className="flex flex-col gap-2">
@@ -113,7 +94,7 @@ const Settings = () => {
                                                 <LuLink className="w-3 h-3"/>
                                                 Content
                                             </div>
-                                            <textarea
+                                            <Textarea
                                                 id="innerText"
                                                 placeholder="Enter text..."
                                                 onChange={handleCustomValuesChange}
@@ -172,6 +153,8 @@ const Settings = () => {
                                                     </div>
                                                 </div>
                                             )
+                                        case "link":
+                                            return <LinkSetting state={state}  handleCustomValuesChange={handleCustomValuesChange}/>
                                         default:
                                             return null;
                                     }

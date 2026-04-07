@@ -1,5 +1,5 @@
 import React, {forwardRef, useEffect, useMemo, useRef, useState} from "react";
-import { HexColorPicker } from "react-colorful";
+import {HexColorPicker} from "react-colorful";
 import {
     Popover,
     PopoverContent,
@@ -7,7 +7,7 @@ import {
 } from "./popover";
 import classNames from "classnames";
 import {Button} from "./button";
-import type { ButtonProps } from "./button";
+import type {ButtonProps} from "./button";
 
 interface ColorPickerProps {
     value: string;
@@ -20,21 +20,21 @@ const ColorPicker = forwardRef<
     Omit<ButtonProps, "value" | "onChange" | "onBlur"> & ColorPickerProps
 >(
     (
-        { disabled, value, onChange, onBlur, name, className, ...props },
+        {disabled, value, onChange, onBlur, name, className, ...props},
         forwardedRef
     ) => {
         const ref = useForwardedRef(forwardedRef);
         const [open, setOpen] = useState(false);
 
-        console.log(value)
-
         const parsedValue = useMemo(() => {
             return value || "#FFFFFF";
         }, [value]);
 
+        console.log(disabled)
+
         return (
             <Popover onOpenChange={setOpen} open={open}>
-                <PopoverTrigger asChild disabled={disabled} onBlur={onBlur}>
+                <PopoverTrigger>
                     <Button
                         {...props}
                         className={classNames("block min-w-9", className)}
@@ -48,11 +48,11 @@ const ColorPicker = forwardRef<
                         }}
                         variant="outline"
                     >
-                        <div />
+                        <div/>
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-full">
-                    <HexColorPicker color={parsedValue} onChange={onChange} />
+                    <HexColorPicker color={parsedValue} onChange={onChange}/>
                 </PopoverContent>
             </Popover>
         );
@@ -61,7 +61,7 @@ const ColorPicker = forwardRef<
 
 ColorPicker.displayName = "ColorPicker";
 
-export { ColorPicker };
+export {ColorPicker};
 
 export function useForwardedRef<T>(ref: React.ForwardedRef<T>) {
     const innerRef = useRef<T>(null);
@@ -76,4 +76,4 @@ export function useForwardedRef<T>(ref: React.ForwardedRef<T>) {
     });
 
     return innerRef;
-}
+};

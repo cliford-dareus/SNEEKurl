@@ -23,7 +23,9 @@ type Props = {
 
 const Typography = ({handleOnChange, handleSelectChange}: Props) => {
     const {state} = useEditor();
-    const [inputColor, setInputColor] = useState("#ffffff");
+    const [inputColor, setInputColor] = useState(
+        state.editor.selectedElement.styles.color || "#ffffff"
+    );
 
     return(
         <AccordionItem value="typography">
