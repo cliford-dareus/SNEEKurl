@@ -27,7 +27,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
 
     return (
         <>
-            <div className="flex items-center rounded-md bg-background shadow-md p-4">
+            <div className="flex items-center rounded-md bg-secondary hover:bg-secondary/50 shadow-md p-4 transition-colors">
                 <div className="flex items-center justify-center rounded-md bg-primary/10 w-[50px] h-[50px]">
                     <img
                         className="rounded-full w-[30px] h-[30px]"
@@ -41,7 +41,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
 
                 <div className="w-[50%] ml-4">
                     <div className="flex items-center gap-4">
-                        <VisitLinkButton url={url}>
+                        <VisitLinkButton url={url.short}>
                             <div className="flex items-center gap-2">
                                 <LuLink2 size={20} className="text-primary"/>
                                 <span className="text-sm text-primary">sneek.co/{url.short}</span>
@@ -65,7 +65,7 @@ const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
 
                     <Button
                         variant="outline"
-                        className="cursor-pointer rounded-lg ml-1 px-4 py-1 text-foreground hover:bg-primary transition-colors"
+                        className="cursor-pointer rounded-lg ml-1 text-foreground hover:bg-accent transition-colors"
                         onClick={() => setQrActive(true)}
                     >
                         <LuQrCode className="" size={16}/>

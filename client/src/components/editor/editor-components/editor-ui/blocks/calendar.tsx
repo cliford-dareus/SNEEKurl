@@ -1,6 +1,8 @@
-import {BsCalendar} from "react-icons/bs";
+import {useState} from "react";
 import ElementWrapper from "../layouts/element-wrapper";
 import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
+import {Calendar} from "../../../../ui/calendar";
+import {Card, CardContent} from "../../../../ui/card";
 
 type TextProps = {
     element: EditorElement;
@@ -8,6 +10,13 @@ type TextProps = {
 
 function CalendarBlock({element}: TextProps) {
     const {state, dispatch} = useEditor();
+    const [date, setDate] = useState<Date | undefined>(
+        new Date(new Date().getFullYear(), 1, 3)
+    )
+    const bookedDates = Array.from(
+        { length: 15 },
+        (_, i) => new Date(new Date().getFullYear(), 1, 12 + i)
+    )
 
     const handleBlur = (e: React.FocusEvent<Element>) => {
         const textElement = e.target as HTMLElement;
@@ -29,7 +38,24 @@ function CalendarBlock({element}: TextProps) {
                 style={element.styles}
                 className="p-[4px] w-full relative transition-all overflow-auto"
             >
-                <BsCalendar className="text-5xl text-background"/>
+                <Card className="w-full h-full p-0">
+                    <CardContent className="p-0 w-full h-full">
+                        <Calendar
+                            mode="single"
+                            defaultMonth={date}
+                            selected={date}
+                            onSelect={setDate}
+                            disabled={bookedDates}
+                            className="w-full"
+                            modifiers={{
+                                booked: bookedDates,
+                            }}
+                            modifiersClassNames={{
+                                booked: "[&>button]:line-through opacity-100",
+                            }}
+                        />
+                    </CardContent>
+                </Card>
             </div>
         </ElementWrapper>
     );

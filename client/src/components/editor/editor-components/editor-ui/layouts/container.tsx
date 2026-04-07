@@ -149,9 +149,9 @@ const Container = ({element, editor}: ContainerProps) => {
                                 id: crypto.randomUUID(),
                                 name: "Calendar",
                                 styles: {
-                                    color: "red",
+                                    color: "#000000",
                                     ...defaultStyles,
-                                    fontSize: "2rem",
+                                    fontSize: "1rem",
                                     display: "flex",
                                 },
                                 type: componentType,

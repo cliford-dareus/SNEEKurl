@@ -35,17 +35,21 @@ const WebsiteList = ({element}: WebsiteListProps) => {
                 style={element.styles}
                 className="flex flex-col w-full relative transition-all overflow-auto"
             >
+                <div className="flex items-center justify-between mb-2">
+                    <h3 className="">Block List</h3>
+                </div>
                 <LinkContainer
                     pageId={pageDetails._id}
                     items={state.editor.pageLinks}
                     manageLinksOrder={manageLinksOrder}
+                    liveMode={state.editor.liveMode}
                 />
             </div>
         </ElementWrapper>
     );
 };
 
-const LinkContainer = ({items, manageLinksOrder}: any) => {
+const LinkContainer = ({items, manageLinksOrder, liveMode}: any) => {
     const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
     const [draggedItem, setDraggedItem] = useState<number | null>(null);
     const listContainerRef = useRef<HTMLDivElement>(null);
@@ -112,7 +116,7 @@ const LinkContainer = ({items, manageLinksOrder}: any) => {
     )
 
     return (
-        <div className="w-full">
+        <div className="w-full flex flex-col gap-2">
             {items.map((item: any, index: number) => (
                 <div
                     key={item?._id}
@@ -135,12 +139,12 @@ const LinkContainer = ({items, manageLinksOrder}: any) => {
                         )}
                     />
                     {item?.name}
-                    <button className="ml-auto">
+                    {!liveMode && <button className="ml-auto">
                         <LuSettings/>
-                    </button>
-                    <button onClick={() => handleDeleteLink(item._id)} className="ml-4">
+                    </button>}
+                    {!liveMode && <button onClick={() => handleDeleteLink(item._id)} className="ml-4">
                         <LuTrash/>
-                    </button>
+                    </button>}
                 </div>
             ))}
         </div>

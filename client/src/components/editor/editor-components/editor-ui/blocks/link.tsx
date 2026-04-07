@@ -12,7 +12,10 @@ const Link = ({element}: LinkProps) => {
     return (
         <ElementWrapper element={element}>
             <VisitLinkButton url={href!}>
-                <div className="w-full h-[50px] flex items-center justify-between px-4 rounded-md border border-background/20">
+                <div
+                    className="w-full h-[50px] flex items-center justify-between px-4 rounded-md border border-background/20"
+                    style={element.styles}
+                >
                     {!Array.isArray(element.content) && element.content.innerText}
                     <LuArrowUpRight className="text-2xl"/>
                 </div>

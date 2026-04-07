@@ -13,7 +13,6 @@ interface Props {
 const LinkSetting = ({state, handleCustomValuesChange }: Props) => {
     const {dispatch} = useEditor();
     const {data, isLoading} = useGetUrlsQuery({});
-    const [open, setOpen] = React.useState(false);
 
     const handleSelectChange = (item: any) => {
         dispatch({
@@ -29,7 +28,7 @@ const LinkSetting = ({state, handleCustomValuesChange }: Props) => {
                 },
             },
         });
-    }
+    };
 
     return (
         <div className="flex flex-col gap-2">
@@ -55,7 +54,7 @@ const LinkSetting = ({state, handleCustomValuesChange }: Props) => {
                 </div>
                 <div className="relative w-full">
                     <div className="w-full h-full max-h-[200px] px-1 overflow-y-scroll bg-base-200 no-scrollbar">
-                        {!isLoading && open && data &&
+                        {!isLoading && data &&
                             data.urls?.map((item, index) => (
                                 <div
                                     key={index}

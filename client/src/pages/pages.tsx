@@ -69,12 +69,12 @@ const Pages = () => {
                     {!isLoading &&
                         pages.map((page: any) => (
                             <div key={page._id}>
-                                <div className="flex items-center justify-between gap-4 rounded-md bg-base-200 p-4 hover:bg-base-300">
+                                <div className="flex items-center justify-between gap-4 rounded-md bg-secondary shadow-md p-4 hover:bg-secondary/50 transition-colors">
                                     <div className="flex items-center gap-2">
                                         <div>
                                             <div className="flex items-center gap-2">
                                                 <p className="font-medium text-[18px] uppercase">{page.title}</p>
-                                                <div className={classNames("text-xs py-1 px-2.5 rounded-box text-zinc-100", page.isPublic ? "bg-secondary": "bg-red-500")}>{page.isPublic ? "Public" : "Not Public"}</div>
+                                                <div className={classNames("text-[10px] py-.5 px-2 rounded-full text-zinc-100", page.isPublic ? "bg-secondary": "bg-primary")}>{page.isPublic ? "Public" : "Private"}</div>
                                             </div>
                                             <div className="flex items-center gap-2 text-zinc-400 text-xs mt-1">
                                                 <span className="flex items-center gap-1">
@@ -96,14 +96,15 @@ const Pages = () => {
                                     </div>
 
                                     <div className="flex items-center gap-4">
-                                        <Button className="bg-primary">
-                                            <Link to={`${page.slug}`} className="w-full flex-1 bg-red-500">
+                                        <Button className="bg-primary !p-0">
+                                            <Link to={`${page.slug}`} className="w-full flex-1 px-2 py-1">
                                                 <AiOutlineEdit />
                                             </Link>
                                         </Button>
                                         <Button
+                                            variant="outline"
                                             onClick={() => handleOpenLinkInBio(page.slug)}
-                                            className="bg-accent"
+                                            className="cursor-pointer rounded-lg ml-1 text-foreground hover:bg-accent transition-colors"
                                         >
                                             <LuView className=""/>
                                         </Button>
@@ -112,7 +113,7 @@ const Pages = () => {
                                             onClick={() =>
                                                 setEditPageActive({state: true, id: page._id})
                                             }
-                                            className="cursor-pointer"
+                                            className="cursor-pointer text-foreground/50 hover:text-foreground transition-colors"
                                         >
                                             <LuSettings/>
                                         </div>
