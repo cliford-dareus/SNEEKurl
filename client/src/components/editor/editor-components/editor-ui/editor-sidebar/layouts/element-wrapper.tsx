@@ -1,7 +1,7 @@
-import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
+import {EditorElement, useEditor} from "../../../../../../hooks/use-editor";
 import {BsTrash2} from "react-icons/bs";
 import classNames from "classnames";
-import {defaultStyles} from "../../../../../Utils/common";
+import {defaultStyles} from "../../../../../../Utils/common";
 import React from "react";
 
 type Props = {

@@ -1,11 +1,11 @@
 import {EditorElement} from "../../../hooks/use-editor";
-import Container from "./editor-ui/layouts/container";
-import TextComponent from "./editor-ui/blocks/text";
-import CalendarBlock from "./editor-ui/blocks/calendar";
-import WebsiteList from "./editor-ui/blocks/website-list";
-import Image from "./editor-ui/blocks/image";
-import Link from "./editor-ui/blocks/link";
-import Map from "./editor-ui/blocks/map";
+import Container from "./editor-ui/editor-sidebar/layouts/container";
+import TextComponent from "./editor-ui/editor-sidebar/blocks/text";
+import CalendarBlock from "./editor-ui/editor-sidebar/blocks/calendar";
+import WebsiteList from "./editor-ui/editor-sidebar/blocks/website-list";
+import Image from "./editor-ui/editor-sidebar/blocks/image";
+import Link from "./editor-ui/editor-sidebar/blocks/link";
+import Map from "./editor-ui/editor-sidebar/blocks/map";
 
 type EditorProps = { element: EditorElement }
 

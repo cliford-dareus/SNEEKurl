@@ -3,6 +3,8 @@ import {Button} from "../components/ui/button";
 import classNames from "classnames";
 import {useAppSelector} from "../app/hook";
 import {Outlet, useNavigate} from "react-router-dom";
+import {LuCheck} from "react-icons/lu";
+import {motion} from "framer-motion";
 import {
     useCreateSubscriptionMutation,
     useRetrieveSubscriptionQuery,
@@ -61,7 +63,7 @@ const Pricing = (): JSX.Element => {
 
     useEffect(() => {
         if (subscriptionData) {
-            Navigate("checkout", {state: subscriptionData});
+            Navigate("/checkout", {state: subscriptionData});
         }
     }, [subscriptionData, Navigate]);
 
@@ -70,7 +72,7 @@ const Pricing = (): JSX.Element => {
             setActivePlan(0);
             return;
         }
-        ;
+
         const activePlan = data.subscription.data.find(
             (x: any) => x.status === "active"
         );
@@ -78,10 +80,10 @@ const Pricing = (): JSX.Element => {
     }, []);
 
     return (
-        <>
+        <div className="flex-1 h-screen bg-background/90">
             <section
-                className="container relative mx-auto flex flex-col justify-center p-4 text-center text-neutral dark:text-neutral-content">
-                <div className="mt-16">
+                className="max-w-6xl flex-1 h-full relative mx-auto flex flex-col justify-center p-4">
+                <div className="mt-16 text-center">
                     <h1 className="mx-auto mt-5 text-7xl text-neutral max-w-[700px] dark:text-neutral-content">
                         Prices small, connect big!
                     </h1>
@@ -91,70 +93,59 @@ const Pricing = (): JSX.Element => {
                     </p>
                 </div>
 
-                <div className="mx-auto mt-16 flex w-full gap-4 text-left max-w-[1000px]">
-                    {pricingPlans.map((opt) => (
-                        <div
-                            key={opt.id}
+                <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-16">
+                    {pricingPlans.map((plan, index) => (
+                        <motion.div
+                            key={index}
+                            initial={{opacity: 0, y: 30}}
+                            whileInView={{opacity: 1, y: 0}}
+                            transition={{duration: 0.6, delay: index * 0.1}}
+                            viewport={{once: true}}
                             className={classNames(
-                                "flex-1 p-4 rounded-lg shadow-lg",
-                                opt.popular ? "bg-primary" : "bg-base-200 mt-8"
+                                "relative rounded-xl p-8 border-2",
+                                plan.popular
+                                    ? "border-primary bg-primary/5 scale-105"
+                                    : "border-base-300 bg-base-100"
                             )}
                         >
-                            <div className="border-b px-2 py-8">
-                                <p className="text-2xl font-bold">{opt.name}</p>
-                                <p className="my-2 text-6xl">${opt.price}</p>
-                                <p>Lorem ipsum dolor sit amet.</p>
+                            {plan.popular && (
+                                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                                        <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
+                                          Most Popular
+                                        </span>
+                                </div>
+                            )}
+
+                            <div className="text-center mb-8">
+                                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
+                                <p className="text-base-content/70 mb-4">{plan.description}</p>
+                                <div className="text-5xl font-bold mb-2">
+                                    ${plan.price}
+                                    <span className="text-lg font-normal text-base-content/70">/month</span>
+                                </div>
                             </div>
 
-                            <div className="border-b px-2 py-8">
-                                {activeplan === opt.price ? (
-                                    <Button
-                                        className="w-full"
-                                        //Manage the active plan
-                                    >
-                                        Active Plan
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        className="w-full"
-                                        onClick={() => {
-                                            if (
-                                                user.username !== "Guest" &&
-                                                activeplan !== opt.price &&
-                                                user.stripe_account_id
-                                            ) {
-                                                // Upgrade plan
-                                                handleUpdateSubscription(opt.price);
-                                                console.log("Upgrade plan");
-                                            } else if (user.username !== "Guest" && !user.stripe_account_id) {
-                                                handleSubscription(opt.price);
-                                            } else {
-                                                // Navigate to login
-                                            }
-                                        }}
-                                    >
-                                        {/* {!isLoading ? opt.cta : "isLoading..."} */}
-                                        {user.username !== "Guest" && activeplan !== opt.price
-                                            ? "Upgrade plan"
-                                            : user.username !== "Guest" && !activeplan
-                                                ? opt.cta
-                                                : opt.cta}
-                                    </Button>
+                            <ul className="space-y-3 mb-8">
+                                {plan.features.map((feature, idx) => (
+                                    <li key={idx} className="flex items-center gap-3">
+                                        <LuCheck className="text-success" size={16}/>
+                                        <span>{feature}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
+                            <Button
+                                onClick={() => handleSubscription(plan.price)}
+                                className={classNames(
+                                    "w-full",
+                                    plan.popular
+                                        ? "bg-primary text-white"
+                                        : "bg-base-300 text-base-content"
                                 )}
-                            </div>
-
-                            <div className="px-2 py-4">
-                                <p className="font-bold">What's included :</p>
-
-                                <ul className="mt-4 flex flex-col gap-2">
-                                    {opt.features.map((perk, index) => (
-                                        <li key={index} className="py-1">
-                                            {perk}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                            >
+                                {activeplan == plan.price ? "Current Plan" : plan.cta}
+                            </Button>
+                        </motion.div>
                     ))}
                 </div>
 
@@ -162,7 +153,7 @@ const Pricing = (): JSX.Element => {
                     <Outlet/>
                 </div>
             </section>
-        </>
+        </div>
     );
 };
 

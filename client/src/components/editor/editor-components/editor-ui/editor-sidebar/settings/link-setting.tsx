@@ -6,12 +6,11 @@ import {getWebsiteName} from "../../../../../../Utils/getSiteUrl";
 import {useEditor} from "../../../../../../hooks/use-editor";
 
 interface Props {
-    state: any;
     handleCustomValuesChange: (e: any) => void;
 }
 
-const LinkSetting = ({state, handleCustomValuesChange }: Props) => {
-    const {dispatch} = useEditor();
+const LinkSetting = ({handleCustomValuesChange}: Props) => {
+    const {state, dispatch} = useEditor();
     const {data, isLoading} = useGetUrlsQuery({});
 
     const handleSelectChange = (item: any) => {
@@ -40,9 +39,9 @@ const LinkSetting = ({state, handleCustomValuesChange }: Props) => {
                 </div>
                 <Input
                     id="innerText"
-                    placeholder="https:www.framely.site/editor"
+                    placeholder="Visit my website..."
                     onChange={handleCustomValuesChange}
-                    value={state.editor.selectedElement.content.innerText}
+                    value={!Array.isArray(state.editor.selectedElement.content) ? state.editor.selectedElement.content.innerText : "Visite my website..."}
                 />
             </div>
 

@@ -2,8 +2,8 @@ import classNames from "classnames";
 import React, {useEffect, useRef, useState} from "react";
 import ElementWrapper from "../layouts/element-wrapper";
 import {LuSettings, LuTrash} from "react-icons/lu";
-import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
-import {useReorderPageLinksMutation} from "../../../../../app/services/page";
+import {EditorElement, useEditor} from "../../../../../../hooks/use-editor";
+import {useReorderPageLinksMutation} from "../../../../../../app/services/page";
 
 type WebsiteListProps = {
     element: EditorElement;

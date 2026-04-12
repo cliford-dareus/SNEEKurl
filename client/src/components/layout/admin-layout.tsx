@@ -43,7 +43,7 @@ const AdminLayout = () => {
             <Header isActive={true} plan={plan} />
             <main className="max-w-6xl mx-auto overflow-hidden px-4 pt-16">
                 <DashboardTopInterface pathname={pathname}/>
-                <div className="flex flex-col-reverse md:flex-row gap-4 pt-4 h-[calc(100vh_-_165px)]">
+                <div className="flex flex-col-reverse md:flex-row gap-4 h-[calc(100vh_-_180px)]">
                     <div className="max-h-screen w-full md:max-w-[256px] flex flex-col gap-4">
                         <nav className="hidden md:flex w-full">
                             <ul className="flex w-full flex-col gap-1">

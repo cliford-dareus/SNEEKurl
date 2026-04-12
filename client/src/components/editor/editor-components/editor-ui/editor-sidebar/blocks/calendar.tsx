@@ -1,8 +1,8 @@
 import {useState} from "react";
 import ElementWrapper from "../layouts/element-wrapper";
-import {EditorElement, useEditor} from "../../../../../hooks/use-editor";
-import {Calendar} from "../../../../ui/calendar";
-import {Card, CardContent} from "../../../../ui/card";
+import {EditorElement, useEditor} from "../../../../../../hooks/use-editor";
+import {Calendar} from "../../../../../ui/calendar";
+import {Card, CardContent} from "../../../../../ui/card";
 
 type TextProps = {
     element: EditorElement;

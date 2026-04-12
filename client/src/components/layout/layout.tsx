@@ -22,13 +22,13 @@ const Layout = (props: Props) => {
     const plan = data?.subscription?.data[0]?.plan.metadata.name ?? "free";
 
     return (
-        <>
+        <div className="w-full h-full bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#fafafa_100%)] dark:bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#010101_100%)]">
             <Header isActive={false}  plan={plan}/>
             <main className="pt-15">
                 <Outlet context={{plan} as ContextType}/>
             </main>
             <Background/>
-        </>
+        </div>
     );
 };
 

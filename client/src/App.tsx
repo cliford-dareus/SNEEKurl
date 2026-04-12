@@ -7,7 +7,7 @@ import Register from "./features/auth/register";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import ProtectedRoutes from "./Utils/protectedRoutes";
 import Pricing from "./pages/pricing";
-import Checkout from "./components/checkout";
+import Checkout from "./pages/checkout";
 import {useIdentifyUserMutation} from "./app/services/auth";
 import {setCredentials} from "./features/auth/authslice";
 import {useAppDispatch} from "./app/hook";
@@ -25,6 +25,7 @@ import {useTokenRefresh} from "./hooks/useTokenRefresh";
 import Landing from "./pages/landing";
 import {API_URL} from "./Utils/common";
 import Pages from "./pages/pages";
+import CompleteCheckout from "./components/complete-checkout";
 
 
 function App() {
@@ -98,18 +99,15 @@ function App() {
     }, []);
 
     return (
-        <div
-            // className="w-full h-full bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#fafafa_100%)] dark:bg-[radial-gradient(circle,rgba(2,_0,_36,_0)_0%,#010101_100%)]"
-        >
+        <div>
             <Routes>
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/register" element={<Register/>}/>
                 <Route path="/:slug" element={<LinksInBio/>}/>
 
                 <Route element={<Layout/>}>
-                    <Route path="/pricing" element={<Pricing/>}>
-                        <Route path="checkout" element={<Checkout/>}/>
-                    </Route>
+                    <Route path="/pricing" element={<Pricing/>} />
+                    <Route path="/checkout" element={<Checkout/>}/>
                     <Route path='/' element={<Landing />} />
                 </Route>
 

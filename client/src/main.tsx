@@ -19,14 +19,14 @@ const stripePromise = loadStripe(
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider>
-      <Elements stripe={stripePromise}>
+      {/*<Elements stripe={stripePromise} options={{ clientSecret: import.meta.env.VITE_STRIPE_CLIENT_SECRET || "" }}>*/}
         <Provider store={store}>
           <BrowserRouter>
             <App />
             <ToastContainer position="top-right" theme="dark" />
           </BrowserRouter>
         </Provider>
-      </Elements>
+      {/*</Elements>*/}
     </ThemeProvider>
   </React.StrictMode>
 );

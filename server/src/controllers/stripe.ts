@@ -230,6 +230,8 @@ const updateSubscription = async (req: any, res: Response) => {
             }
         );
 
+        // update user limit also
+
         res.status(StatusCodes.OK).json({
             subscription: updatedSubscription
         });

@@ -154,7 +154,7 @@ const Settings = () => {
                                                 </div>
                                             )
                                         case "link":
-                                            return <LinkSetting state={state}  handleCustomValuesChange={handleCustomValuesChange}/>
+                                            return <LinkSetting handleCustomValuesChange={handleCustomValuesChange}/>
                                         default:
                                             return null;
                                     }

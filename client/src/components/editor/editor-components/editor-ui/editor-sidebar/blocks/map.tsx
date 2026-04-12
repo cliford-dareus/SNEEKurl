@@ -1,4 +1,4 @@
-import {EditorElement} from "../../../../../hooks/use-editor";
+import {EditorElement} from "../../../../../../hooks/use-editor";
 import ElementWrapper from "../layouts/element-wrapper";
 
 type MapProps = {

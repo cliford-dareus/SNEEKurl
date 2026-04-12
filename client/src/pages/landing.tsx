@@ -81,7 +81,7 @@ const HomeLinkItem = ({
             >
                 <div className="w-[80%]">
                     <div className="flex items-center gap-2">
-                        <VisitLinkButton url={url}>
+                        <VisitLinkButton url={url.short}>
                             <div className="flex items-center gap-2 text-primary">
                                 <LuLink2 size={16}/>
                                 <span className="text-sm">sneek.co/{url.short}</span>
@@ -170,7 +170,7 @@ const Landing = () => {
     return (
         <>
             <section className="bg-background/90">
-                <div className="max-w-6xl  mx-auto flex flex-col justify-center p-4 text-center">
+                <div className="max-w-6xl mx-auto flex flex-col justify-center p-4 text-center">
                     <div className="mt-28">
                     <span className="rounded-full bg-primary px-4 py-1 text-primary-foreground">
                         +1k github
@@ -447,9 +447,9 @@ const Landing = () => {
                             >
                                 {plan.popular && (
                                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
-                      Most Popular
-                    </span>
+                                        <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
+                                          Most Popular
+                                        </span>
                                     </div>
                                 )}
 

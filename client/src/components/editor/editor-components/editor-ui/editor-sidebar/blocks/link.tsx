@@ -1,11 +1,11 @@
 import ElementWrapper from "../layouts/element-wrapper";
-import {EditorElement} from "../../../../../hooks/use-editor";
+import {EditorElement} from "../../../../../../hooks/use-editor";
 import {LuArrowUpRight} from "react-icons/lu";
-import VisitLinkButton from "../../../../visit-link-button";
+import VisitLinkButton from "../../../../../visit-link-button";
 
 type LinkProps = {
     element: EditorElement;
-}
+};
 
 const Link = ({element}: LinkProps) => {
     const href = !Array.isArray(element.content) ? element.content.href : "";

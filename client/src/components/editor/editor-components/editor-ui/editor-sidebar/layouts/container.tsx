@@ -1,9 +1,9 @@
 import classNames from "classnames";
 import {BsTrash2} from "react-icons/bs";
-import EditorPage from "../../editor-element";
+import EditorPage from "../../../editor-element";
 import {useEffect, useRef, useState} from "react";
-import {useEditor} from "../../../../../hooks/use-editor";
-import {defaultStyles} from "../../../../../Utils/common";
+import {useEditor} from "../../../../../../hooks/use-editor";
+import {defaultStyles} from "../../../../../../Utils/common";
 
 type ContainerProps = { element: any, editor?: any }
 

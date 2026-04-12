@@ -59,7 +59,7 @@ const Subscription = () => {
 
     useEffect(() => {
         if (subscriptionData) {
-            Navigate("/pricing/checkout", {state: subscriptionData});
+            Navigate("/checkout", {state: subscriptionData});
         }
     }, [subscriptionData]);
 
