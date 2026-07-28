@@ -1,4 +1,4 @@
-import React, {createContext, useReducer} from "react";
+import React, { createContext, useReducer } from "react";
 
 type DeviceType = 'desktop' | 'mobile' | 'tablet'
 
@@ -9,13 +9,24 @@ export type EditorElement = {
     type: any;
     category: any;
     content:
-        | {
+    | {
         href?: string;
         innerText?: string;
         imageUrl?: string
         altText?: string;
         targetUrl?: string;
     } | EditorElement[];
+}
+
+
+export type BannerTheme = {
+    id: string;
+    name: string;
+    textColor: string;
+    accentColor: string;
+    backgroundGradient: string;
+    backgroundSize: string | null;
+    backgroundColor: string;
 }
 
 type Editor = {
@@ -25,6 +36,7 @@ type Editor = {
     liveMode: boolean;
     previewMode: boolean;
     visible: boolean;
+    theme: BannerTheme;
     elements: EditorElement[];
     selectedElement: EditorElement;
     device: DeviceType;
@@ -36,55 +48,61 @@ type EditorState = {
 
 type EditorAction =
     | {
-    type: "LOAD_DATA",
-    payload: {
-        elements: EditorElement[],
-        withLive: boolean
-        pageLinks: any
-        pageId: string
-        id: string
+        type: "LOAD_DATA",
+        payload: {
+            elements: EditorElement[],
+            theme: BannerTheme,
+            withLive: boolean
+            pageLinks: any
+            pageId: string
+            id: string
+        }
     }
-}
     | {
-    type: "UPDATE_PAGE_LINKS",
-    payload: {
-        pageLinks: any
+        type: "UPDATE_PAGE_LINKS",
+        payload: {
+            pageLinks: any
+        }
     }
-}
     | {
-    type: "ADD_ELEMENT",
-    payload: {
-        containerId: string,
-        elementDetails: EditorElement,
+        type: "ADD_ELEMENT",
+        payload: {
+            containerId: string,
+            elementDetails: EditorElement,
+        }
     }
-}
     | {
-    type: "UPDATE_ELEMENT",
-    payload: {
-        elementDetails: EditorElement,
+        type: "UPDATE_ELEMENT",
+        payload: {
+            elementDetails: EditorElement,
+        }
+    } | {
+        type: "SET_THEME",
+        payload: {
+            theme: BannerTheme
+        }
+    } | {
+        type: "DELETE_ELEMENT",
+        payload: {
+            elementDetails: EditorElement,
+        }
     }
-} | {
-    type: "DELETE_ELEMENT",
-    payload: {
-        elementDetails: EditorElement,
-    }
-}
     | { type: "TOGGLE_LIVE_MODE" }
     | { type: "TOGGLE_PREVIEW_MODE" }
     | { type: "TOGGLE_VISIBLE" }
     | {
-    type: "CHANGE_SELECTED_ELEMENT",
-    payload: {
-        elementDetails: EditorElement | {
-            content: [],
-            id: "",
-            name: "",
-            styles: {},
-            type: null,
-            category: null
+        type: "CHANGE_SELECTED_ELEMENT",
+        payload: {
+            elementDetails: EditorElement | {
+                content: [],
+                id: "",
+                name: "",
+                styles: {},
+                type: null,
+                category: null
+            }
         }
     }
-}
 
 const initialEditorState: EditorState['editor'] = {
     elements: [
@@ -106,6 +124,15 @@ const initialEditorState: EditorState['editor'] = {
         styles: {},
         type: "__body",
         category: "Container"
+    },
+    theme: {
+        id: "1",
+        name: "",
+        textColor: "",
+        accentColor: "",
+        backgroundGradient: "",
+        backgroundSize: null,
+        backgroundColor: ""
     },
     pageLinks: [],
     device: "mobile",
@@ -207,6 +234,15 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                 ...state,
                 editor: updatedEditorState
             }
+        case "SET_THEME":
+            console.log(action.payload.theme); 
+            return {
+                ...state,
+                editor: {
+                    ...state.editor,
+                    theme: action.payload.theme
+                }
+            }
         case "DELETE_ELEMENT":
             const updatedElementsAfterDelete = deleteElement(state.editor.elements, action)
             const updatedEditorStateAfterDelete = {
@@ -254,6 +290,7 @@ const editorReducer = (state: EditorState, action: EditorAction) => {
                 ...initialState,
                 editor: {
                     ...initialState.editor,
+                    theme: action.payload.theme || initialEditorState.theme,
                     elements: action.payload.elements || initialEditorState.elements,
                     pageLinks: action.payload.pageLinks,
                     id: action.payload.id,

@@ -7,13 +7,7 @@ interface PageInterface extends mongoose.Document {
     slug: string;
     isPublic: boolean;
     user: { type: ObjectId; ref: string };
-    themeColor?: string;
-    backgroundColor?: string;
-    backgroundType?: "solid" | "image" | "gradient";
-    backgroundImage?: string;
-    backgroundGradient?: string;
-    accentColor?: string;
-    textColor?: string;
+    theme: string;
     content: string;
     links: { category: string; name: string; link: ObjectId }[];
 }
@@ -24,13 +18,7 @@ const PageSchema = new mongoose.Schema<PageInterface>(
         description: {type: String, required: true},
         slug: {type: String, required: true, unique: true},
         isPublic: {type: Boolean, default: false},
-        themeColor: {type: String, default: "#00FF00"},
-        backgroundColor: {type: String, default: "#000000"},
-        backgroundType: {type: String, default: "solid", enum: ["solid", "image", "gradient"]},
-        backgroundImage: {type: String},
-        backgroundGradient: {type: String, default: "linear-gradient(to right, #00FF00, #0000FF)"},
-        accentColor: {type: String, default: "#FFFFFF"},
-        textColor: {type: String, default: "#FFFFFF"},
+        theme: {type: String},
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

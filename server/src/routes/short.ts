@@ -10,7 +10,7 @@ import {
 } from "../controllers/shortener";
 import authorize from "../middlewares/authorization";
 import guestOrAuth from "../middlewares/guestOrAuth";
-import check_links_limiter_status from "../middlewares/check-links-limiter";
+import check_links_limiter_status from "../middlewares/check-user-limiter";
 import {urlCreationRateLimiter, guestRateLimiter} from "../middlewares/rate-limiter";
 
 const router = express.Router();

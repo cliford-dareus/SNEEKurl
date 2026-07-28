@@ -1,12 +1,12 @@
 import  express from "express";
 import {getMyPages, createPage, updatePage, getPage, managePage, customizePage} from "../controllers/page";
 import authorization from "../middlewares/authorization";
-import check_links_limiter_status from "../middlewares/check-links-limiter";
+import {check_pages_limiter_status} from "../middlewares/check-user-limiter";
 
 const router = express.Router();
 
 router.route('/').get(authorization, getMyPages);
-router.route("/create").post(authorization, check_links_limiter_status, createPage);
+router.route("/create").post(authorization, check_pages_limiter_status, createPage);
 router.route("/update").put(authorization, updatePage);
 router.route('/customize').put(authorization, customizePage);
 router.route('/manage/:slug').put(authorization, managePage);

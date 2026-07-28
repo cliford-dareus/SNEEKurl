@@ -139,9 +139,7 @@ const LinkContainer = ({items, manageLinksOrder, liveMode}: any) => {
                         )}
                     />
                     {item?.name}
-                    {!liveMode && <button className="ml-auto">
-                        <LuSettings/>
-                    </button>}
+                    {!liveMode && <button className="ml-auto"><LuSettings/></button>}
                     {!liveMode && <button onClick={() => handleDeleteLink(item._id)} className="ml-4">
                         <LuTrash/>
                     </button>}

@@ -45,7 +45,7 @@ const createPage = async (req: any, res: Response) => {
 
 const updatePage = async (req: any, res: Response) => {
     try {
-        const {id, title, description, slug, isPublic, links, category, content} = req.body;
+        const {id, title, description, slug, isPublic, links, category, content, theme} = req.body;
         if (!title && !description && !slug && !isPublic && !links && !content) {
             return res.status(StatusCodes.BAD_REQUEST).json({
                 message: "Please provide a title, description, slug, isPublic and links",
@@ -92,6 +92,7 @@ const updatePage = async (req: any, res: Response) => {
         if (slug) updateOps.slug = slug;
         if (isPublic !== undefined) updateOps.isPublic = isPublic;
         if (content) updateOps.content = content;
+        if (theme) updateOps.theme = theme;
         if (Object.keys(updateOps).length > 0) page.set(updateOps);
         page.links = uniqueAges;
 

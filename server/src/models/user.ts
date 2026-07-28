@@ -13,6 +13,7 @@ export interface IUser extends Document {
     freemium?: number;
     subscription_end?: Date;
     max_link: number;
+    max_page: number;
     passwordTokenLife?: Date | null;
     passwordToken?: string;
     refreshToken?: string;
@@ -40,6 +41,7 @@ const UserSchema = new Schema<IUser>(
         subscription_end: {type: Date},
         freemium: {type: Number, default: 5},
         max_link: {type: Number, default: 5},
+        max_page: {type: Number, default: 2},
         passwordToken: {type: String},
         passwordTokenLife: {type: Date},
         refreshToken: {type: String},

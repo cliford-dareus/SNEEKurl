@@ -37,6 +37,6 @@ function EditorPage({element}: EditorProps) {
         default:
             return null;
     }
-}
+};
 
 export default EditorPage;

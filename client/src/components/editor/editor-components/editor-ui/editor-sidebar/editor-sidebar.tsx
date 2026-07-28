@@ -3,6 +3,7 @@ import {useEditor} from "../../../../../hooks/use-editor";
 import {blocks} from "../blocks";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../../../ui/tabs";
 import Setting from "./settings";
+import ThemeBanner from "./banner";
 
 const EditorSidebar = () => {
     const {state, dispatch} = useEditor();
@@ -33,7 +34,7 @@ const EditorSidebar = () => {
 
                 <TabsContent value="block">
                     <div className="">
-                        <h3 className="font-semibold">Add Blocks</h3>
+                        <h3 className="font-semibold uppercase tracking-wider">Add Blocks</h3>
                         <div className="grid grid-cols-2 gap-2 mt-2">
                             {blocks.filter((block) => block.group == "block").map((block: any) => (
                                 <div
@@ -50,8 +51,8 @@ const EditorSidebar = () => {
                     </div>
 
                     <div className="mt-4">
-                        <h3 className="font-semibold">Theme Recommendation</h3>
-                        <div className=""></div>
+                        <h3 className="font-semibold uppercase tracking-wider">Theme Recommendation</h3>
+                        <ThemeBanner />
                     </div>
                 </TabsContent>
                 <TabsContent value="layout">

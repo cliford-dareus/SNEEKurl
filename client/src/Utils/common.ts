@@ -9,7 +9,7 @@ import {
     LuTrendingUp,
     LuUsers
 } from "react-icons/lu";
-import {MdOutlineDashboard, MdOutlineSettings, MdPerson, MdSubscriptions} from "react-icons/md";
+import { MdOutlineDashboard, MdOutlineSettings, MdPerson, MdSubscriptions } from "react-icons/md";
 import { SiSpeedypage } from "react-icons/si";
 
 // export const API_URL = "https://sneekurl-server.onrender.com";
@@ -80,10 +80,10 @@ export const features = [
 ];
 
 export const stats = [
-    {number: "10M+", label: "Links Created", icon: LuLink2},
-    {number: "500K+", label: "Active Users", icon: LuUsers},
-    {number: "99.9%", label: "Uptime", icon: LuShield},
-    {number: "150+", label: "Countries", icon: LuGlobe}
+    { number: "10M+", label: "Links Created", icon: LuLink2 },
+    { number: "500K+", label: "Active Users", icon: LuUsers },
+    { number: "99.9%", label: "Uptime", icon: LuShield },
+    { number: "150+", label: "Countries", icon: LuGlobe }
 ];
 
 export const useCases = [
@@ -259,7 +259,7 @@ export const CHART_DATA = [
 ];
 
 export const defaultStyles: React.CSSProperties = {
-   backgroundPosition: "center",
+    backgroundPosition: "center",
     objectFit: "cover",
     backgroundRepeat: "no-repeat",
     textAlign: "left",

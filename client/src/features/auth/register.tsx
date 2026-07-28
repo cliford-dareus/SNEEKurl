@@ -1,6 +1,5 @@
 import {Controller, SubmitHandler, useForm} from "react-hook-form";
 import Input from "../../components/ui/Input";
-import Button from "../../components/ui/button";
 import {Link} from "react-router-dom";
 import {useRegisterMutation} from "../../app/services/auth";
 
@@ -18,7 +17,8 @@ const Register = () => {
         control,
         handleSubmit,
         watch,
-        formState: {errors}
+        formState: {errors},
+        setError,
     } = useForm<IUserFormValues>({
         defaultValues: {
             username: "",
@@ -37,8 +37,11 @@ const Register = () => {
                 password: data.password,
                 email: data.email,
             }).unwrap();
-        } catch (error) {
-            console.log(error);
+        } catch (err: any) {
+            console.error(err);
+            setError("root", {
+                message: err?.data?.message || "Invalid username or password",
+            });
         }
     };
 
@@ -76,19 +79,7 @@ const Register = () => {
             </div>
 
             <div className="relative glass-morphism w-full max-w-[480px] rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
-
-                {/* Header Section with AI Tip */}
                 <div className="bg-primary p-8 text-white relative">
-                    <button
-                        // onClick={onClose}
-                        className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors"
-                    >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                                  d="M6 18L18 6M6 6l12 12"/>
-                        </svg>
-                    </button>
-
                     <h2 className="text-2xl font-bold mb-2">Create an account</h2>
                     <p className="text-indigo-100 text-sm opacity-90">Join our community and explore new horizons.</p>
                 </div>
@@ -116,7 +107,7 @@ const Register = () => {
                                     {...field}
                                     className="text-zinc-800"
                                     placeholder="John Doe"
-                                    error={fieldState.error?.message}
+                                    // error={fieldState.error?.message}
                                 />
                             )}
                         />
@@ -183,10 +174,17 @@ const Register = () => {
                             )}
                         />
 
+                        {/* Global Error Message */}
+                        {(isError || errors.root) && (
+                            <p className="text-red-600 text-sm text-center font-medium">
+                                {errors.root?.message || "Invalid credentials. Please try again."}
+                            </p>
+                        )}
+
                         <button
                             type="submit"
                             // disabled={loading}
-                            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-slate-200"
+                            className="w-full bg-foreground hover:bg-slate-800 text-white font-semibold py-3 rounded-xl transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-slate-200"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center gap-2">
@@ -229,12 +227,12 @@ const Register = () => {
 
                     <p className="mt-8 text-center text-sm text-slate-500">
                         Already have an account?
-                        <button
-                            onClick={() =>{}}
+                        <Link
+                            to="/login"
                             className="text-primary font-semibold hover:text-primary-700 transition-colors"
                         >
                             Sign In
-                        </button>
+                        </Link>
                     </p>
                 </div>
             </div>

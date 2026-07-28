@@ -15,7 +15,7 @@ const LinksInBio = () => {
 
     return (
         <EditorProvider pageId={data._id} pageDetails={data}>
-            <div className="h-screen flex items-center justify-center overflow-hidden bg-black">
+            <div className="h-screen  overflow-hidden bg-black">
                 <PageEditor pageId={slug!} liveMode/>
             </div>
         </EditorProvider>

@@ -381,7 +381,7 @@ const Container = ({element, editor}: ContainerProps) => {
 
             <div
                 style={{...styles, width: undefined, height: undefined}}
-                className="w-full h-full p-4"
+                className="w-full h-full"
             >
                 {Array.isArray(content) &&
                     content.map((childElement) => (

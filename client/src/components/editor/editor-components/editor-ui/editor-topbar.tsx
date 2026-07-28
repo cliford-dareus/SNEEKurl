@@ -12,11 +12,13 @@ const EditorTopbar = () => {
             await upsertPage({
                 id: state.editor.id,
                 content: JSON.stringify(state.editor.elements),
+                theme: JSON.stringify(state.editor.theme),
             }).unwrap();
         }catch (error) {
             console.log(error);
         }
     }
+    
     return(
         <div className="h-[60px] flex items-center justify-center">
             <Button onClick={handleSave}>Save</Button>

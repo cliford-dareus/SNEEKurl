@@ -1,7 +1,7 @@
-import Dialog, {DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import React from "react";
-import {Controller, SubmitHandler, useForm} from "react-hook-form";
-import {motion} from "framer-motion";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { motion } from "framer-motion";
 import {
     BsGithub,
     BsGlobe,
@@ -11,10 +11,10 @@ import {
     BsSave,
     BsTwitter
 } from "react-icons/bs";
-import {Button} from "../ui/button";
+import { Button } from "../ui/button";
 import Input from "../ui/Input";
-import {toast} from "react-toastify";
-import {useCustomizePageMutation} from "../../app/services/page";
+import { toast } from "react-toastify";
+import { useCustomizePageMutation } from "../../app/services/page";
 
 export interface PageProps {
     _id: string;
@@ -25,13 +25,7 @@ export interface PageProps {
     content?: any;
     links: any;
     user: any;
-    backgroundType: 'solid' | 'gradient' | 'image';
-    backgroundColor: string;
-    backgroundGradient: string;
-    backgroundImageUrl: string;
-    themeColor: string;
-    accentColor: string;
-    textColor: string;
+    theme?: any;
 }
 
 type Props = {
@@ -41,22 +35,22 @@ type Props = {
 }
 
 const ICON_MAP = {
-    globe: <BsGlobe className="w-5 h-5"/>,
-    github: <BsGithub className="w-5 h-5"/>,
-    linkedin: <BsLinkedin className="w-5 h-5"/>,
-    twitter: <BsTwitter className="w-5 h-5"/>,
-    instagram: <BsInstagram className="w-5 h-5"/>,
-    mail: <BsMailbox2 className="w-5 h-5"/>
+    globe: <BsGlobe className="w-5 h-5" />,
+    github: <BsGithub className="w-5 h-5" />,
+    linkedin: <BsLinkedin className="w-5 h-5" />,
+    twitter: <BsTwitter className="w-5 h-5" />,
+    instagram: <BsInstagram className="w-5 h-5" />,
+    mail: <BsMailbox2 className="w-5 h-5" />
 };
 
-const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data}: Props) => {
+const CustomizeLinksInBioModal = ({ customizePageOpen, setCustomizePageOpen, data }: Props) => {
     const [customizePage] = useCustomizePageMutation();
     const [backgroundType, setBackgroundType] = React.useState<'solid' | 'gradient' | 'image'>(data?.backgroundType);
     const {
         control,
         handleSubmit,
         reset,
-        formState: {errors},
+        formState: { errors },
     } = useForm<Partial<PageProps>>({
         defaultValues: {
             backgroundType: data?.backgroundType,
@@ -92,7 +86,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
 
     return (
         <Dialog open={customizePageOpen} onOpenChange={setCustomizePageOpen}>
-            <DialogContent size="lg">
+            <DialogContent>
                 <DialogHeader>
                     <div className="flex items-center gap-3">
                         <svg
@@ -118,16 +112,16 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
 
                 <div className="px-6 py-4">
                     <motion.div
-                        initial={{opacity: 0}}
-                        animate={{opacity: 1}}
-                        exit={{opacity: 0}}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         className=""
                     />
                     <motion.div
-                        initial={{x: "100%"}}
-                        animate={{x: 0}}
-                        exit={{x: "100%"}}
-                        transition={{type: "spring", damping: 25, stiffness: 200}}
+                        initial={{ x: "100%" }}
+                        animate={{ x: 0 }}
+                        exit={{ x: "100%" }}
+                        transition={{ type: "spring", damping: 25, stiffness: 200 }}
                         className="w-full  border-l border-white/10 z-50"
                     >
                         <form onSubmit={handleSubmit(savePage)}>
@@ -135,7 +129,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                             <section className="mb-10">
                                 <div
                                     className="flex items-center gap-2 mb-4 uppercase text-[10px] font-bold tracking-widest">
-                                    <BsPalette className="w-3 h-3"/>
+                                    <BsPalette className="w-3 h-3" />
                                     Appearance
                                 </div>
                                 <div className="space-y-6">
@@ -149,11 +143,10 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                                     key={type}
                                                     type="button"
                                                     onClick={() => setBackgroundType(type)}
-                                                    className={`py-2 rounded-lg text-xs font-medium border transition-all ${
-                                                        data?.backgroundType === type
+                                                    className={`py-2 rounded-lg text-xs font-medium border transition-all ${data?.backgroundType === type
                                                             ? 'bg-red-500 text-black border-white'
                                                             : 'text-zinc-500 border-zinc-200 hover:border-zinc-300'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {type.charAt(0).toUpperCase() + type.slice(1)}
                                                 </Button>
@@ -168,7 +161,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                             <Controller
                                                 name="backgroundColor"
                                                 control={control}
-                                                render={({field}) => (
+                                                render={({ field }) => (
                                                     <div className="flex gap-3 items-center">
                                                         <Input
                                                             type="color"
@@ -189,7 +182,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                             <Controller
                                                 name="backgroundGradient"
                                                 control={control}
-                                                render={({field}) => (
+                                                render={({ field }) => (
                                                     <Input
                                                         type="text"
                                                         {...field}
@@ -207,7 +200,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                             <Controller
                                                 name="backgroundImageUrl"
                                                 control={control}
-                                                render={({field}) => (
+                                                render={({ field }) => (
                                                     <Input
                                                         type="text"
                                                         {...field}
@@ -227,7 +220,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                             <Controller
                                                 name="accentColor"
                                                 control={control}
-                                                render={({field}) => (
+                                                render={({ field }) => (
                                                     <div className="flex gap-3 items-center">
                                                         <Input
                                                             type="color"
@@ -245,7 +238,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                                             <Controller
                                                 name="textColor"
                                                 control={control}
-                                                render={({field}) => (
+                                                render={({ field }) => (
                                                     <div className="flex gap-3 items-center">
                                                         <Input
                                                             type="color"
@@ -271,7 +264,7 @@ const CustomizeLinksInBioModal = ({customizePageOpen, setCustomizePageOpen, data
                         onClick={handleSubmit(savePage)}
                         className="w-full py-4 rounded-2xl bg-white text-black font-bold flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
-                        <BsSave className="w-5 h-5"/>
+                        <BsSave className="w-5 h-5" />
                         Save Changes
                     </button>
                 </DialogFooter>

@@ -1,6 +1,7 @@
 import React, {FormEvent, useEffect, useState} from "react";
 import {PaymentElement, useElements, useStripe} from "@stripe/react-stripe-js";
 import {LuArrowLeft, LuChevronLeft,} from "react-icons/lu";
+import {Button} from "./ui/button";
 
 const CheckoutForm: React.FC = () => {
     const stripe = useStripe();
@@ -38,11 +39,11 @@ const CheckoutForm: React.FC = () => {
                     <div className="">
                         <form className="mt-8" onSubmit={handleSubmit}>
                             <PaymentElement />
-                            <button disabled={isLoading || !stripe || !elements} id="submit">
-        <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
-        </span>
-                            </button>
+                            <Button disabled={isLoading || !stripe || !elements} id="submit">
+                                <span id="button-text">
+                                  {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+                                </span>
+                            </Button>
                         </form>
                     </div>
                 </div>
