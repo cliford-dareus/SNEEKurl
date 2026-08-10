@@ -1,15 +1,15 @@
 import classNames from "classnames";
-import {BsTrash2} from "react-icons/bs";
+import { BsTrash2 } from "react-icons/bs";
 import EditorPage from "../../../editor-element";
-import {useEffect, useRef, useState} from "react";
-import {useEditor} from "../../../../../../hooks/use-editor";
-import {defaultStyles} from "../../../../../../Utils/common";
+import { useEffect, useRef, useState } from "react";
+import { useEditor } from "../../../../../../hooks/use-editor";
+import { defaultStyles } from "../../../../../../Utils/common";
 
 type ContainerProps = { element: any, editor?: any }
 
-const Container = ({element, editor}: ContainerProps) => {
-    const {id, content, name, styles, type} = element;
-    const {state, dispatch} = useEditor();
+const Container = ({ element, editor }: ContainerProps) => {
+    const { id, content, name, styles, type } = element;
+    const { state, dispatch } = useEditor();
     const [isDraggingOver, setIsDraggingOver] = useState(false);
     const isSelected = state.editor.selectedElement.id === id;
 
@@ -331,7 +331,7 @@ const Container = ({element, editor}: ContainerProps) => {
     };
 
     const handleDeleteElement = () => {
-        dispatch({type: "DELETE_ELEMENT", payload: {elementDetails: element}});
+        dispatch({ type: "DELETE_ELEMENT", payload: { elementDetails: element } });
     };
 
     return (
@@ -364,9 +364,9 @@ const Container = ({element, editor}: ContainerProps) => {
                 "outline-dashed outline-[1px] outline-slate-300":
                     !state.editor.liveMode,
             })}
-            style={{width: styles?.width, height: styles?.height}}
+            style={{ width: styles?.width, height: styles?.height }}
             onClick={(e) => handleOnClickBody(e)}
-            // onPointerDown={(e) => e.stopPropagation()}
+        // onPointerDown={(e) => e.stopPropagation()}
         >
             <div
                 className={classNames(
@@ -380,12 +380,12 @@ const Container = ({element, editor}: ContainerProps) => {
             </div>
 
             <div
-                style={{...styles, width: undefined, height: undefined}}
+                style={{ ...styles, width: undefined, height: undefined }}
                 className="w-full h-full"
             >
                 {Array.isArray(content) &&
                     content.map((childElement) => (
-                        <EditorPage key={childElement.id} element={childElement}/>
+                        <EditorPage key={childElement.id} element={childElement} />
                     ))}
             </div>
 
@@ -394,7 +394,7 @@ const Container = ({element, editor}: ContainerProps) => {
                 state.editor.selectedElement.type !== "__body" && (
                     <div
                         className="absolute bg-primary px-2.5 py-1 text-xs font-bold -top-[26px] -right-[1px] rounded-none rounded-t-lg dark:bg-background">
-                        <BsTrash2 className="inline-block mr-1" onClick={handleDeleteElement} size={16}/>
+                        <BsTrash2 className="inline-block mr-1" onClick={handleDeleteElement} size={16} />
                     </div>
                 )}
         </div>

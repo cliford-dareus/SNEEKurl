@@ -1,5 +1,5 @@
 import PageEditor from "../../index";
-import {BaseBoxShapeUtil, HTMLContainer, RecordProps, T, TLShape} from 'tldraw'
+import { BaseBoxShapeUtil, HTMLContainer, RecordProps, T, TLShape } from 'tldraw'
 import IPHONE_MOCKUP from "../../../../assets/apple-iphone-15-black-portrait.png"
 import React from "react";
 
@@ -25,13 +25,11 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IPhoneMockupShape> {
         h: T.number,
         pageId: T.string,
     }
-
-    // [1]
+    
     override canEdit() {
         return true
     }
 
-    // [1b]
     override canEditWhileLocked() {
         return true
     }
@@ -88,21 +86,20 @@ export class EditableShapeUtil extends BaseBoxShapeUtil<IPhoneMockupShape> {
                         boxShadow: 'inset 0 0 8px rgba(0,0,0,0.1)',
                         zIndex: 2,
                     }}>
-                    <PageEditor pageId={shape.props.pageId} liveMode={false}/>
+                    <PageEditor pageId={shape.props.pageId} liveMode={false} />
                 </div>
             </HTMLContainer>
         )
     }
 
     indicator(shape: IPhoneMockupShape) {
-        return <rect width={shape.props.w} height={shape.props.h}/>
+        return <rect width={shape.props.w} height={shape.props.h} />
     }
 
-    // [3]
     override onEditEnd(shape: IPhoneMockupShape) {
         this.editor.animateShape(
-            {...shape, rotation: shape.rotation + Math.PI * 2},
-            {animation: {duration: 250}}
+            { ...shape, rotation: shape.rotation + Math.PI * 2 },
+            { animation: { duration: 250 } }
         )
     }
 }

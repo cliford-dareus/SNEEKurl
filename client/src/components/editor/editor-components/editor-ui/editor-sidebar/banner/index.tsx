@@ -26,24 +26,6 @@ const ThemeBanner = () => {
                         <div className="absolute bottom-[-10%] left-[25%] w-[50%] h-[60%] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.35)_0%,transparent_70%)] blur-2xl" />
                     </div>
 
-                    {/* Nav Header (Menu + Logo matching image) */}
-                    {/*<div className="w-full flex items-center justify-between px-[1px] py-[1px] z-10 relative">
-                        <div className="flex items-center gap-2">
-                            <div className="p-1 rounded-lg bg-white/10 backdrop-blur-md">
-                                <div className="w-[1px] h-[1px] text-indigo-300 drop-shadow-md" />
-                            </div>
-                            <span className="font-bold text-[3px] tracking-tight text-white drop-shadow-md font-sans">
-                                SmartBio
-                            </span>
-                        </div>
-                        <button
-                            // onClick={() => setIsEditing(true)}
-                            className="p-2 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all text-white flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer z-20"
-                        >
-                            <div className="w-5 h-5 text-white" />
-                        </button>
-                    </div>*/}
-
                     {/* Curved Wave Mask Transition (Convex Shape matching image) */}
                     <div
                         className="absolute bottom-[-1px] left-0 right-0 w-full overflow-hidden leading-[0] pointer-events-none z-10 transition-colors duration-500"

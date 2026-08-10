@@ -13,26 +13,24 @@ import {
     LuShare2,
     LuStar,
 } from "react-icons/lu";
-import {ReactNode, useEffect, useRef, useState} from "react";
-import {useAppSelector} from "../app/hook";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { useAppSelector } from "../app/hook";
 import BrowserShot from "../assets/706shots_so.webp";
-import {Outlet} from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import EditQrModal from "../components/modals/edit-qr-modal";
 import EditLinkModal from "../components/modals/edit-link-modal";
-import {selectCurrentUser} from "../features/auth/authslice";
+import { selectCurrentUser } from "../features/auth/authslice";
 import HomeCreateLinkManager from "../features/url/urllandingmanager";
 import VisitLinkButton from "../components/visit-link-button";
 import classNames from "classnames";
-import {
-    Tooltip, TooltipContent, TooltipTrigger,
-} from "../components/ui/tooltip";
-import {useUserPlan} from "../components/layout/layout";
-import {useInView} from "framer-motion";
+import { useUserPlan } from "../components/layout/layout";
+import { useInView } from "framer-motion";
 import ShareLinkModal from "../components/modals/share-link-modal";
-import {motion} from "framer-motion";
-import {Button} from "../components/ui/button";
-import {features, pricingPlans, stats, testimonials, useCases} from "../Utils/common";
+import { motion } from "framer-motion";
+import { Button } from "../components/ui/button";
+import { features, pricingPlans, stats, testimonials, useCases } from "../Utils/common";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../components/ui/tooltip";
 
 const TIMELEFT = {
     hours: 0,
@@ -41,11 +39,11 @@ const TIMELEFT = {
 }
 
 const HomeLinkItem = ({
-                          url,
-                          isAuthenticated,
-                          isFreePlan,
-                          plan,
-                      }: {
+    url,
+    isAuthenticated,
+    isFreePlan,
+    plan,
+}: {
     url: Url;
     isAuthenticated: boolean;
     isFreePlan: boolean;
@@ -63,7 +61,7 @@ const HomeLinkItem = ({
             const timeLeftSeconds = Math.max(timeLeftMs / 1000, 0); // Prevent negative values
             const hours = Math.floor(timeLeftSeconds / 3600);
             const minutes = Math.floor((timeLeftSeconds % 3600) / 60);
-            setTimeLeft({hours, minutes, expires: Date.now() > expiredTime});
+            setTimeLeft({ hours, minutes, expires: Date.now() > expiredTime });
         };
 
         updateTimeLeft();
@@ -83,7 +81,7 @@ const HomeLinkItem = ({
                     <div className="flex items-center gap-2">
                         <VisitLinkButton url={url.short}>
                             <div className="flex items-center gap-2 text-primary">
-                                <LuLink2 size={16}/>
+                                <LuLink2 size={16} />
                                 <span className="text-sm">sneek.co/{url.short}</span>
                             </div>
                         </VisitLinkButton>
@@ -92,7 +90,7 @@ const HomeLinkItem = ({
                                 className="cursor-pointer hover:text-primary"
                                 onClick={() => setShareActive(true)}
                             >
-                                <LuShare2 size={18}/>
+                                <LuShare2 size={18} />
                             </div>
                             <div className="">
                                 <LuQrCode
@@ -106,12 +104,13 @@ const HomeLinkItem = ({
                                 <Tooltip>
                                     <TooltipTrigger>
                                         <div className="flex items-center gap-1 text-xs cursor-help">
-                                            <LuClock size={18}/>
-                                            {timeLeft.hours === 0 ? "" : `${timeLeft.hours} hours`}
-                                            {timeLeft.minutes}m
+                                            <LuClock size={18} />
                                         </div>
                                     </TooltipTrigger>
-                                    <TooltipContent></TooltipContent>
+                                    <TooltipContent>
+                                        {timeLeft.hours === 0 ? "" : `${timeLeft.hours} hours`}
+                                        {timeLeft.minutes}m
+                                    </TooltipContent>
                                 </Tooltip>
                             )}
                         </div>
@@ -153,28 +152,28 @@ const HomeLinkItem = ({
 };
 
 const Landing = () => {
-    const {plan} = useUserPlan();
+    const { plan } = useUserPlan();
     const isFreePlan = plan === "free";
     const user = useAppSelector(selectCurrentUser);
     const isAuthenticated = user.user.username !== undefined;
-    const {data, isSuccess} = useGetUrlsQuery("limit=5");
+    const { data, isSuccess } = useGetUrlsQuery("limit=5");
 
     const heroRef = useRef(null);
     const featuresRef = useRef(null);
     const statsRef = useRef(null);
     const [activeFeature, setActiveFeature] = useState(0);
-    const isHeroInView = useInView(heroRef, {once: true});
-    const isFeaturesInView = useInView(featuresRef, {once: true});
-    const isStatsInView = useInView(statsRef, {once: true});
+    const isHeroInView = useInView(heroRef, { once: true });
+    const isFeaturesInView = useInView(featuresRef, { once: true });
+    const isStatsInView = useInView(statsRef, { once: true });
 
     return (
         <>
             <section className="bg-background/90">
                 <div className="max-w-6xl mx-auto flex flex-col justify-center p-4 text-center">
                     <div className="mt-28">
-                    <span className="rounded-full bg-primary px-4 py-1 text-primary-foreground">
-                        +1k github
-                    </span>
+                        <span className="rounded-full bg-primary px-4 py-1 text-primary-foreground">
+                            +1k github
+                        </span>
                         <p className="mt-4 text-bold text-xl text-foreground/50">
                             Your shortcut to instant connections.
                         </p>
@@ -208,7 +207,7 @@ const Landing = () => {
                     </div>
 
                     <div className="flex justify-center items-center mt-8">
-                        <img className="" src={BrowserShot} alt="shot"/>
+                        <img className="" src={BrowserShot} alt="shot" />
                     </div>
                 </div>
             </section>
@@ -216,22 +215,22 @@ const Landing = () => {
             <section ref={statsRef} className="py-20 bg-background/90">
                 <div className="max-w-6xl  mx-auto px-4">
                     <motion.div
-                        initial={{opacity: 0, y: 30}}
-                        animate={isStatsInView ? {opacity: 1, y: 0} : {}}
-                        transition={{duration: 0.6}}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={isStatsInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.6 }}
                         className="grid grid-cols-2 md:grid-cols-4 gap-8"
                     >
                         {stats.map((stat, index) => (
                             <motion.div
                                 key={index}
-                                initial={{opacity: 0, scale: 0.8}}
-                                animate={isStatsInView ? {opacity: 1, scale: 1} : {}}
-                                transition={{duration: 0.6, delay: index * 0.1}}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={isStatsInView ? { opacity: 1, scale: 1 } : {}}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
                                 className="text-center"
                             >
                                 <div
                                     className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <stat.icon className="text-primary" size={24}/>
+                                    <stat.icon className="text-primary" size={24} />
                                 </div>
                                 <div className="text-4xl font-bold text-primary mb-2">{stat.number}</div>
                                 <div className="text-foreground/50">{stat.label}</div>
@@ -244,9 +243,9 @@ const Landing = () => {
             <section ref={featuresRef} className="py-20 bg-background/90">
                 <div className="max-w-6xl  mx-auto px-4">
                     <motion.div
-                        initial={{opacity: 0, y: 30}}
-                        animate={isFeaturesInView ? {opacity: 1, y: 0} : {}}
-                        transition={{duration: 0.6}}
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={isFeaturesInView ? { opacity: 1, y: 0 } : {}}
+                        transition={{ duration: 0.6 }}
                         className="text-center mb-16"
                     >
                         <h2 className="text-5xl font-bold mb-6">Powerful Features</h2>
@@ -261,9 +260,9 @@ const Landing = () => {
                             {features.map((feature, index) => (
                                 <motion.div
                                     key={feature.id}
-                                    initial={{opacity: 0, x: -30}}
-                                    animate={isFeaturesInView ? {opacity: 1, x: 0} : {}}
-                                    transition={{duration: 0.6, delay: index * 0.1}}
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={isFeaturesInView ? { opacity: 1, x: 0 } : {}}
+                                    transition={{ duration: 0.6, delay: index * 0.1 }}
                                     className={classNames(
                                         "p-6 rounded-xl cursor-pointer transition-all duration-300",
                                         activeFeature === index
@@ -301,8 +300,8 @@ const Landing = () => {
                                                                 : "bg-primary/10 text-primary"
                                                         )}
                                                     >
-                            {benefit}
-                          </span>
+                                                        {benefit}
+                                                    </span>
                                                 ))}
                                             </div>
                                         </div>
@@ -314,9 +313,9 @@ const Landing = () => {
                         {/* Feature Preview */}
                         <motion.div
                             key={activeFeature}
-                            initial={{opacity: 0, scale: 0.9}}
-                            animate={{opacity: 1, scale: 1}}
-                            transition={{duration: 0.5}}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
                             className="relative"
                         >
                             <div className="bg-background rounded-2xl p-8 shadow-xl">
@@ -329,7 +328,7 @@ const Landing = () => {
                                     <p className="text-base-content/70 mb-4">{features[activeFeature].description}</p>
                                     <Button className="bg-primary text-primary-foreground hover:bg-accent">
                                         Try {features[activeFeature].title}
-                                        <LuArrowRight className="ml-2" size={16}/>
+                                        <LuArrowRight className="ml-2" size={16} />
                                     </Button>
                                 </div>
                             </div>
@@ -352,22 +351,22 @@ const Landing = () => {
                         {useCases.map((useCase, index) => (
                             <motion.div
                                 key={index}
-                                initial={{opacity: 0, y: 30}}
-                                whileInView={{opacity: 1, y: 0}}
-                                transition={{duration: 0.6, delay: index * 0.1}}
-                                viewport={{once: true}}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                viewport={{ once: true }}
                                 className="bg-background/50 rounded-xl p-8 hover:shadow-lg transition-shadow"
                             >
                                 <div
                                     className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                                    <useCase.icon className="text-primary" size={28}/>
+                                    <useCase.icon className="text-primary" size={28} />
                                 </div>
                                 <h3 className="text-2xl font-bold mb-4">{useCase.title}</h3>
                                 <p className="text-foreground/70 mb-6">{useCase.description}</p>
                                 <ul className="space-y-2">
                                     {useCase.features.map((feature, idx) => (
                                         <li key={idx} className="flex items-center gap-2">
-                                            <LuCheck className="text-success" size={16}/>
+                                            <LuCheck className="text-success" size={16} />
                                             <span className="text-sm">{feature}</span>
                                         </li>
                                     ))}
@@ -390,24 +389,24 @@ const Landing = () => {
                         {testimonials.map((testimonial, index) => (
                             <motion.div
                                 key={index}
-                                initial={{opacity: 0, y: 30}}
-                                whileInView={{opacity: 1, y: 0}}
-                                transition={{duration: 0.6, delay: index * 0.1}}
-                                viewport={{once: true}}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                viewport={{ once: true }}
                                 className="bg-background/20 rounded-xl p-8 shadow-lg"
                             >
                                 <div className="flex items-center gap-1 mb-4">
                                     {[...Array(testimonial.rating)].map((_, i) => (
-                                        <LuStar key={i} className="text-destructive fill-current" size={16}/>
+                                        <LuStar key={i} className="text-destructive fill-current" size={16} />
                                     ))}
                                 </div>
                                 <p className="text-foreground/70 mb-6 italic">"{testimonial.text}"</p>
                                 <div className="flex items-center gap-3">
                                     <div
                                         className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-primary font-semibold">
-                      {testimonial.name.split(' ').map(n => n[0]).join('')}
-                    </span>
+                                        <span className="text-primary font-semibold">
+                                            {testimonial.name.split(' ').map(n => n[0]).join('')}
+                                        </span>
                                     </div>
                                     <div>
                                         <div className="font-semibold">{testimonial.name}</div>
@@ -434,10 +433,10 @@ const Landing = () => {
                         {pricingPlans.map((plan, index) => (
                             <motion.div
                                 key={index}
-                                initial={{opacity: 0, y: 30}}
-                                whileInView={{opacity: 1, y: 0}}
-                                transition={{duration: 0.6, delay: index * 0.1}}
-                                viewport={{once: true}}
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
+                                viewport={{ once: true }}
                                 className={classNames(
                                     "relative rounded-xl p-8 border-2",
                                     plan.popular
@@ -448,7 +447,7 @@ const Landing = () => {
                                 {plan.popular && (
                                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                                         <span className="bg-primary text-white px-4 py-2 rounded-full text-sm font-medium">
-                                          Most Popular
+                                            Most Popular
                                         </span>
                                     </div>
                                 )}
@@ -465,7 +464,7 @@ const Landing = () => {
                                 <ul className="space-y-3 mb-8">
                                     {plan.features.map((feature, idx) => (
                                         <li key={idx} className="flex items-center gap-3">
-                                            <LuCheck className="text-success" size={16}/>
+                                            <LuCheck className="text-success" size={16} />
                                             <span>{feature}</span>
                                         </li>
                                     ))}
@@ -491,10 +490,10 @@ const Landing = () => {
             <section className="py-20 bg-gradient-to-r from-primary to-accent">
                 <div className="max-w-6xl  mx-auto px-4 text-center">
                     <motion.div
-                        initial={{opacity: 0, y: 30}}
-                        whileInView={{opacity: 1, y: 0}}
-                        transition={{duration: 0.6}}
-                        viewport={{once: true}}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
                         className="max-w-3xl mx-auto"
                     >
                         <h2 className="text-5xl font-bold text-primary-foreground mb-6">
@@ -506,7 +505,7 @@ const Landing = () => {
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Button className="bg-accent text-accent-foreground px-8 py-4 text-lg font-semibold">
                                 Start Free Trial
-                                <LuArrowRight className="ml-2" size={20}/>
+                                <LuArrowRight className="ml-2" size={20} />
                             </Button>
                             <Button className="bg-transparent border-2 border-white text-primary-foreground px-8 py-4 text-lg">
                                 Contact Sales
@@ -517,7 +516,7 @@ const Landing = () => {
             </section>
 
             <>
-                <Outlet/>
+                <Outlet />
             </>
         </>
     );

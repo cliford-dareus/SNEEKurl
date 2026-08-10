@@ -1,5 +1,5 @@
-import {NextFunction, Request, Response} from "express";
-import {StatusCodes} from "http-status-codes";
+import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import stripe from "../config/stripe";
 import Short from "../models/short";
 import User from "../models/user";
@@ -41,7 +41,7 @@ const check_links_limiter_status = async (
 
                 // Update user's max_link in database for caching
                 if (user.max_link !== maxLinks) {
-                    await User.findByIdAndUpdate(user._id, {max_link: maxLinks});
+                    await User.findByIdAndUpdate(user._id, { max_link: maxLinks });
                 }
             } catch (stripeError) {
                 console.error("Stripe API error:", stripeError);
@@ -91,7 +91,7 @@ export const check_pages_limiter_status = async (
         let maxPage = user.max_page || 1;
 
         // Check if user has active subscription
-        if(user.stripe_account_id){
+        if (user.stripe_account_id) {
             try {
                 const [planMetadata, subscription] = await checkUserSubscription(user.stripe_account_id);
 
@@ -106,7 +106,7 @@ export const check_pages_limiter_status = async (
 
                 // Update user's max_link in database for caching
                 if (user.max_page !== maxPage) {
-                    await User.findByIdAndUpdate(user._id, {max_page: maxPage});
+                    await User.findByIdAndUpdate(user._id, { max_page: maxPage });
                 }
             } catch (stripeError) {
                 console.error("Stripe API error:", stripeError);
