@@ -1,5 +1,7 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+import { notFound } from "../lib/api/response";
 
-const notFound = (req: Request, res: Response) =>
-    res.status(404).send("Route not Found");
-export default notFound;
+const notFoundMiddleware = (req: Request, res: Response) =>
+  notFound(res, `Route ${req.method} ${req.originalUrl} not found`);
+
+export default notFoundMiddleware;

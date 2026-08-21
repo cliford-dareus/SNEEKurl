@@ -1,12 +1,14 @@
-import { StatusCodes } from 'http-status-codes';
-import CustomError from './CustomError';
+import { StatusCodes } from "http-status-codes";
+import CustomError from "./CustomError";
 
 class BadRequest extends CustomError {
-    statusCode : unknown
-    constructor(message:string){
-        super(message);
-        this.statusCode = StatusCodes.BAD_REQUEST;
-    }
-};
+  constructor(
+    message = "Invalid request",
+    errors?: Array<{ field?: string; message: string; code?: string }>,
+    code = "BAD_REQUEST"
+  ) {
+    super(message, StatusCodes.BAD_REQUEST, code, errors);
+  }
+}
 
 export default BadRequest;

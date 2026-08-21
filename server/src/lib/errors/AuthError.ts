@@ -1,12 +1,10 @@
-import { StatusCodes } from 'http-status-codes';
-import CustomError from './CustomError';
+import { StatusCodes } from "http-status-codes";
+import CustomError from "./CustomError";
 
 class Unauthenticated extends CustomError {
-    statusCode : unknown
-    constructor(message:string){
-        super(message);
-        this.statusCode = StatusCodes.UNAUTHORIZED;
-    }
-};
+  constructor(message = "Authentication required", code = "UNAUTHORIZED") {
+    super(message, StatusCodes.UNAUTHORIZED, code);
+  }
+}
 
 export default Unauthenticated;
