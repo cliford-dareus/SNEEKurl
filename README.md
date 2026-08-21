@@ -102,6 +102,53 @@ See `server/.env.example` for the full list (`JWT_SECRET`, `MONGO_URI`, `REDIS_U
 
 ---
 
+## Docker
+
+### Local development
+
+```bash
+cp .env.docker.example .env
+# edit JWT_SECRET and optional Stripe/UploadThing keys
+
+docker compose up --build
+# or: make up
+```
+
+| Service | URL |
+|---------|-----|
+| Client (Vite) | http://localhost:5173 |
+| API | http://localhost:4000 |
+| MongoDB | localhost:27017 |
+| Redis | localhost:6379 |
+
+Source under `server/src` and `client/src` is bind-mounted for hot reload.
+
+### Production-like
+
+```bash
+cp .env.docker.example .env
+# set a strong JWT_SECRET
+
+docker compose -f docker-compose.prod.yml up --build -d
+# or: make prod
+```
+
+Open **http://localhost:8080** — nginx serves the SPA and proxies API routes to the server.
+
+```bash
+docker compose -f docker-compose.prod.yml down   # stop
+```
+
+### Useful commands
+
+```bash
+make logs          # follow local logs
+make prod-logs     # follow prod logs
+make test          # run server Jest suite in a container
+```
+
+---
+
 ## License
 
 MIT
