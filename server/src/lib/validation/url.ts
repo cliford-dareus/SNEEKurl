@@ -2,11 +2,36 @@ import { z } from "zod";
 
 /**
  * Basic URL validation + optional custom backhalf rules.
+ * Compatible with Zod v4.
  */
+const optionalBackhalf = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z
+    .string()
+    .trim()
+    .min(3, "Custom backhalf must be at least 3 characters")
+    .max(32, "Custom backhalf must be at most 32 characters")
+    .regex(
+      /^[a-zA-Z0-9_-]+$/,
+      "Backhalf can only contain letters, numbers, hyphens, and underscores"
+    )
+    .optional()
+);
+
+const optionalPassword = z.preprocess(
+  (val) => (val === "" || val === null ? undefined : val),
+  z
+    .string()
+    .min(4, "Link password must be at least 4 characters")
+    .max(64, "Link password must be at most 64 characters")
+    .optional()
+);
+
 export const createShortSchema = z.object({
   longUrl: z
-    .string({ required_error: "Enter a long URL" })
+    .string({ error: "Enter a long URL" })
     .trim()
+    .min(1, "Enter a long URL")
     .url({ message: "Please enter a valid URL (include http:// or https://)" })
     .refine(
       (val) => {
@@ -19,23 +44,8 @@ export const createShortSchema = z.object({
       },
       { message: "Only http and https URLs are allowed" }
     ),
-  backhalf: z
-    .string()
-    .trim()
-    .min(3, "Custom backhalf must be at least 3 characters")
-    .max(32, "Custom backhalf must be at most 32 characters")
-    .regex(
-      /^[a-zA-Z0-9_-]+$/,
-      "Backhalf can only contain letters, numbers, hyphens, and underscores"
-    )
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  password: z
-    .string()
-    .min(4, "Link password must be at least 4 characters")
-    .max(64, "Link password must be at most 64 characters")
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
+  backhalf: optionalBackhalf,
+  password: optionalPassword,
 });
 
 export const editShortSchema = z.object({
