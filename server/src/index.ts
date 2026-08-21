@@ -104,7 +104,7 @@ app.use(
 webhook(app, bodyParser);
 
 app.get("/csrf-token", csrfProtection, (req, res) => {
-    res.json({csrfToken: req.csrfToken()});
+    res.json({ success: true, message: "CSRF token issued.", data: { csrfToken: req.csrfToken() } });
 });
 
 app.use(notfoundMiddleware);
