@@ -213,7 +213,7 @@ const logout = async (req: any, res: Response) => {
     try {
         // Blacklist the current access token
         if (req.token) {
-            blacklistToken(req.token);
+            await blacklistToken(req.token);
         }
 
         // Clear refresh token from database
