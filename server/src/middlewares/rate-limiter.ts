@@ -1,60 +1,53 @@
-import rateLimit from 'express-rate-limit';
+import rateLimit from "express-rate-limit";
 
-// General API rate limiter - more reasonable limits
+const rateLimitHandler = (message: string) => (_req: any, res: any) => {
+  res.status(429).json({
+    success: false,
+    message,
+    code: "RATE_LIMITED",
+  });
+};
+
 export const generalRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 500, // 100 requests per 15 minutes
-    message: {
-        error: 'Too many requests from this IP, please try again later.',
-        retryAfter: '15 minutes'
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-    keyGenerator: (req) => {
-        // Use IP address as key
-        return req.ip || req.connection.remoteAddress || 'unknown';
-    }
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler(
+    "Too many requests from this IP. Please try again in 15 minutes."
+  ),
 });
 
-// Strict rate limiter for auth endpoints
 export const authRateLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // 5 login attempts per 15 minutes
-    message: {
-        error: 'Too many authentication attempts, please try again later.',
-        retryAfter: '15 minutes'
-    },
-    standardHeaders: true,
-    legacyHeaders: false,
-    skipSuccessfulRequests: true, // Don't count successful requests
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: rateLimitHandler(
+    "Too many login or registration attempts. Please try again in 15 minutes."
+  ),
 });
 
-// URL creation rate limiter
 export const urlCreationRateLimiter = rateLimit({
-    windowMs: 60 * 1000, // 1 minute
-    max: 10, // 10 URL creations per minute
-    message: {
-        error: 'Too many URLs created, please slow down.',
-        retryAfter: '1 minute'
-    },
-    keyGenerator: (req: any) => {
-        // Rate limit by user ID if authenticated, otherwise by IP
-        return req.user?.id || req.ip || 'unknown';
-    }
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req: any) => req.user?._id?.toString() || req.user?.id || req.ip || "unknown",
+  handler: rateLimitHandler(
+    "You are creating links too quickly. Please wait a minute and try again."
+  ),
 });
 
-// Guest user rate limiter (more restrictive)
 export const guestRateLimiter = rateLimit({
-    windowMs: 60 * 60 * 1000, // 1 hour
-    max: 20, // 20 requests per hour for guests
-    message: {
-        error: 'Guest limit exceeded. Please sign up for higher limits.',
-        retryAfter: '1 hour'
-    },
-    keyGenerator: (req: any) => {
-        // Use guest client_id if available, otherwise IP
-        return req.guest?.client_id || req.ip || 'unknown';
-    }
+  windowMs: 60 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req: any) => req.guest?.client_id || req.ip || "unknown",
+  handler: rateLimitHandler(
+    "Guest limit exceeded. Sign up for a free account to get higher limits."
+  ),
 });
 
 export default generalRateLimiter;
