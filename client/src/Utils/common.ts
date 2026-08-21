@@ -13,7 +13,7 @@ import { MdOutlineDashboard, MdOutlineSettings, MdPerson, MdSubscriptions } from
 import { SiSpeedypage } from "react-icons/si";
 
 // export const API_URL = "https://sneekurl-server.onrender.com";
-export const API_URL = "http://localhost:4080";
+export const API_URL = "http://localhost:4000";
 export const pricingPlans = [
     {
         id: "pricing_1",
