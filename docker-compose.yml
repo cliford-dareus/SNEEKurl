@@ -1,0 +1,88 @@
+# SNEEKurl – local development
+# Usage:
+#   cp .env.docker.example .env
+#   docker compose up --build
+#
+# Services:
+#   - client  http://localhost:5173  (Vite HMR)
+#   - server  http://localhost:4000
+#   - mongo   localhost:27017
+#   - redis   localhost:6379
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      ENVIRONMENT: development
+      PORT: 4000
+      MONGO_URI: mongodb://mongo:27017/sneekurl
+      REDIS_URL: redis://redis:6379
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:5173,http://localhost:3000}
+      JWT_SECRET: ${JWT_SECRET:-dev-jwt-secret-change-me}
+    volumes:
+      - ./server/src:/app/src
+      - ./server/package.json:/app/package.json
+      - server_node_modules:/app/node_modules
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:4000}
+    volumes:
+      - ./client/src:/app/src
+      - ./client/index.html:/app/index.html
+      - ./client/public:/app/public
+      - client_node_modules:/app/node_modules
+    depends_on:
+      - server
+
+volumes:
+  mongo_data:
+  redis_data:
+  server_node_modules:
+  client_node_modules:
