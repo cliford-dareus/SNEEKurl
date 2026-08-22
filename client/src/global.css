@@ -6,9 +6,7 @@
     :root {
         /* ==================== Core ==================== */
         --background: 0 0% 100%;
-        /* Pure white background - clean & professional */
         --foreground: 222 47% 11%;
-        /* Deep neutral dark for excellent readability */
 
         /* Cards & Surfaces */
         --card: 0 0% 100%;
@@ -17,21 +15,19 @@
         --popover: 0 0% 100%;
         --popover-foreground: 222 47% 11%;
 
-        /* Primary - Modern energetic red (your original red kept but refined) */
+        /* Primary */
         --primary: 357 79% 50%;
-        /* Bright, trustworthy red (#EF233C) */
         --primary-foreground: 0 0% 100%;
 
-        /* Secondary - Very subtle cool gray */
+        /* Secondary */
         --secondary: 210 20% 98%;
         --secondary-foreground: 222 47% 11%;
 
-        /* Muted / Subtle elements */
+        /* Muted */
         --muted: 210 20% 96%;
         --muted-foreground: 215 16% 46%;
 
-        /* Accent - Fresh lime green for "success / shortened" moments */
-        /*--accent: 80 82% 58%;              !* Vibrant but not childish lime (#A3E635) *!*/
+        /* Accent */
         --accent: 260 86% 53%;
         --accent-foreground: 222 47% 11%;
 
@@ -43,10 +39,10 @@
         --border: 214 32% 91%;
         --input: 214 32% 91%;
 
-        /* Focus ring - tied to primary for consistency */
+        /* Focus ring */
         --ring: 348 83% 53%;
 
-        /* ==================== Sidebar (if you have one) ==================== */
+        /* Sidebar */
         --sidebar-background: 0 0% 99%;
         --sidebar-foreground: 222 47% 11%;
         --sidebar-primary: 348 83% 53%;
@@ -54,27 +50,19 @@
         --sidebar-accent: 210 20% 96%;
         --sidebar-accent-foreground: 222 47% 11%;
         --sidebar-border: 214 32% 91%;
+        --sidebar-ring: 348 83% 53%;
 
-        /* ==================== Charts / Stats ==================== */
+        /* Charts */
         --chart-1: 348 83% 53%;
-        /* Primary red */
         --chart-2: 80 82% 58%;
-        /* Accent lime */
         --chart-3: 217 91% 60%;
-        /* Bright blue for clicks */
         --chart-4: 142 71% 45%;
-        /* Success green */
         --chart-5: 38 92% 55%;
-        /* Warm orange for highlights */
 
-        /* ==================== Radius & Effects ==================== */
         --radius: 0.75rem;
-        /* Slightly more modern than 0.5rem */
 
-        /* Optional: Soft shadows for depth (use in Tailwind or CSS) */
         --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
         --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-
 
         --sz: 15px;
         --c0: #000;
@@ -92,52 +80,35 @@
     }
 
     .dark {
-        /* ==================== Dark Mode (Default) ==================== */
         --background: 300 7% 3%;
-        /* Deep, rich dark background */
         --foreground: 0 0% 98%;
-        /* Near-white text for excellent contrast */
 
-        /* Cards & Surfaces */
         --card: 222 47% 13%;
-        /* Slightly lighter than background */
         --card-foreground: 0 0% 98%;
 
         --popover: 222 47% 13%;
         --popover-foreground: 0 0% 98%;
 
-        /* Primary - Vibrant, trustworthy red */
         --primary: 357 79% 50%;
-        /* Bright modern red (#FF2D55 approx) */
         --primary-foreground: 0 0% 100%;
 
-        /* Secondary */
         --secondary: 217 32% 17%;
-        /* Subtle dark gray */
         --secondary-foreground: 0 0% 95%;
 
-        /* Muted */
         --muted: 217 32% 17%;
         --muted-foreground: 215 20% 65%;
 
-        /* Accent - Fresh lime for success & shortened links */
         --accent: 80 82% 62%;
-        /* Vibrant lime */
         --accent-foreground: 222 47% 11%;
-        /* Dark text on bright accent */
 
-        /* Destructive */
         --destructive: 0 84% 60%;
         --destructive-foreground: 0 0% 100%;
 
-        /* Border & Input */
         --border: 217 32% 22%;
         --input: 217 32% 22%;
 
-        /* Ring / Focus */
         --ring: 348 83% 58%;
 
-        /* Sidebar */
         --sidebar-background: 222 47% 9%;
         --sidebar-foreground: 0 0% 95%;
         --sidebar-primary: 348 83% 58%;
@@ -145,41 +116,47 @@
         --sidebar-accent: 217 32% 17%;
         --sidebar-accent-foreground: 0 0% 95%;
         --sidebar-border: 217 32% 22%;
+        --sidebar-ring: 348 83% 58%;
 
-        /* Charts / Analytics */
         --chart-1: 348 83% 58%;
-        /* Primary red */
         --chart-2: 80 82% 62%;
-        /* Accent lime */
         --chart-3: 217 91% 65%;
-        /* Bright blue for clicks */
         --chart-4: 142 71% 48%;
-        /* Success green */
         --chart-5: 38 92% 58%;
-        /* Warm orange */
 
-        /* Radius */
         --radius: 0.75rem;
     }
 }
 
 @layer base {
-
     * {
         @apply border-border outline-ring/50;
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-background text-foreground antialiased;
+        color-scheme: light;
     }
 
-    /** {*/
-    /*    box-sizing: border-box;*/
-    /*    margin: 0;*/
-    /*    padding: 0;*/
-    /*}*/
+    .dark body,
+    html.dark {
+        color-scheme: dark;
+    }
 
-    /* Mobile menu animations */
+    * {
+        scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+    }
+
+    .Toastify__toast {
+        background: hsl(var(--card)) !important;
+        color: hsl(var(--card-foreground)) !important;
+        border: 1px solid hsl(var(--border));
+    }
+
+    .Toastify__close-button {
+        color: hsl(var(--foreground)) !important;
+    }
+
     @media (max-width: 767px) {
         .mobile-menu-enter {
             opacity: 0;
@@ -206,34 +183,15 @@
 }
 
 @layer utilities {
-
-    /* Hide scrollbar for Chrome, Safari and Opera */
     .no-scrollbar::-webkit-scrollbar {
         display: none;
     }
 
-    /* Hide scrollbar for IE, Edge and Firefox */
     .no-scrollbar {
         -ms-overflow-style: none;
-        /* IE and Edge */
         scrollbar-width: none;
-        /* Firefox */
     }
 
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        /* IE and Edge */
-        scrollbar-width: none;
-        /* Firefox */
-    }
-
-    /* Mobile-specific utilities */
     @media (max-width: 767px) {
         .mobile-full-width {
             width: 100vw;
