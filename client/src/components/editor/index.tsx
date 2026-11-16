@@ -5,6 +5,7 @@ import React, { useEffect, useRef } from "react";
 import EditorPage from "./editor-components/editor-element";
 import { motion } from "framer-motion";
 import { LuSparkles } from "react-icons/lu";
+import { defaultStyles } from "../../Utils/common";
 
 type Props = {
   pageId: string;
@@ -41,7 +42,6 @@ const PageEditor = ({ pageId, liveMode }: Props) => {
     }
   }, [liveMode, dispatch]);
 
-  // Load data only when the query has succeeded
   useEffect(() => {
     if (!isSuccess || !data) return;
 
@@ -91,6 +91,108 @@ const PageEditor = ({ pageId, liveMode }: Props) => {
           type: "__body",
           category: "Container",
         },
+      },
+    });
+  };
+
+  // Fallback drop on the canvas — adds to the body if no nested container caught it
+  const handleCanvasDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "copy";
+  };
+
+  const handleCanvasDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const componentType = e.dataTransfer.getData("componentType");
+    if (!componentType) return;
+
+    // Only add if the event wasn't already handled by a container
+    // Containers stopPropagation, so this only fires for empty canvas space
+    const newId = crypto.randomUUID();
+    let elementDetails: any = null;
+
+    const base = { id: newId, styles: { ...defaultStyles } };
+
+    switch (componentType) {
+      case "link":
+        elementDetails = {
+          ...base,
+          name: "Link",
+          type: "link",
+          category: "Basic",
+          content: { innerText: "Visit my website", targetUrl: undefined, href: undefined },
+          styles: { ...defaultStyles, color: "#ffffff" },
+        };
+        break;
+      case "p":
+        elementDetails = {
+          ...base,
+          name: "Paragraph",
+          type: "p",
+          category: "Text",
+          content: { innerText: "Paragraph" },
+          styles: { color: "black", ...defaultStyles, fontSize: "1rem", lineHeight: "1.5" },
+        };
+        break;
+      case "image":
+        elementDetails = {
+          ...base,
+          name: "Image",
+          type: "image",
+          category: "Basic",
+          content: { imageUrl: undefined, altText: undefined },
+          styles: {},
+        };
+        break;
+      case "websiteList":
+        elementDetails = {
+          ...base,
+          name: "Website List",
+          type: "websiteList",
+          category: "Basic",
+          content: { links: [] },
+          styles: { ...defaultStyles },
+        };
+        break;
+      case "map":
+        elementDetails = {
+          ...base,
+          name: "Map",
+          type: "map",
+          category: "Basic",
+          content: { latitude: undefined, longitude: undefined },
+          styles: { ...defaultStyles },
+        };
+        break;
+      case "calendar":
+        elementDetails = {
+          ...base,
+          name: "Calendar",
+          type: "calendar",
+          category: "Basic",
+          content: { date: undefined },
+          styles: { ...defaultStyles },
+        };
+        break;
+      case "container":
+        elementDetails = {
+          ...base,
+          name: "Container",
+          type: "container",
+          category: "layout",
+          content: [],
+          styles: { ...defaultStyles },
+        };
+        break;
+      default:
+        return;
+    }
+
+    dispatch({
+      type: "ADD_ELEMENT",
+      payload: {
+        containerId: "__body",
+        elementDetails,
       },
     });
   };
@@ -178,9 +280,11 @@ const PageEditor = ({ pageId, liveMode }: Props) => {
         </motion.div>
       </div>
 
-      {/* Blocks canvas */}
+      {/* Blocks canvas — drop zone */}
       <div
         ref={scrollRef}
+        onDragOver={handleCanvasDragOver}
+        onDrop={handleCanvasDrop}
         className="flex-1 overflow-y-auto overflow-x-hidden"
       >
         <div className="flex min-h-full flex-col items-center px-4 pb-8 pt-2">
