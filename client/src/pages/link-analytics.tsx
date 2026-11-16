@@ -1,360 +1,323 @@
-import React, {useEffect} from "react";
-import {ResponsivePie} from "@nivo/pie";
-import {ResponsiveBar} from "@nivo/bar";
-import {ResponsiveLine} from "@nivo/line";
-import {useParams} from "react-router-dom";
-import {useGetLinkAnalyticsQuery} from "../app/services/urlapi";
-import {useAppSelector} from "../app/hook";
-import {selectCurrentUser} from "../features/auth/authslice";
+import React from "react";
+import { ResponsivePie } from "@nivo/pie";
+import { ResponsiveLine } from "@nivo/line";
+import { useParams } from "react-router-dom";
+import { useGetLinkAnalyticsQuery } from "../app/services/urlapi";
+
+const chartTheme = {
+  text: { fill: "hsl(var(--muted-foreground))" },
+  axis: {
+    ticks: { text: { fill: "hsl(var(--muted-foreground))" } },
+    domain: { line: { stroke: "hsl(var(--border))" } },
+  },
+  grid: { line: { stroke: "hsl(var(--border))" } },
+  tooltip: {
+    container: {
+      background: "hsl(var(--card))",
+      color: "hsl(var(--card-foreground))",
+      border: "1px solid hsl(var(--border))",
+      borderRadius: "8px",
+      fontSize: 12,
+    },
+  },
+};
+
+const StatCard = ({
+  label,
+  value,
+  hint,
+}: {
+  label: string;
+  value: string | number;
+  hint?: string;
+}) => (
+  <div className="rounded-lg border border-border bg-card p-4">
+    <p className="text-xs font-medium text-muted-foreground">{label}</p>
+    <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
+      {value}
+    </p>
+    {hint && <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p>}
+  </div>
+);
+
+const BreakdownList = ({
+  title,
+  items,
+  nameKey,
+}: {
+  title: string;
+  items: any[] | undefined;
+  nameKey: string;
+}) => (
+  <div className="rounded-lg border border-border bg-card p-5">
+    <h3 className="mb-4 text-sm font-semibold text-foreground">{title}</h3>
+    <div className="space-y-2.5">
+      {items && items.length > 0 ? (
+        items.slice(0, 8).map((item, index) => (
+          <div
+            key={item[nameKey] ?? index}
+            className="flex items-center justify-between gap-3 text-sm"
+          >
+            <div className="flex min-w-0 items-center gap-2">
+              <span className="w-5 shrink-0 text-xs text-muted-foreground">
+                {index + 1}
+              </span>
+              <span className="truncate text-foreground">{item[nameKey]}</span>
+            </div>
+            <div className="shrink-0 text-right">
+              <span className="font-medium text-foreground">{item.clicks}</span>
+              <span className="ml-1.5 text-xs text-muted-foreground">
+                ({item.percentage}%)
+              </span>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p className="py-6 text-center text-sm text-muted-foreground">
+          No data available
+        </p>
+      )}
+    </div>
+  </div>
+);
 
 const LinkAnalytics = () => {
-    const {id} = useParams();
-    const {data, isLoading, error} = useGetLinkAnalyticsQuery(id);
+  const { id } = useParams();
+  const { data, isLoading, error } = useGetLinkAnalyticsQuery(id);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-lg">Loading analytics...</div>
-            </div>
-        );
-    }
-
-    if (error || !data?.analytics) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <div className="text-lg text-error">
-                    {error?.data?.message || "Failed to load analytics"}
-                </div>
-            </div>
-        );
-    }
-
-    const {analytics} = data;
-    const {
-        link,
-        period,
-        clicksByDay,
-        deviceBreakdown,
-        browserBreakdown,
-        osBreakdown,
-        countryBreakdown,
-        referrerBreakdown,
-        hourlyPattern,
-        uniqueVisitors,
-        recentClicks
-    } = analytics;
-
+  if (isLoading) {
     return (
-        <div className="space-y-8">
-            {/* Header */}
-            <div className="bg-base-200 rounded-lg p-6">
-                <h1 className="text-2xl font-bold mb-2">Link Analytics</h1>
-                <div className="flex items-center gap-4 text-sm text-zinc-400">
-                    <span className="font-medium">sneek.co/{link.short}</span>
-                    <span>→</span>
-                    <span className="truncate max-w-md">{link.longUrl}</span>
-                </div>
-                <div className="mt-2 text-sm text-zinc-400">
-                    Created: {new Date(link.createdAt).toLocaleDateString()}
-                    {link.lastClick && (
-                        <span className="ml-4">
-              Last click: {new Date(link.lastClick).toLocaleDateString()}
-            </span>
-                    )}
-                </div>
-            </div>
-
-            {/* Overview Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-sm font-medium text-base-content mb-2">Total Clicks</h3>
-                    <p className="text-3xl font-bold text-primary">{link.totalClicks}</p>
-                </div>
-
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-sm font-medium text-base-content mb-2">Period Clicks</h3>
-                    <p className="text-3xl font-bold text-secondary">{period.clicks}</p>
-                    <p className="text-xs text-zinc-400">Last {period.days} days</p>
-                </div>
-
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-sm font-medium text-base-content mb-2">Unique Visitors</h3>
-                    <p className="text-3xl font-bold text-accent">{uniqueVisitors.total}</p>
-                    <p className="text-xs text-zinc-400">{uniqueVisitors.percentage}% of clicks</p>
-                </div>
-
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-sm font-medium text-base-content mb-2">Mobile Traffic</h3>
-                    <p className="text-3xl font-bold text-info">
-                        {deviceBreakdown.find(d => d.id === 'Mobile')?.percentage || 0}%
-                    </p>
-                </div>
-            </div>
-
-            {/* Charts Row 1 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Daily Clicks Chart */}
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Clicks Over Time</h3>
-                    <div className="h-64">
-                        {/*{clicksByDay?.length > 0 ? (*/}
-                        {/*  <ResponsiveBar*/}
-                        {/*    data={clicksByDay}*/}
-                        {/*    keys={['clicks']}*/}
-                        {/*    indexBy="date"*/}
-                        {/*    margin={{ top: 20, right: 20, bottom: 50, left: 40 }}*/}
-                        {/*    padding={0.3}*/}
-                        {/*    colors={['#6366f1']}*/}
-                        {/*    axisBottom={{*/}
-                        {/*      tickSize: 5,*/}
-                        {/*      tickPadding: 5,*/}
-                        {/*      tickRotation: -45,*/}
-                        {/*    }}*/}
-                        {/*    axisLeft={{*/}
-                        {/*      tickSize: 5,*/}
-                        {/*      tickPadding: 5,*/}
-                        {/*    }}*/}
-                        {/*    enableLabel={false}*/}
-                        {/*    theme={{*/}
-                        {/*      text: { fill: 'oklch(var(--bc))' },*/}
-                        {/*      axis: { ticks: { text: { fill: 'oklch(var(--bc))' } } }*/}
-                        {/*    }}*/}
-                        {/*  />*/}
-                        {/*) : (*/}
-                        {/*  <div className="flex items-center justify-center h-full text-base-content">*/}
-                        {/*    No data available*/}
-                        {/*  </div>*/}
-                        {/*)}*/}
-                    </div>
-                </div>
-
-                {/* Device Distribution */}
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Device Distribution</h3>
-                    <div className="h-64">
-                        {deviceBreakdown?.some(d => d.value > 0) ? (
-                            <ResponsivePie
-                                data={deviceBreakdown}
-                                margin={{top: 20, right: 20, bottom: 20, left: 20}}
-                                innerRadius={0.5}
-                                padAngle={0.7}
-                                cornerRadius={3}
-                                colors={['#6366f1', '#8b5cf6']}
-                                borderWidth={1}
-                                borderColor={{from: 'color', modifiers: [['darker', 0.2]]}}
-                                enableArcLinkLabels={false}
-                                arcLabelsSkipAngle={10}
-                                theme={{
-                                    text: {fill: 'oklch(var(--bc))'}
-                                }}
-                            />
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-base-content">
-                                No data available
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Charts Row 2 */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Browser Breakdown */}
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Top Browsers</h3>
-                    <div className="space-y-3">
-                        {browserBreakdown?.length > 0 ? (
-                            browserBreakdown?.map(({browser, clicks, percentage}, index) => (
-                                <div key={browser} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-base-content">
-                      #{index + 1}
-                    </span>
-                                        <span>{browser}</span>
-                                    </div>
-                                    <div className="text-right">
-                                        <span className="font-semibold text-primary">{clicks}</span>
-                                        <span className="text-xs text-base-content/70 ml-2">({percentage}%)</span>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-center text-base-content">No data available</div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Operating Systems */}
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Operating Systems</h3>
-                    <div className="space-y-3">
-                        {osBreakdown?.length > 0 ? (
-                            osBreakdown?.map(({os, clicks, percentage}, index) => (
-                                <div key={os} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-base-content">
-                      #{index + 1}
-                    </span>
-                                        <span>{os}</span>
-                                    </div>
-                                    <div className="text-right">
-                                        <span className="font-semibold text-primary">{clicks}</span>
-                                        <span className="text-xs text-base-content/70 ml-2">({percentage}%)</span>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-center text-base-content">No data available</div>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Hourly Pattern */}
-            <div className="bg-base-200 rounded-lg p-6">
-                <h3 className="text-lg font-semibold mb-4">Click Pattern by Hour</h3>
-                <div className="h-64">
-                    {hourlyPattern?.some(h => h.clicks > 0) ? (
-                        <ResponsiveLine
-                            data={[{
-                                id: "clicks",
-                                data: hourlyPattern.map(h => ({x: h.hour, y: h.clicks}))
-                            }]}
-                            margin={{top: 20, right: 20, bottom: 50, left: 40}}
-                            xScale={{type: 'point'}}
-                            yScale={{type: 'linear', min: 'auto', max: 'auto'}}
-                            curve="cardinal"
-                            axisBottom={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                                tickRotation: -45,
-                            }}
-                            axisLeft={{
-                                tickSize: 5,
-                                tickPadding: 5,
-                            }}
-                            colors={['#6366f1']}
-                            pointSize={6}
-                            pointBorderWidth={2}
-                            pointBorderColor={{from: 'serieColor'}}
-                            enableGridX={false}
-                            theme={{
-                                text: {fill: 'oklch(var(--bc))'},
-                                axis: {ticks: {text: {fill: 'oklch(var(--bc))'}}}
-                            }}
-                        />
-                    ) : (
-                        <div className="flex items-center justify-center h-full text-base-content">
-                            No data available
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Countries and Referrers */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Top Countries */}
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Top Countries</h3>
-                    <div className="space-y-3">
-                        {countryBreakdown?.length > 0 ? (
-                            countryBreakdown?.slice(0, 8).map(({country, clicks, percentage}, index) => (
-                                <div key={country} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-base-content">
-                      #{index + 1}
-                    </span>
-                                        <span>{country}</span>
-                                    </div>
-                                    <div className="text-right">
-                                        <span className="font-semibold text-primary">{clicks}</span>
-                                        <span className="text-xs text-base-content/70 ml-2">({percentage}%)</span>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-center text-base-content">No data available</div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Top Referrers */}
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Top Referrers</h3>
-                    <div className="space-y-3">
-                        {referrerBreakdown?.length > 0 ? (
-                            referrerBreakdown?.slice(0, 8).map(({referrer, clicks, percentage}, index) => (
-                                <div key={referrer} className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium text-base-content">
-                      #{index + 1}
-                    </span>
-                                        <span className="truncate max-w-32">{referrer}</span>
-                                    </div>
-                                    <div className="text-right">
-                                        <span className="font-semibold text-primary">{clicks}</span>
-                                        <span className="text-xs text-base-content/70 ml-2">({percentage}%)</span>
-                                    </div>
-                                </div>
-                            ))
-                        ) : (
-                            <div className="text-center text-base-content">No data available</div>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Recent Activity */}
-            {recentClicks?.length > 0 && (
-                <div className="bg-base-200 rounded-lg p-6">
-                    <h3 className="text-lg font-semibold mb-4">Recent Activity</h3>
-                    <div className="overflow-x-auto">
-                        <table className="table w-full">
-                            <thead>
-                            <tr>
-                                <th>Time</th>
-                                <th>Country</th>
-                                <th>Device</th>
-                                <th>Browser</th>
-                                <th>OS</th>
-                                <th>Referrer</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                {recentClicks?.slice(0, 10)?.map((click, index) => (
-                                  <tr key={index}>
-                                    <td className="text-sm">
-                                      {new Date(click.time).toLocaleString()}
-                                    </td>
-                                    <td>{click.country}</td>
-                                    <td>
-                                      <span className={`badge ${click.isMobile ? 'badge-secondary' : 'badge-primary'}`}>
-                                        {click.isMobile ? 'Mobile' : 'Desktop'}
-                                      </span>
-                                    </td>
-                                    <td>{click.browser}</td>
-                                    <td>{click.os}</td>
-                                    <td className="truncate max-w-32">{click.referrer}</td>
-                                  </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            )}
-
-            {/* No Data State */}
-            {period.clicks === 0 && (
-                <div className="bg-base-200 rounded-lg p-12 text-center">
-                    <h3 className="text-lg font-semibold mb-2">No Recent Analytics Data</h3>
-                    <p className="text-base-content">
-                        This link hasn't been clicked in the last {period.days} days. Share it to start collecting
-                        analytics!
-                    </p>
-                </div>
-            )}
-        </div>
+      <div className="flex h-64 items-center justify-center">
+        <p className="text-sm text-muted-foreground">Loading analytics...</p>
+      </div>
     );
+  }
+
+  if (error || !data?.analytics) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <p className="text-sm text-destructive">
+          {(error as any)?.data?.message || "Failed to load analytics"}
+        </p>
+      </div>
+    );
+  }
+
+  const { analytics } = data;
+  const {
+    link,
+    period,
+    deviceBreakdown,
+    browserBreakdown,
+    osBreakdown,
+    countryBreakdown,
+    referrerBreakdown,
+    hourlyPattern,
+    uniqueVisitors,
+    recentClicks,
+  } = analytics;
+
+  return (
+    <div className="space-y-6 pb-8">
+      {/* Header */}
+      <div className="rounded-lg border border-border bg-card p-5">
+        <h1 className="text-lg font-semibold tracking-tight text-foreground">
+          Link Analytics
+        </h1>
+        <div className="mt-1.5 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <span className="font-medium text-primary">sneek.co/{link.short}</span>
+          <span>→</span>
+          <span className="max-w-md truncate">{link.longUrl}</span>
+        </div>
+        <div className="mt-2 text-xs text-muted-foreground">
+          Created {new Date(link.createdAt).toLocaleDateString()}
+          {link.lastClick && (
+            <span className="ml-3">
+              Last click {new Date(link.lastClick).toLocaleDateString()}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Overview Stats */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <StatCard label="Total clicks" value={link.totalClicks} />
+        <StatCard
+          label="Period clicks"
+          value={period.clicks}
+          hint={`Last ${period.days} days`}
+        />
+        <StatCard
+          label="Unique visitors"
+          value={uniqueVisitors.total}
+          hint={`${uniqueVisitors.percentage}% of clicks`}
+        />
+        <StatCard
+          label="Mobile traffic"
+          value={`${deviceBreakdown?.find((d: any) => d.id === "Mobile")?.percentage || 0}%`}
+        />
+      </div>
+
+      {/* Charts */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-lg border border-border bg-card p-5">
+          <h3 className="mb-4 text-sm font-semibold text-foreground">
+            Device distribution
+          </h3>
+          <div className="h-56">
+            {deviceBreakdown?.some((d: any) => d.value > 0) ? (
+              <ResponsivePie
+                data={deviceBreakdown}
+                margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+                innerRadius={0.55}
+                padAngle={1}
+                cornerRadius={3}
+                colors={["hsl(238, 70%, 55%)", "hsl(250, 50%, 70%)"]}
+                borderWidth={0}
+                enableArcLinkLabels={false}
+                arcLabelsSkipAngle={12}
+                theme={chartTheme}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                No data available
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="rounded-lg border border-border bg-card p-5">
+          <h3 className="mb-4 text-sm font-semibold text-foreground">
+            Clicks by hour
+          </h3>
+          <div className="h-56">
+            {hourlyPattern?.some((h: any) => h.clicks > 0) ? (
+              <ResponsiveLine
+                data={[
+                  {
+                    id: "clicks",
+                    data: hourlyPattern.map((h: any) => ({
+                      x: h.hour,
+                      y: h.clicks,
+                    })),
+                  },
+                ]}
+                margin={{ top: 16, right: 16, bottom: 40, left: 36 }}
+                xScale={{ type: "point" }}
+                yScale={{ type: "linear", min: "auto", max: "auto" }}
+                curve="monotoneX"
+                axisBottom={{
+                  tickSize: 0,
+                  tickPadding: 8,
+                  tickRotation: -40,
+                }}
+                axisLeft={{
+                  tickSize: 0,
+                  tickPadding: 8,
+                }}
+                colors={["hsl(238, 70%, 55%)"]}
+                pointSize={5}
+                pointBorderWidth={0}
+                enableGridX={false}
+                theme={chartTheme}
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                No data available
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Breakdowns */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <BreakdownList
+          title="Top browsers"
+          items={browserBreakdown}
+          nameKey="browser"
+        />
+        <BreakdownList
+          title="Operating systems"
+          items={osBreakdown}
+          nameKey="os"
+        />
+        <BreakdownList
+          title="Top countries"
+          items={countryBreakdown}
+          nameKey="country"
+        />
+        <BreakdownList
+          title="Top referrers"
+          items={referrerBreakdown}
+          nameKey="referrer"
+        />
+      </div>
+
+      {/* Recent Activity */}
+      {recentClicks?.length > 0 && (
+        <div className="rounded-lg border border-border bg-card p-5">
+          <h3 className="mb-4 text-sm font-semibold text-foreground">
+            Recent activity
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-border text-xs text-muted-foreground">
+                  <th className="pb-2 pr-4 font-medium">Time</th>
+                  <th className="pb-2 pr-4 font-medium">Country</th>
+                  <th className="pb-2 pr-4 font-medium">Device</th>
+                  <th className="pb-2 pr-4 font-medium">Browser</th>
+                  <th className="pb-2 pr-4 font-medium">OS</th>
+                  <th className="pb-2 font-medium">Referrer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {recentClicks.slice(0, 10).map((click: any, index: number) => (
+                  <tr
+                    key={index}
+                    className="border-b border-border/60 last:border-0"
+                  >
+                    <td className="py-2.5 pr-4 text-muted-foreground">
+                      {new Date(click.time).toLocaleString()}
+                    </td>
+                    <td className="py-2.5 pr-4">{click.country}</td>
+                    <td className="py-2.5 pr-4">
+                      <span
+                        className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${
+                          click.isMobile
+                            ? "bg-muted text-muted-foreground"
+                            : "bg-primary/10 text-primary"
+                        }`}
+                      >
+                        {click.isMobile ? "Mobile" : "Desktop"}
+                      </span>
+                    </td>
+                    <td className="py-2.5 pr-4">{click.browser}</td>
+                    <td className="py-2.5 pr-4">{click.os}</td>
+                    <td className="max-w-[8rem] truncate py-2.5">
+                      {click.referrer}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {period.clicks === 0 && (
+        <div className="rounded-lg border border-dashed border-border py-12 text-center">
+          <h3 className="text-sm font-semibold text-foreground">
+            No recent data
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            This link hasn't been clicked in the last {period.days} days.
+          </p>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default LinkAnalytics;
