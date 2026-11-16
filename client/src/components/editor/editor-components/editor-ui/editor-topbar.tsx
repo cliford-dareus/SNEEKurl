@@ -1,29 +1,54 @@
-import React from "react";
-import {Button} from "../../../ui/button";
-import {useEditor} from "../../../../hooks/use-editor";
-import {useUpdatePageMutation} from "../../../../app/services/page";
+import React, { useState } from "react";
+import { Button } from "../../../ui/button";
+import { useEditor } from "../../../../hooks/use-editor";
+import { useUpdatePageMutation } from "../../../../app/services/page";
+import { toast } from "react-toastify";
+import { LuSave } from "react-icons/lu";
 
 const EditorTopbar = () => {
-    const {state} = useEditor();
-    const [upsertPage] = useUpdatePageMutation();
+  const { state } = useEditor();
+  const [upsertPage, { isLoading }] = useUpdatePageMutation();
+  const [saved, setSaved] = useState(false);
 
-    const handleSave = async (data: any) => {
-        try {
-            await upsertPage({
-                id: state.editor.id,
-                content: JSON.stringify(state.editor.elements),
-                theme: JSON.stringify(state.editor.theme),
-            }).unwrap();
-        }catch (error) {
-            console.log(error);
-        }
+  const handleSave = async () => {
+    if (!state.editor.id) {
+      toast.error("Page not loaded yet");
+      return;
     }
-    
-    return(
-        <div className="h-[60px] flex items-center justify-center">
-            <Button onClick={handleSave}>Save</Button>
-        </div>
-    )
+
+    try {
+      await upsertPage({
+        id: state.editor.id,
+        content: JSON.stringify(state.editor.elements),
+        theme: JSON.stringify(state.editor.theme),
+      }).unwrap();
+
+      toast.success("Page saved");
+      setSaved(true);
+      setTimeout(() => setSaved(false), 2000);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save page");
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <Button
+        size="sm"
+        onClick={handleSave}
+        disabled={isLoading || !state.editor.id}
+        className="gap-1.5"
+      >
+        {isLoading ? (
+          <span className="size-3.5 animate-spin rounded-full border-2 border-primary-foreground/30 border-t-primary-foreground" />
+        ) : (
+          <LuSave size={14} />
+        )}
+        {isLoading ? "Saving..." : saved ? "Saved" : "Save"}
+      </Button>
+    </div>
+  );
 };
 
 export default EditorTopbar;
