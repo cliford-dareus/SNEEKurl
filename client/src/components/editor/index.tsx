@@ -2,240 +2,202 @@ import classNames from "classnames";
 import { useEditor } from "../../hooks/use-editor";
 import { useGetPageQuery } from "../../app/services/page";
 import React, { useEffect, useRef } from "react";
-import { BsEye } from "react-icons/bs";
 import EditorPage from "./editor-components/editor-element";
-import { backIn, motion } from "framer-motion";
-import { LuMenu, LuSettings2, LuSparkles } from "react-icons/lu";
+import { motion } from "framer-motion";
+import { LuSparkles } from "react-icons/lu";
 
 type Props = {
-    pageId: string;
-    liveMode?: boolean;
-}
+  pageId: string;
+  liveMode?: boolean;
+};
 
 const PageEditor = ({ pageId, liveMode }: Props) => {
-    const { state, dispatch } = useEditor();
-    const { data, isLoading, isSuccess } = useGetPageQuery({ id: pageId });
+  const { state, dispatch } = useEditor();
+  const { data, isSuccess } = useGetPageQuery({ id: pageId });
 
-    const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const scrollContainer = scrollRef.current;
-        if (!scrollContainer) return;
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
 
-        const handleWheel = (e: WheelEvent) => {
-            // Only stop propagation if we can actually scroll
-            const canScrollVertically =
-                scrollContainer.scrollHeight > scrollContainer.clientHeight;
-
-            if (canScrollVertically) {
-                e.stopPropagation();
-            }
-        };
-
-        scrollContainer.addEventListener('wheel', handleWheel, { passive: true });
-
-        return () => {
-            scrollContainer.removeEventListener('wheel', handleWheel);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (liveMode) {
-            dispatch({ type: "TOGGLE_LIVE_MODE", payload: { value: true } })
-        }
-    }, [liveMode, dispatch])
-
-    // Load data on pageId change
-    useEffect(() => {
-        dispatch({
-            type: "LOAD_DATA",
-            payload: {
-                elements: data?.content ? JSON.parse(data.content) : "",
-                theme: data?.theme ? JSON.parse(data.theme) : null,
-                withLive: !!liveMode,
-                id: data?._id,
-                pageLinks: data?.links,
-                pageId: data?.slug,
-            }
-        })
-    }, [pageId, liveMode, dispatch])
-
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleWheel = (e: WheelEvent) => {
+      const canScrollVertically =
+        scrollContainer.scrollHeight > scrollContainer.clientHeight;
+      if (canScrollVertically) {
         e.stopPropagation();
-        dispatch({ type: "CHANGE_SELECTED_ELEMENT", payload: {} })
+      }
     };
 
-    const handleUnPreview = () => {
-        dispatch({ type: "TOGGLE_PREVIEW_MODE" })
-        dispatch({ type: "TOGGLE_LIVE_MODE" })
+    scrollContainer.addEventListener("wheel", handleWheel, { passive: true });
+    return () => {
+      scrollContainer.removeEventListener("wheel", handleWheel);
     };
+  }, []);
 
-    const getBackgroundStyle = () => {
-        if (data?.backgroundType === 'image' && data?.backgroundImageUrl) {
-            return {
-                backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${data?.backgroundImageUrl})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-            };
-        }
-        if (data?.backgroundType === 'gradient') {
-            return { background: data?.backgroundGradient };
-        }
-        return { backgroundColor: data?.backgroundColor };
-    };
+  useEffect(() => {
+    if (liveMode) {
+      dispatch({ type: "TOGGLE_LIVE_MODE" });
+    }
+  }, [liveMode, dispatch]);
 
-    console.log(state.editor.theme);
-    const backgroundSize = state.editor.theme?.backgroundSize ? state.editor.theme.backgroundSize : 0;
+  // Load data only when the query has succeeded
+  useEffect(() => {
+    if (!isSuccess || !data) return;
 
-    return (
-        <div className={classNames(
-            "h-screen max-w-full overflow-hidden bg-black text-white flex flex-col",
-            !state.editor.previewMode && !state.editor.liveMode ? "max-h-[calc(100vh-65px)]" : "",
-        )}
-            onClick={handleClick}
-            onPointerDown={(e) => e.stopPropagation()}
-        >
-            <div className="">
-                {/* Top Banner (Mesh Gradient Visual Block matching image) */}
-                <div
-                    className="relative w-full h-[150px] md:h-[250px] flex flex-col justify-between overflow-hidden"
-                    style={{
-                        background: state.editor.theme?.backgroundGradient,
-                    }}
-                >
-                    {/* Ambient Glowing Blobs to emulate modern SaaS mesh layout inside photo */}
-                    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-90 select-none">
-                        <div className="absolute top-[-30%] left-[-10%] w-[80%] h-[130%] rounded-full bg-[radial-gradient(circle,rgba(20,184,166,0.35)_0%,transparent_70%)] blur-2xl animate-pulse" />
-                        <div className="absolute top-[10%] right-[-10%] w-[70%] h-[120%] rounded-full bg-[radial-gradient(circle,rgba(217,70,239,0.5)_0%,transparent_60%)] blur-3xl opacity-80" />
-                        <div className="absolute bottom-[-10%] left-[25%] w-[50%] h-[60%] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.35)_0%,transparent_70%)] blur-2xl" />
-                    </div>
+    let elements = state.editor.elements;
+    try {
+      if (data.content) {
+        const parsed = JSON.parse(data.content);
+        if (Array.isArray(parsed)) elements = parsed;
+      }
+    } catch {
+      // keep default
+    }
 
-                    {/* Nav Header (Menu + Logo matching image) */}
-                    <div className="w-full flex items-center justify-between px-6 py-5 z-10 relative">
-                        <div className="flex items-center gap-2">
-                            <div className="p-1 rounded-lg bg-white/10 backdrop-blur-md">
-                                <LuSparkles className="w-5 h-5 text-indigo-300 drop-shadow-md" />
-                            </div>
-                            <span className="font-bold text-lg tracking-tight text-white drop-shadow-md font-sans">
-                                {state.editor.theme?.headerBrandName || "SmartBio"}
-                            </span>
-                        </div>
-                        <button
-                            onClick={() => setIsEditing(true)}
-                            className="p-2 rounded-xl bg-white/10 backdrop-blur-md hover:bg-white/20 transition-all text-white flex items-center gap-1 hover:scale-105 active:scale-95 cursor-pointer z-20"
-                        >
-                            <LuMenu className="w-5 h-5 text-white" />
-                        </button>
-                    </div>
+    let theme = state.editor.theme;
+    try {
+      if (data.theme) {
+        theme = JSON.parse(data.theme);
+      }
+    } catch {
+      // keep default
+    }
 
-                    {/* Curved Wave Mask Transition (Convex Shape matching image) */}
-                    <div
-                        className="absolute bottom-[-1px] left-0 right-0 w-full overflow-hidden leading-[0] pointer-events-none z-10 transition-colors duration-500"
-                        style={{ fill: state.editor.theme?.backgroundColor }}
-                    >
-                        <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className="relative block w-full h-[55px] md:h-[75px]">
-                            <path d="M0,120 Q720,20 1440,120 L1440,120 L0,120 Z" />
-                        </svg>
-                    </div>
-                </div>
+    dispatch({
+      type: "LOAD_DATA",
+      payload: {
+        elements,
+        theme,
+        withLive: !!liveMode,
+        id: data._id,
+        pageLinks: data.links || [],
+        pageId: data.slug,
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess, data?._id, liveMode]);
 
-                {/* Overlapping Avatar Area (Intersecting curved line) */}
-                <div className="absolute left-0 right-0 top-40 flex flex-col items-center z-20 mt-[-90px] md:mt-[-55px] mb-6">
-                    <div className="relative group">
-                        <div
-                            className="w-24 h-24 md:w-32 bg-slate-400 md:h-32 rounded-full overflow-hidden ring-[8px] p-0.5 shadow-xl transition-all duration-500 hover:scale-105"
-                            style={{
-                                backgroundColor: state.editor.theme?.backgroundColor,
-                                borderColor: `${state.editor.theme?.accentColor}10`,
-                                boxShadow: "0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)",
-                                // Simple hack to apply dynamic background ring
-                                outline: `8px solid ${state.editor.theme?.backgroundColor}`
-                            }}
-                        >
-                            <img
-                                src={data?.avatarUrl}
-                                alt="Profile"
-                                className="w-full h-full rounded-full object-cover transition-all duration-500"
-                                referrerPolicy="no-referrer"
-                            />
-                        </div>
-                        <motion.div
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ delay: 0.5, type: "spring" }}
-                            style={{
-                                backgroundColor: state.editor.theme?.themeColor,
-                                borderColor: state.editor.theme?.backgroundColor,
-                                borderWidth: "3px"
-                            }}
-                            className="absolute bottom-1 right-1 w-5 h-5 rounded-full shadow-md"
-                        />
-                    </div>
-                </div>
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    dispatch({
+      type: "CHANGE_SELECTED_ELEMENT",
+      payload: {
+        elementDetails: {
+          content: [],
+          id: "__body",
+          name: "Body",
+          styles: {},
+          type: "__body",
+          category: "Container",
+        },
+      },
+    });
+  };
 
-                {/* Profile Name & Description */}
-                <motion.div
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.2 }}
-                    className="flex flex-col items-center text-center mb-4 max-w-md w-full mx-auto"
-                >
-                    <h1
-                        className="text-3xl md:text-4xl font-sans font-extrabold tracking-tight mb-3 transition-colors duration-500"
-                        style={{ color: data?.accentColor }}
-                    >
-                        {data?.user.username}
-                    </h1>
-                    <p
-                        className="text-sm md:text-base leading-relaxed tracking-wide opacity-80"
-                        style={{ color: data?.textColor }}
-                    >
-                        {data?.description}
-                    </p>
-                </motion.div>
-            </div>
-
-            {/* Main Link-in-Bio Canvas (Device Styled) */}
-            <div className={classNames(
-                "use-animation-zoom-in bg-black transition-all rounded-none w-full overflow-x-hidden flex flex-col relative no-scrollbar border-red-100",
-                {
-                    "!p-0 !m-0 min-w-screen h-[80vh] !border-red-200": state.editor.previewMode || state.editor.liveMode,
-                    "overflow-y-scroll": !state.editor.previewMode || !state.editor.liveMode,
-                }
-            )}
-                ref={scrollRef}
-            >
-                <div className={classNames("flex flex-col text-center h-full")}>
-                    {/* Content Body Space */}
-                    <div className="pb-10 flex-1 flex flex-col items-center">
-
-                        {/* Links Section */}
-                        <div className="flex flex-col items-center w-full h-full">
-                            {Array.isArray(state.editor.elements) &&
-                                state.editor.elements.map((childElement, index: number) => {
-                                    return <EditorPage key={index} element={childElement} />
-                                })}
-                        </div>
-
-                        {/* Footer */}
-                        <motion.footer
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 1 }}
-                            className="mt-auto pt-8 border-t border-neutral-200/10 w-full text-center max-w-md"
-                        >
-                            <p
-                                className="text-[10px] uppercase tracking-[0.25em] font-semibold opacity-40"
-                                style={{ color: state.editor.theme?.textColor }}
-                            >
-                                © 2026 {data?.user?.username} — Powered by {data?.headerBrandName}
-                            </p>
-                        </motion.footer>
-                    </div>
-                </div>
-            </div>
+  return (
+    <div
+      className={classNames(
+        "flex h-full flex-col overflow-hidden bg-background text-foreground",
+        state.editor.liveMode && "bg-black text-white"
+      )}
+      onClick={handleClick}
+    >
+      {/* Banner */}
+      <div
+        className="relative flex h-[140px] w-full flex-col justify-between overflow-hidden"
+        style={{
+          background:
+            state.editor.theme?.backgroundGradient ||
+            "linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)",
+        }}
+      >
+        <div className="pointer-events-none absolute inset-0 opacity-80">
+          <div className="absolute left-[-10%] top-[-30%] h-[130%] w-[80%] rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.4)_0%,transparent_70%)] blur-2xl" />
+          <div className="absolute right-[-10%] top-[10%] h-[120%] w-[70%] rounded-full bg-[radial-gradient(circle,rgba(124,58,237,0.45)_0%,transparent_60%)] blur-3xl" />
         </div>
-    );
+
+        <div className="relative z-10 flex w-full items-center justify-between px-5 py-4">
+          <div className="flex items-center gap-2">
+            <div className="rounded-md bg-white/15 p-1 backdrop-blur-sm">
+              <LuSparkles className="size-4 text-white" />
+            </div>
+            <span className="text-sm font-semibold tracking-tight text-white drop-shadow-sm">
+              {state.editor.theme?.headerBrandName || "SNEEK"}
+            </span>
+          </div>
+        </div>
+
+        <div className="absolute bottom-[-1px] left-0 right-0 w-full overflow-hidden leading-[0]">
+          <svg
+            viewBox="0 0 1440 80"
+            preserveAspectRatio="none"
+            className="block h-10 w-full"
+            style={{ fill: state.editor.theme?.backgroundColor || "#ffffff" }}
+          >
+            <path d="M0,80 Q720,10 1440,80 L1440,80 L0,80 Z" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Avatar + name */}
+      <div className="relative z-10 -mt-10 flex flex-col items-center px-4 pb-2">
+        <div
+          className="size-20 overflow-hidden rounded-full border-4 shadow-lg"
+          style={{
+            borderColor: state.editor.theme?.backgroundColor || "#ffffff",
+          }}
+        >
+          <img
+            src={data?.avatarUrl || "https://via.placeholder.com/160"}
+            alt=""
+            className="size-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 text-center"
+        >
+          <h1
+            className="text-xl font-bold tracking-tight"
+            style={{ color: data?.accentColor || "inherit" }}
+          >
+            {data?.user?.username || "Your Name"}
+          </h1>
+          {data?.description && (
+            <p
+              className="mt-1 max-w-[280px] text-xs leading-relaxed opacity-80"
+              style={{ color: data?.textColor || "inherit" }}
+            >
+              {data.description}
+            </p>
+          )}
+        </motion.div>
+      </div>
+
+      {/* Blocks canvas */}
+      <div
+        ref={scrollRef}
+        className="flex-1 overflow-y-auto overflow-x-hidden"
+      >
+        <div className="flex min-h-full flex-col items-center px-4 pb-8 pt-2">
+          {Array.isArray(state.editor.elements) &&
+            state.editor.elements.map((childElement, index) => (
+              <EditorPage key={childElement.id || index} element={childElement} />
+            ))}
+
+          <div className="mt-auto w-full max-w-md pt-6 text-center">
+            <p className="text-[10px] uppercase tracking-widest text-muted-foreground opacity-50">
+              Powered by SNEEK
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default PageEditor;
