@@ -1,11 +1,11 @@
 import classNames from "classnames";
 import { BsTrash2 } from "react-icons/bs";
 import EditorPage from "../../../editor-element";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useEditor } from "../../../../../../hooks/use-editor";
 import { defaultStyles } from "../../../../../../Utils/common";
 
-type ContainerProps = { element: any; editor?: any };
+type ContainerProps = { element: any };
 
 const Container = ({ element }: ContainerProps) => {
   const { id, content, name, styles, type } = element;
@@ -13,278 +13,189 @@ const Container = ({ element }: ContainerProps) => {
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const isSelected = state.editor.selectedElement.id === id;
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const componentType = e.dataTransfer.getData("componentType");
+    if (!componentType) return;
 
-    const handleOnDrop = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDraggingOver(false);
+    const newId = crypto.randomUUID();
 
-      const componentType = e.dataTransfer?.getData("componentType");
-
-      switch (componentType) {
-        case "h1":
-        case "h2":
-        case "h3":
-        case "h4":
-        case "h5":
-        case "h6":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: {
-                  innerText: `Heading ${componentType.charAt(1)}`,
-                },
-                id: crypto.randomUUID(),
-                name: `Heading ${componentType.charAt(1)}`,
-                styles: {
-                  color: "black",
-                  ...defaultStyles,
-                  fontSize:
-                    componentType === "h1"
-                      ? "2.5rem"
-                      : componentType === "h2"
-                        ? "2rem"
-                        : componentType === "h3"
-                          ? "1.75rem"
-                          : componentType === "h4"
-                            ? "1.5rem"
-                            : componentType === "h5"
-                              ? "1.25rem"
-                              : "1rem",
-                  fontWeight:
-                    componentType === "h1" || componentType === "h2"
-                      ? "700"
-                      : "600",
-                  lineHeight: "1.2",
-                  marginBottom: "0.5rem",
-                },
-                type: componentType,
-                category: "Text",
-              },
-            },
-          });
-          break;
-        case "p":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: { innerText: "Paragraph" },
-                id: crypto.randomUUID(),
-                name: "Paragraph",
-                styles: {
-                  color: "black",
-                  ...defaultStyles,
-                  fontSize: "1rem",
-                  lineHeight: "1.5",
-                  marginBottom: "1rem",
-                },
-                type: componentType,
-                category: "Text",
-              },
-            },
-          });
-          break;
-        case "span":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: { innerText: "Text" },
-                id: crypto.randomUUID(),
-                name: "Text",
-                styles: {
-                  color: "black",
-                  ...defaultStyles,
-                  fontSize: "1rem",
-                  display: "inline",
-                },
-                type: componentType,
-                category: "Text",
-              },
-            },
-          });
-          break;
-        case "image":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: { imageUrl: undefined, altText: undefined },
-                id: crypto.randomUUID(),
-                name: "Image",
-                styles: {},
-                type: componentType,
-                category: "Basic",
-              },
-            },
-          });
-          break;
-        case "calendar":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: { date: undefined },
-                id: crypto.randomUUID(),
-                name: "Calendar",
-                styles: {
-                  color: "#000000",
-                  ...defaultStyles,
-                  fontSize: "1rem",
-                  display: "flex",
-                },
-                type: componentType,
-                category: "Basic",
-              },
-            },
-          });
-          break;
-        case "websiteList":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: { links: [] },
-                id: crypto.randomUUID(),
-                name: "Website List",
-                styles: { color: "inherit", ...defaultStyles },
-                type: componentType,
-                category: "Basic",
-              },
-            },
-          });
-          break;
-        case "link":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: {
-                  innerText: "Visit my website",
-                  targetUrl: undefined,
-                  href: undefined,
-                },
-                id: crypto.randomUUID(),
-                name: "Link",
-                styles: { ...defaultStyles, color: "#ffffff" },
-                type: componentType,
-                category: "Basic",
-              },
-            },
-          });
-          break;
-        case "map":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: { latitude: undefined, longitude: undefined },
-                id: crypto.randomUUID(),
-                name: "Map",
-                styles: { ...defaultStyles },
-                type: componentType,
-                category: "Basic",
-              },
-            },
-          });
-          break;
-        case "container":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: [],
-                id: crypto.randomUUID(),
-                name: "Container",
-                styles: { ...defaultStyles },
-                type: "container",
-                category: "layout",
-              },
-            },
-          });
-          break;
-        case "2Col":
-          dispatch({
-            type: "ADD_ELEMENT",
-            payload: {
-              containerId: id,
-              elementDetails: {
-                content: [
-                  {
-                    content: [],
-                    id: crypto.randomUUID(),
-                    name: "Container",
-                    styles: { ...defaultStyles, width: "100%" },
-                    type: "container",
-                    category: "Container",
-                  },
-                  {
-                    content: [],
-                    id: crypto.randomUUID(),
-                    name: "Container",
-                    styles: { ...defaultStyles, width: "100%" },
-                    type: "container",
-                    category: "Container",
-                  },
-                ],
-                id: crypto.randomUUID(),
-                name: "Two Column",
-                styles: { ...defaultStyles, display: "flex" },
-                type: "2Col",
-                category: "Container",
-              },
-            },
-          });
-          break;
-        default:
-      }
+    const base = {
+      id: newId,
+      styles: { ...defaultStyles },
     };
 
-    const handleDragStart = (e: DragEvent, type: string) => {
-      if (type !== "__body") {
-        e.dataTransfer?.setData("componentType", type);
-      }
-    };
+    let elementDetails: any = null;
 
-    const handleDragOver = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDraggingOver(true);
-    };
+    switch (componentType) {
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6":
+        elementDetails = {
+          ...base,
+          name: `Heading ${componentType.charAt(1)}`,
+          type: componentType,
+          category: "Text",
+          content: { innerText: `Heading ${componentType.charAt(1)}` },
+          styles: {
+            color: "black",
+            ...defaultStyles,
+            fontSize:
+              componentType === "h1"
+                ? "2.5rem"
+                : componentType === "h2"
+                  ? "2rem"
+                  : componentType === "h3"
+                    ? "1.75rem"
+                    : componentType === "h4"
+                      ? "1.5rem"
+                      : componentType === "h5"
+                        ? "1.25rem"
+                        : "1rem",
+            fontWeight: componentType === "h1" || componentType === "h2" ? "700" : "600",
+            lineHeight: "1.2",
+            marginBottom: "0.5rem",
+          },
+        };
+        break;
+      case "p":
+        elementDetails = {
+          ...base,
+          name: "Paragraph",
+          type: componentType,
+          category: "Text",
+          content: { innerText: "Paragraph" },
+          styles: {
+            color: "black",
+            ...defaultStyles,
+            fontSize: "1rem",
+            lineHeight: "1.5",
+            marginBottom: "1rem",
+          },
+        };
+        break;
+      case "image":
+        elementDetails = {
+          ...base,
+          name: "Image",
+          type: componentType,
+          category: "Basic",
+          content: { imageUrl: undefined, altText: undefined },
+          styles: {},
+        };
+        break;
+      case "calendar":
+        elementDetails = {
+          ...base,
+          name: "Calendar",
+          type: componentType,
+          category: "Basic",
+          content: { date: undefined },
+          styles: { color: "#000000", ...defaultStyles, fontSize: "1rem", display: "flex" },
+        };
+        break;
+      case "websiteList":
+        elementDetails = {
+          ...base,
+          name: "Website List",
+          type: componentType,
+          category: "Basic",
+          content: { links: [] },
+          styles: { color: "inherit", ...defaultStyles },
+        };
+        break;
+      case "link":
+        elementDetails = {
+          ...base,
+          name: "Link",
+          type: componentType,
+          category: "Basic",
+          content: {
+            innerText: "Visit my website",
+            targetUrl: undefined,
+            href: undefined,
+          },
+          styles: { ...defaultStyles, color: "#ffffff" },
+        };
+        break;
+      case "map":
+        elementDetails = {
+          ...base,
+          name: "Map",
+          type: componentType,
+          category: "Basic",
+          content: { latitude: undefined, longitude: undefined },
+          styles: { ...defaultStyles },
+        };
+        break;
+      case "container":
+        elementDetails = {
+          ...base,
+          name: "Container",
+          type: "container",
+          category: "layout",
+          content: [],
+          styles: { ...defaultStyles },
+        };
+        break;
+      case "2Col":
+        elementDetails = {
+          ...base,
+          name: "Two Column",
+          type: "2Col",
+          category: "Container",
+          content: [
+            {
+              content: [],
+              id: crypto.randomUUID(),
+              name: "Container",
+              styles: { ...defaultStyles, width: "100%" },
+              type: "container",
+              category: "Container",
+            },
+            {
+              content: [],
+              id: crypto.randomUUID(),
+              name: "Container",
+              styles: { ...defaultStyles, width: "100%" },
+              type: "container",
+              category: "Container",
+            },
+          ],
+          styles: { ...defaultStyles, display: "flex" },
+        };
+        break;
+      default:
+        return;
+    }
 
-    const handleDragLeave = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDraggingOver(false);
-    };
+    dispatch({
+      type: "ADD_ELEMENT",
+      payload: {
+        containerId: id,
+        elementDetails,
+      },
+    });
+  };
 
-    el.addEventListener("dragstart", (e) => handleDragStart(e, type), false);
-    el.addEventListener("dragover", handleDragOver, false);
-    el.addEventListener("dragleave", handleDragLeave, false);
-    el.addEventListener("drop", handleOnDrop, false);
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = "copy";
+    setIsDraggingOver(true);
+  };
 
-    return () => {
-      el.removeEventListener("dragover", handleDragOver, false);
-      el.removeEventListener("dragleave", handleDragLeave, false);
-      el.removeEventListener("drop", handleOnDrop, false);
-    };
-  }, [dispatch, id, type]);
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
+  };
 
   const handleOnClickBody = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -300,21 +211,19 @@ const Container = ({ element }: ContainerProps) => {
 
   return (
     <div
-      ref={containerRef}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
       className={classNames("relative group my-1", {
         "max-w-full w-full no-scrollbar":
           (type === "container" || type === "2Col") && !styles?.width,
         "h-fit": type === "container" && !styles?.height,
-        "h-full": type === "__body",
+        "min-h-[120px] w-full": type === "__body",
         "!h-screen !m-0 !rounded-none":
           type === "__body" && state.editor.liveMode,
         "flex flex-col md:!flex-row": type === "2Col",
-        "!w-[350px]": type === "__body" && state.editor.device === "mobile",
-        "!w-[800px]": type === "__body" && state.editor.device === "tablet",
-        "!w-full": type === "__body" && state.editor.device === "desktop",
-        "transition-[width,height]": type === "__body",
+        "!w-full": type === "__body",
 
-        // Soft Indigo selection / drag states
         "outline outline-2 outline-primary":
           isSelected &&
           !state.editor.liveMode &&
@@ -324,7 +233,7 @@ const Container = ({ element }: ContainerProps) => {
           isSelected &&
           !state.editor.liveMode &&
           state.editor.selectedElement.type === "__body",
-        "outline outline-2 outline-dashed outline-primary/70": isDraggingOver,
+        "outline outline-2 outline-dashed outline-primary": isDraggingOver,
         "outline outline-1 outline-dashed outline-border":
           !state.editor.liveMode && !isSelected && !isDraggingOver,
       })}
