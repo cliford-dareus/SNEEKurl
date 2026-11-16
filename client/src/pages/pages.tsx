@@ -1,140 +1,147 @@
-import React, {useState} from "react";
-import {LuArrowDown, LuArrowUp, LuFilter, LuSettings, LuView} from "react-icons/lu";
-import {Button} from "../components/ui/button";
+import React, { useState } from "react";
+import { LuArrowDown, LuArrowUp, LuFilter, LuSettings, LuExternalLink } from "react-icons/lu";
+import { Button } from "../components/ui/button";
 import EditPageModal from "../components/modals/edit-page-modal";
-import {useGetPagesQuery} from "../app/services/page";
-import {Link} from "react-router-dom";
+import { useGetPagesQuery } from "../app/services/page";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
-import {AiOutlineEdit} from "react-icons/ai";
-import {GiGraspingSlug} from "react-icons/gi";
-import {BsClock, BsDot} from "react-icons/bs";
-import {TbClick} from "react-icons/tb";
+import { AiOutlineEdit } from "react-icons/ai";
+import { BsClock, BsDot } from "react-icons/bs";
+import { TbClick } from "react-icons/tb";
 
 const Pages = () => {
-    const {data: pages, isLoading} = useGetPagesQuery();
-    const [activeFilter, setActiveFilter] = useState<any[]>([]);
-    const [editPageActive, setEditPageActive] = useState({
-        state: false,
-        id: "",
-    });
+  const { data: pages, isLoading } = useGetPagesQuery();
+  const [activeFilter, setActiveFilter] = useState<any[]>([]);
+  const [editPageActive, setEditPageActive] = useState({
+    state: false,
+    id: "",
+  });
 
-    const handleOpenLinkInBio = async (slug: string) => {
-        window.open(`http://localhost:5173/${slug}`, "_blank");
-    };
+  const handleOpenLinkInBio = async (slug: string) => {
+    window.open(`http://localhost:5173/${slug}`, "_blank");
+  };
 
-    return (
-        <section className="">
-            <div
-                className="sticky top-0 z-20 mb-4 flex items-center gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
-                <div className="flex gap-4 items-center">
-                    <div className="">
-                        <span className="text-xl font-medium uppercase">My Pages</span>
-                        <p className="text-xs text-base-content text-zinc-400">{pages?.length} total pages</p>
-                    </div>
-                    {activeFilter.length !== 0 &&
-                        activeFilter?.map((filter) => (
-                            <div
-                                className="relative flex cursor-pointer items-center rounded-md border border-base-200 px-4 text-sm group py-0.5">
-                                <div
-                                    className="absolute top-0 right-0 h-3 w-3 rounded-full bg-base-100 group-hover:bg-red-500"></div>
-                                {Object.keys(filter)[0]}
-                                <div>
-                                    {Object.values(filter)[0] == "asc" ||
-                                    Object.values(filter)[0] == "most_click" ? (
-                                        <LuArrowDown/>
-                                    ) : (
-                                        <LuArrowUp/>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
+  return (
+    <section>
+      <div className="sticky top-0 z-20 mb-4 flex items-center gap-3 rounded-lg border border-border bg-card/80 px-4 py-2.5 backdrop-blur-sm">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
+          <div className="min-w-0">
+            <h1 className="text-base font-semibold tracking-tight text-foreground">
+              My Pages
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              {pages?.length ?? 0} total pages
+            </p>
+          </div>
+
+          {activeFilter.length > 0 && (
+            <div className="hidden flex-wrap items-center gap-1.5 sm:flex">
+              {activeFilter.map((filter, idx) => (
+                <div
+                  key={idx}
+                  className="inline-flex items-center gap-1 rounded-md border border-border bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground"
+                >
+                  <span>{Object.keys(filter)[0]}</span>
+                  {Object.values(filter)[0] === "asc" ||
+                  Object.values(filter)[0] === "most_click" ? (
+                    <LuArrowDown size={12} />
+                  ) : (
+                    <LuArrowUp size={12} />
+                  )}
                 </div>
-                <div className="ml-auto">
-                    <div
-                        className="flex cursor-pointer items-center gap-2 rounded-full bg-base-200 px-4 py-0.5"
-                        // onClick={() => setOpenFilter(true)}
-                    >
-                        Filter
-                        <LuFilter/>
-                    </div>
-                </div>
+              ))}
             </div>
+          )}
+        </div>
 
-            {!isLoading && !pages?.length ? (
-                <div className="flex items-center justify-center">
-                    <p>You have no Link Page...</p>
+        <Button variant="outline" size="sm" className="shrink-0 gap-1.5">
+          <LuFilter size={14} />
+          Filter
+        </Button>
+      </div>
+
+      {!isLoading && !pages?.length ? (
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
+          <p className="text-sm text-muted-foreground">
+            You don't have any link-in-bio pages yet.
+          </p>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          {!isLoading &&
+            pages?.map((page: any) => (
+              <div key={page._id}>
+                <div className="flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:bg-muted/30">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-medium text-foreground">{page.title}</p>
+                      <span
+                        className={classNames(
+                          "rounded-full px-2 py-0.5 text-[10px] font-medium",
+                          page.isPublic
+                            ? "bg-primary/10 text-primary"
+                            : "bg-muted text-muted-foreground"
+                        )}
+                      >
+                        {page.isPublic ? "Public" : "Private"}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                      <span className="truncate">/{page.slug}</span>
+                      <BsDot size={12} />
+                      <span className="inline-flex items-center gap-1">
+                        <BsClock size={11} />
+                        {new Date(page.createdAt as string).toLocaleDateString()}
+                      </span>
+                      <BsDot size={12} />
+                      <span className="inline-flex items-center gap-1">
+                        <TbClick size={12} />
+                        {page.links.length}{" "}
+                        {page.links.length === 1 ? "link" : "links"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex shrink-0 items-center gap-1.5">
+                    <Button variant="outline" size="icon-sm" asChild>
+                      <Link to={`${page.slug}`} aria-label="Edit page">
+                        <AiOutlineEdit size={15} />
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon-sm"
+                      onClick={() => handleOpenLinkInBio(page.slug)}
+                      aria-label="Open page"
+                    >
+                      <LuExternalLink size={14} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() =>
+                        setEditPageActive({ state: true, id: page._id })
+                      }
+                      aria-label="Page settings"
+                    >
+                      <LuSettings size={15} />
+                    </Button>
+                  </div>
                 </div>
-            ) : (
-                <div className="flex flex-col gap-4 no-scrollbar">
-                    {!isLoading &&
-                        pages.map((page: any) => (
-                            <div key={page._id}>
-                                <div className="flex items-center justify-between gap-4 rounded-md bg-secondary shadow-md p-4 hover:bg-secondary/50 transition-colors">
-                                    <div className="flex items-center gap-2">
-                                        <div>
-                                            <div className="flex items-center gap-2">
-                                                <p className="font-medium text-[18px] uppercase">{page.title}</p>
-                                                <div className={classNames("text-[10px] py-.5 px-2 rounded-full text-zinc-100", page.isPublic ? "bg-secondary": "bg-primary")}>{page.isPublic ? "Public" : "Private"}</div>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-zinc-400 text-xs mt-1">
-                                                <span className="flex items-center gap-1">
-                                                    <GiGraspingSlug size={12}/>
-                                                    {page.slug}
-                                                </span>
-                                                <BsDot size={12}/>
-                                                <span className="flex items-center gap-1">
-                                                    <BsClock size={12}/>
-                                                    {new Date(page.createdAt as string).toLocaleDateString()}
-                                                </span>
-                                                <BsDot size={12}/>
-                                                <span className="flex items-center gap-1">
-                                                    <TbClick size={12}/>
-                                                    {page.links.length} {page.links.length > 1 ? "Links" : "Link"}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div className="flex items-center gap-4">
-                                        <Button className="bg-primary !p-0">
-                                            <Link to={`${page.slug}`} className="w-full flex-1 px-2 py-1">
-                                                <AiOutlineEdit />
-                                            </Link>
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            onClick={() => handleOpenLinkInBio(page.slug)}
-                                            className="cursor-pointer rounded-lg ml-1 text-foreground hover:bg-accent transition-colors"
-                                        >
-                                            <LuView className=""/>
-                                        </Button>
-
-                                        <div
-                                            onClick={() =>
-                                                setEditPageActive({state: true, id: page._id})
-                                            }
-                                            className="cursor-pointer text-foreground/50 hover:text-foreground transition-colors"
-                                        >
-                                            <LuSettings/>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <>
-                                    {page._id === editPageActive.id && (
-                                        <EditPageModal
-                                            editPageActive={editPageActive.state}
-                                            setEditPageActive={setEditPageActive}
-                                            page={page}
-                                        />
-                                    )}
-                                </>
-                            </div>
-                        ))}
-                </div>
-            )}
-        </section>
-    );
+                {page._id === editPageActive.id && (
+                  <EditPageModal
+                    editPageActive={editPageActive.state}
+                    setEditPageActive={setEditPageActive}
+                    page={page}
+                  />
+                )}
+              </div>
+            ))}
+        </div>
+      )}
+    </section>
+  );
 };
 
 export default Pages;
