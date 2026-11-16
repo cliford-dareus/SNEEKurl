@@ -1,35 +1,39 @@
 import ElementWrapper from "../layouts/element-wrapper";
-import {EditorElement} from "../../../../../../hooks/use-editor";
+import { EditorElement } from "../../../../../../hooks/use-editor";
 
 type ImageProps = {
-    element: EditorElement;
-}
+  element: EditorElement;
+};
 
-const Image = ({element}: ImageProps) => {
-    if(Array.isArray(element.content)) {
-        return(
-            <ElementWrapper element={element}>
-                <div className="w-full h-[50px] bg-secondary text-secondary-foreground flex items-center justify-center">
-                    <p className="text-sm">No image selected</p>
-                </div>
-            </ElementWrapper>
-        )
-    };
+const Image = ({ element }: ImageProps) => {
+  const hasImage =
+    !Array.isArray(element.content) && !!element.content.imageUrl;
 
-    return(
-        <ElementWrapper element={element}>
-            <div
-                style={element.styles}
-                className="w-full h-[300px] relative transition-all overflow-clip rounded-md"
-            >
-                <img
-                    src={element.content.imageUrl}
-                    alt={element.content.altText}
-                    className="w-full h-full object-cover"
-                />
-            </div>
-        </ElementWrapper>
-    )
+  if (!hasImage) {
+    return (
+      <ElementWrapper element={element}>
+        <div className="flex h-24 w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
+          No image selected
+        </div>
+      </ElementWrapper>
+    );
+  }
+
+  return (
+    <ElementWrapper element={element}>
+      <div
+        style={element.styles}
+        className="relative w-full overflow-hidden rounded-lg"
+      >
+        <img
+          src={element.content.imageUrl}
+          alt={element.content.altText || ""}
+          className="h-full w-full object-cover"
+          style={{ minHeight: element.styles.height || 160 }}
+        />
+      </div>
+    </ElementWrapper>
+  );
 };
 
 export default Image;
