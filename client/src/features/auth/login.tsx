@@ -40,6 +40,7 @@ const Login = () => {
         password: formData.password,
       }).unwrap();
 
+<<<<<<< Updated upstream
       dispatch(
         setCredentials({
           user: {
@@ -50,6 +51,18 @@ const Login = () => {
           },
         })
       );
+=======
+            dispatch(
+                setCredentials({
+                    user: {
+                        username: response.data.user.username,
+                        email: response.data.user.email,
+                        stripe_account_id: response.data.user.stripe_account_id,
+                        isVerified: response.data.user.isVerified,
+                    },
+                })
+            );
+>>>>>>> Stashed changes
 
       navigate("/links", { replace: true });
     } catch (err: any) {

@@ -86,11 +86,11 @@ const csrfProtection = csrf({
 });
 
 // Routes
-app.use("/auth", csrfProtection, authRouter);
-app.use("/user", csrfProtection, userRouter);
+app.use("/auth", authRouter);
+app.use("/user",  userRouter);
 app.use("/short", shortRouter);
-app.use("/page", csrfProtection, pageRouter);
-app.use("/stripe", csrfProtection, stripeRouter);
+app.use("/page", pageRouter);
+app.use("/stripe", stripeRouter);
 app.use("/sneekurl/fp", onbordingRouter);
 app.use("/short/analytics", analyticsRouter);
 

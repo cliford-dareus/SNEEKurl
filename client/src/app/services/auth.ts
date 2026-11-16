@@ -10,8 +10,10 @@ export interface User {
 }
 
 export interface UserResponse {
-    user: User;
-    token: string;
+    data: {
+        user: User;
+        token: string;
+    }
 }
 
 export interface LoginRequest {

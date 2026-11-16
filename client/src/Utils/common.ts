@@ -16,7 +16,7 @@ import { SiSpeedypage } from "react-icons/si";
 // VITE_API_URL: set at build/runtime for Docker (empty = same origin)
 export const API_URL =
   (typeof import.meta !== "undefined" && (import.meta as any).env?.VITE_API_URL) ||
-  "http://localhost:4000";
+  "http://localhost:4080";
 export const pricingPlans = [
     {
         id: "pricing_1",
