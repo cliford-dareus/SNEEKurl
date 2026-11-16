@@ -1,71 +1,62 @@
-import {Button} from "./ui/button";
+import { Button } from "./ui/button";
 import CreateLinkModal from "./modals/create-link-modal";
-import {useState} from "react";
-import {LuSearch} from "react-icons/lu";
+import { useState } from "react";
+import { LuPlus, LuSearch } from "react-icons/lu";
 import SearchLinkModal from "./modals/search-link-modal";
 import CreateLinkInBioModal from "./modals/create-link-in-bio-modal";
 
 type Props = {
-    pathname: string;
+  pathname: string;
 };
 
-const DashboardTopInterface = ({pathname}: Props) => {
-    const [searchLinkActive, setSearchLinkActive] = useState(false);
-    const [addLinkActive, setAddLinkActive] = useState(false);
-    const [createLinkInBioActive, setCreateLinkInBioActive] = useState(false);
+const DashboardTopInterface = ({ pathname }: Props) => {
+  const [searchLinkActive, setSearchLinkActive] = useState(false);
+  const [addLinkActive, setAddLinkActive] = useState(false);
+  const [createLinkInBioActive, setCreateLinkInBioActive] = useState(false);
 
-    return (
-        <>
-            <div className="flex items-center gap-4 py-4 h-[10vh]">
-                {pathname !== "/pages" ? (
-                    <div
-                        className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
-                        onClick={() => setAddLinkActive(true)}
-                    >
-                        <Button className="bg-primary">Add New Link</Button>
-                    </div>
-                ) : (
-                    <div
-                        className="rounded-md border border-base-300 p-4 md:min-w-[256px]"
-                        onClick={() => setCreateLinkInBioActive(true)}
-                    >
-                        <Button className="bg-primary">Add New Page</Button>
-                    </div>
-                )}
+  const isPages = pathname === "/pages";
 
-                <div className="flex-1 rounded-md border border-base-300 p-2.5">
-                    <div
-                        className="ml-auto flex w-full justify-between gap-4 rounded-full border border-base-300 px-4 py-1"
-                        onClick={() => setSearchLinkActive(true)}
-                    >
-                        <input
-                            className="w-[80%] bg-transparent outline-none"
-                            onFocus={() => setSearchLinkActive(true)}
-                            placeholder="Search links..."
-                        />
-                        <Button className="bg-primary">
-                            <LuSearch/>
-                        </Button>
-                    </div>
-                </div>
-            </div>
+  return (
+    <>
+      <div className="flex items-center gap-3 py-4">
+        <Button
+          size="sm"
+          className="shrink-0 gap-1.5"
+          onClick={() =>
+            isPages ? setCreateLinkInBioActive(true) : setAddLinkActive(true)
+          }
+        >
+          <LuPlus size={16} />
+          {isPages ? "New page" : "New link"}
+        </Button>
 
-            <CreateLinkModal
-                setAddLinkActive={setAddLinkActive}
-                addLinkActive={addLinkActive}
-            />
+        <div
+          className="flex h-8 flex-1 cursor-text items-center gap-2 rounded-md border border-input bg-transparent px-3 transition-colors hover:border-ring/50"
+          onClick={() => setSearchLinkActive(true)}
+        >
+          <LuSearch size={15} className="shrink-0 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">
+            Search links...
+          </span>
+        </div>
+      </div>
 
-            <SearchLinkModal
-                searchLinkActive={searchLinkActive}
-                setSearchLinkActive={setSearchLinkActive}
-            />
+      <CreateLinkModal
+        setAddLinkActive={setAddLinkActive}
+        addLinkActive={addLinkActive}
+      />
 
-            <CreateLinkInBioModal
-                createLinkInBioActive={createLinkInBioActive}
-                setCreateLinkInBioActive={setCreateLinkInBioActive}
-            />
-        </>
-    );
+      <SearchLinkModal
+        searchLinkActive={searchLinkActive}
+        setSearchLinkActive={setSearchLinkActive}
+      />
+
+      <CreateLinkInBioModal
+        createLinkInBioActive={createLinkInBioActive}
+        setCreateLinkInBioActive={setCreateLinkInBioActive}
+      />
+    </>
+  );
 };
 
 export default DashboardTopInterface;
