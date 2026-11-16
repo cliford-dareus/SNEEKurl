@@ -1,137 +1,128 @@
-import React, {useState} from 'react';
-import {Url, useDeleteUrlMutation} from "../app/services/urlapi";
-import {getSiteUrl} from "../Utils/getSiteUrl";
+import React, { useState } from "react";
+import { Url, useDeleteUrlMutation } from "../app/services/urlapi";
+import { getSiteUrl } from "../Utils/getSiteUrl";
 import VisitLinkButton from "./visit-link-button";
 import {
-    LuBarChart,
-    LuFileEdit,
-    LuLink2,
-    LuMoreVertical,
-    LuQrCode,
-    LuTrash2
+  LuBarChart,
+  LuFileEdit,
+  LuLink2,
+  LuMoreVertical,
+  LuQrCode,
+  LuTrash2,
 } from "react-icons/lu";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import EditLinkModal from "./modals/edit-link-modal";
 import EditQrModal from "./modals/edit-qr-modal";
 import ShareLinkModal from "./modals/share-link-modal";
-import {Popover, PopoverTrigger, PopoverContent} from "./ui/popover";
-import {Button} from "./ui/button";
-import {GiClick} from "react-icons/gi";
+import { Popover, PopoverTrigger, PopoverContent } from "./ui/popover";
+import { Button } from "./ui/button";
 
-const LinkCard = ({url, plan}: { url: Url, plan: string }) => {
-    const [open, setOpen] = useState(false);
-    const [editActive, setEditActive] = useState(false);
-    const [qrActive, setQrActive] = useState(false);
-    const [shareActive, setShareActive] = useState(false);
-    const [deleteUrl] = useDeleteUrlMutation();
+const LinkCard = ({ url, plan }: { url: Url; plan: string }) => {
+  const [editActive, setEditActive] = useState(false);
+  const [qrActive, setQrActive] = useState(false);
+  const [shareActive, setShareActive] = useState(false);
+  const [deleteUrl] = useDeleteUrlMutation();
 
-    return (
-        <>
-            <div className="flex items-center rounded-md bg-secondary hover:bg-secondary/50 shadow-md p-4 transition-colors">
-                <div className="flex items-center justify-center rounded-md bg-primary/10 w-[50px] h-[50px]">
-                    <img
-                        className="rounded-full w-[30px] h-[30px]"
-                        src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
-                            url.longUrl,
-                        )}`}
-                        loading="lazy"
-                        alt="site favicon"
-                    />
-                </div>
+  return (
+    <>
+      <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3.5 transition-colors hover:bg-muted/30">
+        <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted">
+          <img
+            className="size-5 rounded-sm"
+            src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
+              url.longUrl
+            )}&sz=64`}
+            loading="lazy"
+            alt=""
+          />
+        </div>
 
-                <div className="w-[50%] ml-4">
-                    <div className="flex items-center gap-4">
-                        <VisitLinkButton url={url.short}>
-                            <div className="flex items-center gap-2">
-                                <LuLink2 size={20} className="text-primary"/>
-                                <span className="text-sm text-primary">sneek.co/{url.short}</span>
-                            </div>
-                        </VisitLinkButton>
-                        <div className="relative flex cursor-pointer items-center rounded-full p-2">
-                            <span className="absolute -top-1 left-0 text-foreground/50">{url.totalClicks}</span>
-                            <GiClick className="text-primary" size={16}/>
-                        </div>
-                    </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <VisitLinkButton url={url.short}>
+              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                <LuLink2 size={14} className="shrink-0" />
+                sneek.co/{url.short}
+              </span>
+            </VisitLinkButton>
+            <span className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+              {url.totalClicks} clicks
+            </span>
+          </div>
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+            {url.longUrl}
+          </p>
+        </div>
 
-                    <p className="truncate text-xs text-foreground/50">{url.longUrl}</p>
-                </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <Button variant="outline" size="icon-sm" asChild>
+            <Link to={`/analytics/${url.short}`} aria-label="Analytics">
+              <LuBarChart size={15} />
+            </Link>
+          </Button>
 
-                <div className="ml-auto flex items-center gap-2">
-                    <Button className="rounded-lg bg-primary px-4 py-1 ml-1 hover:bg-accent transition-colors">
-                        <Link to={`/analytics/${url.short}`}>
-                            <LuBarChart className="" size={16}/>
-                        </Link>
-                    </Button>
+          <Button
+            variant="outline"
+            size="icon-sm"
+            onClick={() => setQrActive(true)}
+            aria-label="QR code"
+          >
+            <LuQrCode size={15} />
+          </Button>
 
-                    <Button
-                        variant="outline"
-                        className="cursor-pointer rounded-lg ml-1 text-foreground hover:bg-accent transition-colors"
-                        onClick={() => setQrActive(true)}
-                    >
-                        <LuQrCode className="" size={16}/>
-                    </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" size="icon-sm" aria-label="More options">
+                <LuMoreVertical size={16} />
+              </Button>
+            </PopoverTrigger>
 
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <div className="cursor-pointer ml-4">
-                                <LuMoreVertical
-                                    size={18}
-                                    className="text-foreground/50 hover:text-foreground transition-colors"
-                                />
-                            </div>
-                        </PopoverTrigger>
+            <PopoverContent
+              side="bottom"
+              align="end"
+              className="w-40 border border-border bg-popover p-1 shadow-md"
+            >
+              <button
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+                onClick={() => setEditActive(true)}
+              >
+                <LuFileEdit size={14} />
+                Edit
+              </button>
+              <button
+                type="button"
+                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-destructive transition-colors hover:bg-destructive/10"
+                onClick={() => deleteUrl(url.short)}
+              >
+                <LuTrash2 size={14} />
+                Delete
+              </button>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
 
-                        <PopoverContent
-                            side="bottom"
-                            align="center"
-                            className="bg-background border flex flex-col gap-2 z-50 p-2"
-                        >
+      <EditLinkModal
+        url={url}
+        editActive={editActive}
+        setEditActive={setEditActive}
+        plan={plan}
+      />
 
-                            <div
-                                className="flex w-full cursor-pointer border items-center p-2 rounded hover:bg-primary/10 transition-colors"
-                                onClick={() => {
-                                    setEditActive(true);
-                                }}
-                            >
-                                <LuFileEdit className="mr-2" size={16}/>
-                                Edit
-                            </div>
+      <EditQrModal
+        url={url}
+        setQrActive={setQrActive}
+        editQrActive={qrActive}
+      />
 
-                            <div
-                                className="flex w-full cursor-pointer border items-center p-2 rounded hover:bg-primary/10 transition-colors text-error"
-                                onClick={() => {
-                                    deleteUrl(url.short);
-                                }}
-                            >
-                                <LuTrash2 className="mr-2" size={16}/>
-                                Delete
-                            </div>
-                        </PopoverContent>
-                    </Popover>
-                </div>
-            </div>
-
-            <EditLinkModal
-                url={url}
-                editActive={editActive}
-                setEditActive={setEditActive}
-                plan={plan}
-            />
-
-            <EditQrModal
-                url={url}
-                setQrActive={setQrActive}
-                editQrActive={qrActive}
-            />
-
-            <ShareLinkModal
-                shareActive={shareActive}
-                setShareActive={setShareActive}
-                url={url}
-            />
-
-        </>
-    );
+      <ShareLinkModal
+        shareActive={shareActive}
+        setShareActive={setShareActive}
+        url={url}
+      />
+    </>
+  );
 };
 
 export default LinkCard;
