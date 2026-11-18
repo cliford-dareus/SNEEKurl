@@ -14,10 +14,10 @@ const Links = () => {
 
   return (
     <section className="relative">
-      <div className="sticky top-0 z-20 mb-4 flex items-center gap-3 rounded-lg border border-border bg-card/80 px-4 py-2.5 backdrop-blur-sm">
+      <div className="sticky top-16 z-20 mb-4 flex items-center gap-3 rounded-xl border border-border bg-card/90 px-4 py-3 shadow-sm backdrop-blur-md">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <div className="min-w-0">
-            <h1 className="text-base font-semibold tracking-tight text-foreground">
+            <h1 className="text-lg font-semibold tracking-tight text-foreground">
               My Links
             </h1>
             <p className="text-xs text-muted-foreground">
@@ -30,7 +30,7 @@ const Links = () => {
               {activeFilter.map((filter, idx) => (
                 <div
                   key={idx}
-                  className="inline-flex items-center gap-1 rounded-md border border-border bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground"
+                  className="inline-flex items-center gap-1 rounded-lg border border-border bg-muted/50 px-2 py-1 text-xs font-medium text-muted-foreground"
                 >
                   <span>{Object.keys(filter)[0]}</span>
                   {Object.values(filter)[0] === "asc" ||

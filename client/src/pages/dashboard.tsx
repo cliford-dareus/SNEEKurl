@@ -35,7 +35,7 @@ const Dashboard = () => {
         return [
             {
                 "id": "Clicks",
-                "color": "hsl(331, 70%, 50%)",
+                "color": "hsl(245, 60%, 52%)",
                 "data": userAnalytics.analytics.clicksOverTime.map(item => ({
                     x: item.date,
                     y: item.clicks
@@ -46,17 +46,44 @@ const Dashboard = () => {
 
     const topLinks = userAnalytics?.analytics?.topLinks || [];
 
+    const statCards = [
+        {
+            icon: LuMousePointer,
+            value: totalClicks,
+            label: "Total clicks",
+            iconClass: "bg-primary/10 text-primary",
+        },
+        {
+            icon: LuLink2,
+            value: userAnalytics?.analytics?.overview?.totalLinks || 0,
+            label: "Total links",
+            iconClass: "bg-chart-2/10 text-chart-2",
+        },
+        {
+            icon: LuTrendingUp,
+            value: userAnalytics?.analytics?.overview?.averageClicksPerLink || 0,
+            label: "Avg clicks/link",
+            iconClass: "bg-chart-5/10 text-chart-5",
+        },
+        {
+            icon: LuBarChart,
+            value: userAnalytics?.analytics?.overview?.period?.days || 0,
+            label: "Days tracked",
+            iconClass: "bg-chart-3/10 text-chart-3",
+        },
+    ];
+
     return (
         <>
             <section className="relative">
-                <div className="mb-4 flex justify-between items-center">
-                    <div className="">
-                        <h2 className="font-medium text-2xl uppercase">Hey, {user.user.username}</h2>
-                        <p className="text-sm text-zinc-400">Track your links and customize your bio links</p>
+                <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                    <div>
+                        <h2 className="text-2xl font-semibold tracking-tight">Hey, {user.user.username}</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">Track your links and customize your bio links</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <select
-                            className="select select-sm select-bordered bg-base-100"
+                            className="h-9 rounded-lg border border-input bg-card px-3 text-sm shadow-sm outline-none transition-colors focus:border-ring focus:ring-2 focus:ring-ring/40"
                             value={analyticsPeriod}
                             onChange={(e) => setAnalyticsPeriod(e.target.value)}
                         >
@@ -69,87 +96,49 @@ const Dashboard = () => {
                 </div>
 
                 {/* Analytics Overview Cards */}
-                <div className="w-full grid grid-cols-4 gap-4 h-[200px] mb-6">
-                    <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
-                        <div className="absolute top-4 left-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <LuMousePointer className="text-primary" size={16}/>
-                                <span className="text-2xl font-bold">{totalClicks}</span>
-                            </div>
-                            <p className="text-sm leading-3 text-neutral">Total clicks</p>
-                        </div>
-                        <div className="h-[130px] w-full mt-auto">
-                            <MyResponsiveLine data={chartData}/>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
-                        <div className="absolute top-4 left-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <LuLink2 className="text-secondary" size={16}/>
-                                <span className="text-2xl font-bold">
-                                    {userAnalytics?.analytics?.overview?.totalLinks || 0}
+                <div className="mb-6 grid w-full grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                    {statCards.map((card, index) => (
+                        <div
+                            key={card.label}
+                            className="relative overflow-hidden rounded-xl border border-border bg-card p-5 shadow-sm"
+                        >
+                            <div className="flex items-start justify-between gap-3">
+                                <div>
+                                    <p className="text-sm text-muted-foreground">{card.label}</p>
+                                    <p className="mt-1 text-3xl font-bold tracking-tight">{card.value}</p>
+                                </div>
+                                <span className={`flex size-10 shrink-0 items-center justify-center rounded-lg ${card.iconClass}`}>
+                                    <card.icon size={18} />
                                 </span>
                             </div>
-                            <p className="text-sm leading-3 text-neutral">Total links</p>
+                            {index === 0 ? (
+                                <div className="mt-3 h-[64px] w-full">
+                                    <MyResponsiveLine data={chartData} />
+                                </div>
+                            ) : (
+                                <div className="pointer-events-none absolute -bottom-3 -right-2 text-[88px] leading-none opacity-[0.06]">
+                                    <card.icon />
+                                </div>
+                            )}
                         </div>
-                        <div className="h-[130px] w-full mt-auto flex items-end justify-center">
-                            <div className="text-4xl opacity-20">
-                                <LuLink2/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
-                        <div className="absolute top-4 left-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <LuTrendingUp className="text-accent" size={16}/>
-                                <span className="text-2xl font-bold">
-                                    {userAnalytics?.analytics?.overview?.averageClicksPerLink || 0}
-                                </span>
-                            </div>
-                            <p className="text-sm leading-3 text-neutral">Avg clicks/link</p>
-                        </div>
-                        <div className="h-[130px] w-full mt-auto flex items-end justify-center">
-                            <div className="text-4xl opacity-20">
-                                <LuTrendingUp/>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="flex-1 flex relative border border-base-300 rounded-md p-4">
-                        <div className="absolute top-4 left-4">
-                            <div className="flex items-center gap-2 mb-1">
-                                <LuBarChart className="text-info" size={16}/>
-                                <span className="text-2xl font-bold">
-                                    {userAnalytics?.analytics?.overview?.period?.days || 0}
-                                </span>
-                            </div>
-                            <p className="text-sm leading-3 text-neutral">Days tracked</p>
-                        </div>
-                        <div className="h-[130px] w-full mt-auto flex items-end justify-center">
-                            <div className="text-4xl opacity-20">
-                                <LuBarChart/>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
 
                 {/* Top Performing Links */}
                 {topLinks.length > 0 && (
-                    <div className="mb-6 bg-base-200 rounded-lg p-4">
-                        <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                            <LuTrendingUp className="text-primary"/>
+                    <div className="mb-6 rounded-xl border border-border bg-card p-5 shadow-sm">
+                        <h3 className="mb-4 flex items-center gap-2 text-base font-semibold tracking-tight">
+                            <LuTrendingUp className="text-primary" size={18} />
                             Top Performing Links
                         </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             {topLinks.slice(0, 6).map((link, index: number) => (
-                                <div key={link.short} className="bg-base-100 rounded-lg p-4 border border-base-300">
+                                <div key={link.short} className="rounded-xl border border-border bg-muted/40 p-4 transition-shadow hover:shadow-sm">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm font-medium text-primary">
-                                            #{index + 1}
+                                        <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                                            {index + 1}
                                         </span>
-                                        <span className="text-sm font-bold text-accent">
+                                        <span className="text-sm font-semibold text-primary">
                                             {link.clicks} clicks
                                         </span>
                                     </div>
@@ -157,17 +146,17 @@ const Dashboard = () => {
                                         <p className="font-medium text-sm truncate">
                                             sneek.co/{link.short}
                                         </p>
-                                        <p className="text-xs text-base-content/70 truncate">
+                                        <p className="text-xs text-muted-foreground truncate">
                                             {link.longUrl}
                                         </p>
                                     </div>
-                                    <div className="flex items-center justify-between text-xs text-base-content/60">
+                                    <div className="flex items-center justify-between text-xs text-muted-foreground">
                                         <span>
                                             Created: {new Date(link.createdAt).toLocaleDateString()}
                                         </span>
                                         <Link
                                             to={`/analytics/${link.short}`}
-                                            className="text-primary hover:text-primary-focus"
+                                            className="font-medium text-primary hover:text-primary/80"
                                         >
                                             View details
                                         </Link>
@@ -178,26 +167,24 @@ const Dashboard = () => {
                     </div>
                 )}
 
-                <div className="sticky top-0 z-20 my-4 flex items-center gap-4 rounded-md border border-base-200 bg-base-200 px-4 py-1">
-                    <div className="flex items-center gap-4">
-                        <div className="">
-                            <span className="font-medium">My Links</span>
-                            <p className="text-sm text-zinc-400">{data?.urls.length} total links</p>
+                <div className="sticky top-16 z-20 my-4 flex items-center gap-4 rounded-xl border border-border bg-card/90 px-4 py-2.5 shadow-sm backdrop-blur-md">
+                    <div className="flex min-w-0 items-center gap-4">
+                        <div className="shrink-0">
+                            <span className="text-base font-semibold tracking-tight">My Links</span>
+                            <p className="text-xs text-muted-foreground">{data?.urls.length} total links</p>
                         </div>
                         {activeFilter.length !== 0 &&
                             activeFilter?.map((filter) => (
                                 <div
                                     key={Object.keys(filter)[0]}
-                                    className="relative flex cursor-pointer items-center rounded-md border border-base-200 px-4 text-sm group py-0.5">
-                                    <div
-                                        className="absolute top-0 right-0 h-3 w-3 rounded-full bg-base-200 group-hover:bg-red-500"></div>
+                                    className="relative hidden cursor-pointer items-center gap-1 rounded-lg border border-border bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground sm:flex">
                                     {Object.keys(filter)[0]}
                                     <div>
                                         {Object.values(filter)[0] == "asc" ||
                                         Object.values(filter)[0] == "most_click" ? (
-                                            <LuArrowDown/>
+                                            <LuArrowDown size={12} />
                                         ) : (
-                                            <LuArrowUp/>
+                                            <LuArrowUp size={12} />
                                         )}
                                     </div>
                                 </div>
@@ -206,11 +193,11 @@ const Dashboard = () => {
 
                     <div className="ml-auto">
                         <div
-                            className="flex cursor-pointer items-center gap-2 rounded-full bg-base-200 px-4 py-0.5"
+                            className="flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 shadow-sm transition-colors hover:bg-muted"
                             onClick={() => setOpenFilter(true)}
                         >
-                            <p className="text-sm text-base-content">Filter</p>
-                            <LuFilter/>
+                            <p className="text-sm font-medium">Filter</p>
+                            <LuFilter size={14} />
                         </div>
                     </div>
                 </div>

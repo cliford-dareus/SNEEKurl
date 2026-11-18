@@ -25,8 +25,8 @@ const LinkCard = ({ url, plan }: { url: Url; plan: string }) => {
 
   return (
     <>
-      <div className="flex items-center gap-3 rounded-lg border border-border bg-card p-3.5 transition-colors hover:bg-muted/30">
-        <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-muted">
+      <div className="group flex items-center gap-3.5 rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:border-primary/30 hover:shadow-md">
+        <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-muted ring-1 ring-border">
           <img
             className="size-5 rounded-sm"
             src={`https://www.google.com/s2/favicons?domain=${getSiteUrl(
@@ -40,16 +40,16 @@ const LinkCard = ({ url, plan }: { url: Url; plan: string }) => {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <VisitLinkButton url={url.short}>
-              <span className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline">
                 <LuLink2 size={14} className="shrink-0" />
                 sneek.co/{url.short}
               </span>
             </VisitLinkButton>
-            <span className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
               {url.totalClicks} clicks
             </span>
           </div>
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+          <p className="mt-1 truncate text-xs text-muted-foreground">
             {url.longUrl}
           </p>
         </div>
@@ -80,11 +80,11 @@ const LinkCard = ({ url, plan }: { url: Url; plan: string }) => {
             <PopoverContent
               side="bottom"
               align="end"
-              className="w-40 border border-border bg-popover p-1 shadow-md"
+              className="w-40 border border-border bg-popover p-1.5 shadow-lg"
             >
               <button
                 type="button"
-                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-foreground transition-colors hover:bg-muted"
+                className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-foreground transition-colors hover:bg-muted"
                 onClick={() => setEditActive(true)}
               >
                 <LuFileEdit size={14} />
@@ -92,7 +92,7 @@ const LinkCard = ({ url, plan }: { url: Url; plan: string }) => {
               </button>
               <button
                 type="button"
-                className="flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-sm text-destructive transition-colors hover:bg-destructive/10"
+                className="flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10"
                 onClick={() => deleteUrl(url.short)}
               >
                 <LuTrash2 size={14} />

@@ -12,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+      },
       animation: {
         shimmer: "shimmer 2s linear infinite",
         "draw-line": "draw-line 1s forwards",
