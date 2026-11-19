@@ -1,7 +1,6 @@
 import React, {Dispatch, SetStateAction, useState} from 'react';
 import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter} from "../ui/dialog";
 import {getSiteUrl} from "../../Utils/getSiteUrl";
-import Button from "../ui/button";
 import Separator from "../ui/separator";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {generateReactHelpers} from "@uploadthing/react/hooks";

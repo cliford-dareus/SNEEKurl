@@ -1,6 +1,6 @@
 import Label from "../../components/ui/label";
 import Input from "../../components/ui/Input";
-import Button from "../../components/ui/button";
+import {Button} from "../../components/ui/button";
 import { SubmitHandler, useForm, Controller } from "react-hook-form";
 
 type Props = {
@@ -55,18 +55,17 @@ const Urlform = ({ shortenFn }: Props) => {
                 message: "Please enter a valid URL"
               }
             }}
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <Input
                 {...field}
                 className="w-full rounded-full px-4 py-1"
                 placeholder="https://example.com"
-                error={fieldState.error?.message}
               />
             )}
           />
         </div>
 
-        <Button classnames="bg-primary">Generate Short</Button>
+        <Button className="bg-primary">Generate Short</Button>
       </form>
 
       <div className="mx-auto mt-4 flex aspect-square w-8 items-center justify-center rounded-full bg-accent text-black">
@@ -96,17 +95,16 @@ const Urlform = ({ shortenFn }: Props) => {
                 message: "Only letters, numbers, hyphens and underscores allowed"
               }
             }}
-            render={({ field, fieldState }) => (
+            render={({ field }) => (
               <Input
                 {...field}
                 placeholder="custom-alias"
-                error={fieldState.error?.message}
               />
             )}
           />
         </div>
 
-        <Button classnames="bg-primary">Generate custom short</Button>
+        <Button className="bg-primary">Generate custom short</Button>
         <span className="">
           Lorem ipsum dolor sit amet consectetur adipisicing.
         </span>

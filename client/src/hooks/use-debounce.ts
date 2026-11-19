@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 
 export function UseDebounce<T>(value: T, time=500): T {
     const [debounceValue, setDebounceValue] = useState<T>(value)
-    const timeRef = useRef<NodeJS.Timeout>()
+    const timeRef = useRef<ReturnType<typeof setTimeout>>()
 
     useEffect(() => {
         timeRef.current = setTimeout(()=> setDebounceValue(value), time);

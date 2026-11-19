@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useGetUrlsQuery } from "../app/services/urlapi";
 import LinkCard from "./link-card";
 import { useUserPlan } from "./layout/admin-layout";
+import { LuLink2 } from "react-icons/lu";
 
 const LinkItems = () => {
   const plan = useUserPlan();
@@ -38,11 +39,11 @@ const LinkItems = () => {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="h-[68px] animate-pulse rounded-lg border border-border bg-muted/40"
+            className="h-[76px] animate-pulse rounded-xl border border-border bg-muted/40"
           />
         ))}
       </div>
@@ -51,8 +52,11 @@ const LinkItems = () => {
 
   if (!data?.urls?.length) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-16 text-center">
-        <p className="text-sm text-muted-foreground">No links yet.</p>
+      <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-card/50 px-6 py-16 text-center shadow-sm">
+        <span className="mb-4 flex size-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <LuLink2 size={22} />
+        </span>
+        <p className="text-sm font-medium">No links yet.</p>
         <p className="mt-1 text-xs text-muted-foreground">
           Create your first short link to get started.
         </p>
@@ -61,7 +65,7 @@ const LinkItems = () => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3">
       {data.urls.map((url) => (
         <LinkCard key={url._id} url={url} plan={plan.plan!} />
       ))}

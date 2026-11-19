@@ -18,10 +18,10 @@ const DashboardTopInterface = ({ pathname }: Props) => {
 
   return (
     <>
-      <div className="flex items-center gap-3 py-4">
+      <div className="mb-6 flex items-center gap-3">
         <Button
-          size="sm"
-          className="shrink-0 gap-1.5"
+          size="default"
+          className="h-10 shrink-0 gap-1.5 px-4 shadow-sm"
           onClick={() =>
             isPages ? setCreateLinkInBioActive(true) : setAddLinkActive(true)
           }
@@ -31,10 +31,10 @@ const DashboardTopInterface = ({ pathname }: Props) => {
         </Button>
 
         <div
-          className="flex h-8 flex-1 cursor-text items-center gap-2 rounded-md border border-input bg-transparent px-3 transition-colors hover:border-ring/50"
+          className="flex h-10 flex-1 cursor-text items-center gap-2.5 rounded-xl border border-border bg-card px-3.5 shadow-sm transition-colors hover:border-ring/60 focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/40"
           onClick={() => setSearchLinkActive(true)}
         >
-          <LuSearch size={15} className="shrink-0 text-muted-foreground" />
+          <LuSearch size={16} className="shrink-0 text-muted-foreground" />
           <span className="text-sm text-muted-foreground">
             Search links...
           </span>
