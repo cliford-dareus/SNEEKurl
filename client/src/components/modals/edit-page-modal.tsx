@@ -88,7 +88,7 @@ const EditPageModal = ({editPageActive, setEditPageActive, page}: Props) => {
                     >
                         <div className="flex flex-col gap-4">
                             <div>
-                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Title</Label>
+                                <Label className="block text-xs text-zinc-400 mb-1 ml-1">Title</Label>
                                 <Controller
                                     name="title"
                                     control={control}
@@ -102,7 +102,7 @@ const EditPageModal = ({editPageActive, setEditPageActive, page}: Props) => {
                             </div>
 
                             <div>
-                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Description</Label>
+                                <Label className="block text-xs text-zinc-400 mb-1 ml-1">Description</Label>
                                 <Controller
                                     name="description"
                                     control={control}
@@ -116,7 +116,7 @@ const EditPageModal = ({editPageActive, setEditPageActive, page}: Props) => {
                             </div>
 
                             <div>
-                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Slug</Label>
+                                <Label className="block text-xs text-zinc-400 mb-1 ml-1">Slug</Label>
                                 <Controller
                                     name="slug"
                                     control={control}

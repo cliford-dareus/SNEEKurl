@@ -1,6 +1,6 @@
 import { useShortenUrlMutation } from "../../app/services/urlapi";
 import Urlform from "./urlform";
-import Button from "../../components/ui/button";
+import {Button} from "../../components/ui/button";
 import { useAppSelector } from "../../app/hook";
 
 type Props = {};
@@ -26,7 +26,7 @@ const UrlManager = (props: Props) => {
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa
           perspiciatis, totam molestiae labore saepe harum?
         </p>
-        <Button classnames="mt-auto">Create your free account</Button>
+        <Button className="mt-auto">Create your free account</Button>
       </div>
     );
   }

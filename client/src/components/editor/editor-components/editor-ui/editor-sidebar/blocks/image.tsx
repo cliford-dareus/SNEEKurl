@@ -6,10 +6,9 @@ type ImageProps = {
 };
 
 const Image = ({ element }: ImageProps) => {
-  const hasImage =
-    !Array.isArray(element.content) && !!element.content.imageUrl;
+  const content = element.content;
 
-  if (!hasImage) {
+  if (Array.isArray(content) || !content.imageUrl) {
     return (
       <ElementWrapper element={element}>
         <div className="flex h-24 w-full items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
@@ -26,8 +25,8 @@ const Image = ({ element }: ImageProps) => {
         className="relative w-full overflow-hidden rounded-lg"
       >
         <img
-          src={element.content.imageUrl}
-          alt={element.content.altText || ""}
+          src={content.imageUrl}
+          alt={content.altText || ""}
           className="h-full w-full object-cover"
           style={{ minHeight: element.styles.height || 160 }}
         />

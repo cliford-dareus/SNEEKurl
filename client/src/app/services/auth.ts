@@ -12,8 +12,17 @@ export interface User {
 export interface UserResponse {
     data: {
         user: User;
-        token: string;
+        accessToken: string;
     }
+}
+
+// The identify endpoint (/sneekurl/fp) does not use the standard { data }
+// envelope: it returns the user at the top level, and omits it entirely
+// for guest sessions.
+export interface IdentifyResponse {
+    message: string;
+    user?: User;
+    token?: string;
 }
 
 export interface LoginRequest {
@@ -106,7 +115,7 @@ export const authApi = createApi({
         protected: builder.mutation<{ message: string }, void>({
             query: () => "protected",
         }),
-        identifyUser: builder.mutation<UserResponse, any>({
+        identifyUser: builder.mutation<IdentifyResponse, any>({
             query: (result: any) => ({
                 url: `/sneekurl/fp?client_id=${result.visitorId}`,
                 method: "POST",

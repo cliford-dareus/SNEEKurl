@@ -87,24 +87,23 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                     >
                         <div className="flex flex-col gap-4 pt-8">
                             <div>
-                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Destination Url</Label>
+                                <Label className="block text-xs text-zinc-400 mb-1 ml-1">Destination Url</Label>
                                 <Controller
                                     name="longUrl"
                                     control={control}
-                                    render={({field, fieldState}) => (
+                                    render={({field}) => (
                                         <Input
                                             {...field}
                                             placeholder="https://"
                                             pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9\-].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$"
                                             title="Must be valid URL"
-                                            error={fieldState.error?.message}
                                         />
                                     )}
                                 />
                             </div>
 
                             <div>
-                                <Label classnames="block text-xs text-zinc-400 mb-1 ml-1">Short Url</Label>
+                                <Label className="block text-xs text-zinc-400 mb-1 ml-1">Short Url</Label>
                                 <div className="flex items-center gap-2">
                                     <div className="rounded-full bg-accent px-2 py-1">
                                         sneek.co/
@@ -112,11 +111,10 @@ const EditLinkModal = ({url, editActive, setEditActive, plan}: Props) => {
                                     <Controller
                                         name="short"
                                         control={control}
-                                        render={({field, fieldState}) => (
+                                        render={({field}) => (
                                             <Input
                                                 {...field}
                                                 placeholder="Enter a back-half(Optional)"
-                                                error={fieldState.error?.message}
                                             />
                                         )}
                                     />

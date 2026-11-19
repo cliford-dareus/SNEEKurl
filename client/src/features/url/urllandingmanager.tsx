@@ -56,12 +56,11 @@ const HomeCreateLinkManager = memo(
                             message: "Please enter a valid URL"
                         }
                     }}
-                    render={({field, fieldState}) => (
+                    render={({field}) => (
                         <Input
                             {...field}
                             className="border-none outline-none bg-transparent flex-1"
                             placeholder="https://example.com/very-long-url"
-                            error={fieldState.error?.message}
                         />
                     )}
                 />

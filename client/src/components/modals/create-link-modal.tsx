@@ -72,24 +72,23 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
                     <form onSubmit={handleSubmit(handleCreateLink)} className="space-y-4">
                         <div className="flex flex-col gap-4">
                             <div>
-                                <Label classnames="block text-sm text-zinc-400 mb-1 ml-1">Destination Url</Label>
+                                <Label className="block text-sm text-zinc-400 mb-1 ml-1">Destination Url</Label>
                                 <Controller
                                     name="longUrl"
                                     control={control}
-                                    render={({field, fieldState}) => (
+                                    render={({field}) => (
                                         <Input
                                             {...field}
                                             placeholder="https://"
                                             pattern="^(https?://)?([a-zA-Z0-9]([a-zA-Z0-9\-].*[a-zA-Z0-9])?\.)+[a-zA-Z].*$"
                                             title="Must be valid URL"
-                                            error={fieldState.error?.message}
                                         />
                                     )}
                                 />
                             </div>
 
                             <div>
-                                <Label classnames="block text-sm text-zinc-400 mb-1 ml-1">Short Url</Label>
+                                <Label className="block text-sm text-zinc-400 mb-1 ml-1">Short Url</Label>
                                 <div className="flex items-center gap-2">
                                     <div className="rounded-full bg-accent px-2 py-1">
                                         sneek.co/
@@ -97,11 +96,10 @@ const CreateLinkModal = ({addLinkActive, setAddLinkActive}: Props) => {
                                     <Controller
                                         name="back-half"
                                         control={control}
-                                        render={({field, fieldState}) => (
+                                        render={({field}) => (
                                             <Input
                                                 {...field}
                                                 placeholder="Enter a back-half(Optional)"
-                                                error={fieldState.error?.message}
                                             />
                                         )}
                                     />

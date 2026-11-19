@@ -27,6 +27,7 @@ export type BannerTheme = {
     backgroundGradient: string;
     backgroundSize: string | null;
     backgroundColor: string;
+    headerBrandName?: string;
 }
 
 type Editor = {

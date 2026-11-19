@@ -26,6 +26,14 @@ export interface PageProps {
     links: any;
     user: any;
     theme?: any;
+    backgroundType?: 'solid' | 'gradient' | 'image';
+    backgroundColor?: string;
+    backgroundGradient?: string;
+    backgroundImageUrl?: string;
+    themeColor?: string;
+    accentColor?: string;
+    textColor?: string;
+    avatarUrl?: string;
 }
 
 type Props = {
@@ -45,7 +53,7 @@ const ICON_MAP = {
 
 const CustomizeLinksInBioModal = ({ customizePageOpen, setCustomizePageOpen, data }: Props) => {
     const [customizePage] = useCustomizePageMutation();
-    const [backgroundType, setBackgroundType] = React.useState<'solid' | 'gradient' | 'image'>(data?.backgroundType);
+    const [backgroundType, setBackgroundType] = React.useState<'solid' | 'gradient' | 'image' | undefined>(data?.backgroundType);
     const {
         control,
         handleSubmit,

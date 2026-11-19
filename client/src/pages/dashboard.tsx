@@ -36,7 +36,7 @@ const Dashboard = () => {
             {
                 "id": "Clicks",
                 "color": "hsl(245, 60%, 52%)",
-                "data": userAnalytics.analytics.clicksOverTime.map(item => ({
+                "data": userAnalytics.analytics.clicksOverTime.map((item: { date: string; clicks: number }) => ({
                     x: item.date,
                     y: item.clicks
                 }))
@@ -132,7 +132,7 @@ const Dashboard = () => {
                             Top Performing Links
                         </h3>
                         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                            {topLinks.slice(0, 6).map((link, index: number) => (
+                            {topLinks.slice(0, 6).map((link: { short: string; clicks: number; longUrl: string; createdAt: string }, index: number) => (
                                 <div key={link.short} className="rounded-xl border border-border bg-muted/40 p-4 transition-shadow hover:shadow-sm">
                                     <div className="flex items-center justify-between mb-2">
                                         <span className="inline-flex size-6 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">

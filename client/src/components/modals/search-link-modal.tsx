@@ -100,7 +100,7 @@ const SearchLinkModal = ({searchLinkActive, setSearchLinkActive}: Props) => {
                         >
                             <div className="mt-8 flex flex-col gap-4">
                                 <div>
-                                    <Label classnames="block text-xs mb-2 ml-1 uppercase font-bold">Destination
+                                    <Label className="block text-xs mb-2 ml-1 uppercase font-bold">Destination
                                         Url</Label>
                                     <Controller
                                         name="search"

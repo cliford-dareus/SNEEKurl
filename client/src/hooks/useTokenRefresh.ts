@@ -12,7 +12,7 @@ export const useTokenRefresh = () => {
     const interval = setInterval(async () => {
       try {
         const result = await refreshToken().unwrap();
-        dispatch(setCredentials({ user: result.user }));
+        dispatch(setCredentials({ user: result.data.user }));
       } catch (error) {
         // Refresh failed, user will be redirected to login by the base query
         console.log("Token refresh failed:", error);
